@@ -15,6 +15,10 @@ if (! defined('ABSPATH')) {
 get_header();
 ?>
 
+<pre>
+    <?php var_dump(get_post_meta(get_the_ID())); ?>
+</pre>
+
 <main id="lgl-primary" class="lgl-site-main">
     <div class="lgl-holder">
         <?php
