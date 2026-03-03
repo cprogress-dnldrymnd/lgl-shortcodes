@@ -14,6 +14,7 @@
     --lgl-medium-gray: #d9d9d9;
     --lgl-dark-gray: #555;
     --lgl-gray: #969696;
+    --lgl-accent-2: #00e6f6;
 }
 
 // ==========================================================================
@@ -415,18 +416,18 @@
                     }
                 }
 
-                .bt-post--readmore {
+                .bt-post--`ore {
                     a {
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        color: var(--lgl-primary);
+                        background-color: var(--lgl-primary);
                         font-weight: 700;
                         text-decoration: none;
                         font-size: 14px;
                         text-transform: uppercase;
                         transition: color 0.3s ease;
-
+                        color: var(--lgl-accent-2);
                         &:hover {
                             color: var(--lgl-electric-blue);
                         }
