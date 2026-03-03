@@ -74,7 +74,7 @@
         .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit:active {
           transform: translateY(1px); }
   .lgl-search-container.lgl-search-container.lgl-search-container .select2-container {
-    min-height: 64px;
+    min-height: 70px;
     display: flex;
     align-items: center; }
     .lgl-search-container.lgl-search-container.lgl-search-container .select2-container .select2-selection__placeholder {
