@@ -39,6 +39,7 @@ if (! class_exists('LGL_Shortcodes')) {
 		 * @var array
 		 */
 		protected $custom_templates;
+
 		public function __construct()
 		{
 			add_action('init', array($this, 'register_shortcodes'));
@@ -47,79 +48,43 @@ if (! class_exists('LGL_Shortcodes')) {
 			// AJAX endpoints for dependent dropdowns and search results
 			add_action('wp_ajax_lgl_get_models', array($this, 'ajax_get_models'));
 			add_action('wp_ajax_nopriv_lgl_get_models', array($this, 'ajax_get_models'));
-
 			add_action('wp_ajax_lgl_fetch_results', array($this, 'ajax_fetch_results'));
 			add_action('wp_ajax_nopriv_lgl_fetch_results', array($this, 'ajax_fetch_results'));
-
 			add_action('wp_ajax_lgl_add_to_wishlist', array($this, 'ajax_add_to_wishlist'));
-			// Note: Wishlists usually require a logged-in user. If you want this for guests, you'd need a cookie/session approach, not user meta. 
-			// We'll leave nopriv off to enforce login, or handle it explicitly.
 
-			// Define custom templates
-			$this->custom_templates = array(
-				'single-lgl.php' => 'LGL Custom Single Template'
-			);
-
-			// Register template for specific post types (modify this array as needed)
-			$supported_post_types = array('caravan');
-			foreach ($supported_post_types as $post_type) {
-				add_filter("theme_{$post_type}_templates", array($this, 'register_plugin_templates'));
-			}
-
-			// Intercept frontend rendering to load the plugin file
-			add_filter('template_include', array($this, 'load_plugin_template'));
-
-		}
-
-		
-
-		/**
-		 * Injects the plugin's custom templates into the WordPress backend 'Post Attributes' dropdown.
-		 * Includes a type-safe check to prevent array_merge fatal errors.
-		 *
-		 * @param mixed $templates The existing templates available for the post type.
-		 * @return array The merged array containing the plugin templates.
-		 */
-		public function register_plugin_templates($templates)
-		{
-			// Enforce array type before merging to prevent fatal errors
-			if (!is_array($templates)) {
-				$templates = array();
-			}
-
-			return array_merge($templates, $this->custom_templates);
+			// Aggressive override: Force plugin template for specific CPTs, bypassing theme hierarchy
+			add_filter('single_template', array($this, 'force_plugin_single_template'), 99999);
 		}
 
 		/**
-		 * Intercepts the WordPress template hierarchy to load the custom file from the plugin directory
-		 * if the user has selected it in the backend. Strictly isolates to singular views.
+		 * Forcibly intercepts the single template routing for specific custom post types.
+		 * Bypasses database meta checks and directly serves the plugin's single-lgl.php template.
 		 *
-		 * @param string $template The path to the default template WordPress intends to load.
-		 * @return string The overridden template path if conditions are met, otherwise the default.
+		 * @param string $template The current path to the template WordPress intends to load.
+		 * @return string The overridden template path if it matches our target CPTs, otherwise the default.
 		 */
-		public function load_plugin_template($template)
+		public function force_plugin_single_template($template)
 		{
-			global $post;
+			// Define the specific post types that must use the plugin template
+			$target_post_types = array('caravan', 'motorhome', 'campervan');
 
-			// Strict context check: Only intercept on singular views where a valid post object exists.
-			if (!is_singular() || !$post) {
-				return $template;
-			}
+			// Check if the current query is a single view for one of our target post types
+			if (is_singular($target_post_types)) {
 
-			// Retrieve the saved template assigned to this specific post
-			$saved_template = get_post_meta($post->ID, '_wp_page_template', true);
+				// Define the absolute path to the plugin's custom single template
+				$plugin_template = LGL_SHORTCODES_PATH . 'templates/single-lgl.php';
 
-			// Check if the saved template belongs to our plugin array
-			if (isset($this->custom_templates[$saved_template])) {
-				// Construct path to the plugin's /templates/ directory
-				$plugin_template = LGL_SHORTCODES_PATH . 'templates/' . $saved_template;
+				// Prioritize theme override if it exists (e.g., your-theme/lgl-shortcodes/single-lgl.php)
+				// Otherwise, strictly enforce the plugin's internal template file
+				$theme_override = locate_template('lgl-shortcodes/single-lgl.php');
+				$file_to_load = ($theme_override) ? $theme_override : $plugin_template;
 
-				// Load plugin template if it exists, otherwise fallback to theme default
-				if (file_exists($plugin_template)) {
-					return $plugin_template;
+				if (file_exists($file_to_load)) {
+					return $file_to_load;
 				}
 			}
 
+			// Return the default theme template if conditions are not met
 			return $template;
 		}
 
