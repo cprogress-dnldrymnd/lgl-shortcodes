@@ -549,4 +549,10 @@
   font-size: 16px;
   font-weight: 600; }
 
+.lgl-finance-label {
+  color: var(--lgl-tertiary);
+  font-weight: bold;
+  font-size: 16px;
+  font-family: var(--secondary-font); }
+
 /*# sourceMappingURL=main.css.map */
