@@ -50,9 +50,15 @@
             @media (max-width: 1440px) {
                 --width: 16.66666666666667%;
             }
-            @media(max-width: 1199px) {
+            @media (max-width: 1199px) {
                 --width: 33.33333333333333%;
                 border-bottom: 1px solid var(--lgl-light-gray);
+            }
+            @media (max-width: 1024px) {
+                --width: 50%;
+            }
+              @media (max-width: 575px) {
+                --width: 100%;
             }
             label {
                 font-size: 13px;

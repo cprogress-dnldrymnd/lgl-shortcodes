@@ -46,6 +46,12 @@
         .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-filter-group {
           --width: 33.33333333333333%;
           border-bottom: 1px solid var(--lgl-light-gray); } }
+      @media (max-width: 1024px) {
+        .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-filter-group {
+          --width: 50%; } }
+      @media (max-width: 575px) {
+        .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-filter-group {
+          --width: 100%; } }
       .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-filter-group label {
         font-size: 13px;
         color: var(--lgl-dark-gray);
