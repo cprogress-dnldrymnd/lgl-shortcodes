@@ -269,6 +269,9 @@
             }
             .bt-post--info-inner {
                 padding: 36px;
+                @media (max-width: 480px) {
+                    padding: 36px 20px 20px;
+                }
             }
 
             .bt-post--thumbnail {
@@ -354,6 +357,9 @@
                     font-weight: 700;
                     color: var(--lgl-secondary);
                     margin-bottom: 0;
+                    @media (max-width: 480px) {
+                        font-size: 16px;
+                    }
                 }
 
                 .bt-post--title {
@@ -370,6 +376,9 @@
                         &:hover {
                             color: var(--lgl-electric-blue);
                         }
+                    }
+                    @media (max-width: 480px) {
+                        font-size: 20px;
                     }
                 }
 
