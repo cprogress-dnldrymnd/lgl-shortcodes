@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: LGL Shortcodes
  * Plugin URI: https://digitallydisruptive.co.uk/
@@ -11,7 +10,7 @@
  */
 
 if (! defined('ABSPATH')) {
-	exit; // Prevent direct access to the file.
+    exit; // Prevent direct access to the file.
 }
 
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
@@ -20,119 +19,330 @@ define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
 
 if (! class_exists('LGL_Shortcodes')) {
 
-	/**
-	 * Main class for the LGL Shortcodes plugin.
-	 * Manages the registration, parameter parsing, and template routing of all shortcodes.
-	 */
-	class LGL_Shortcodes
-	{
+    /**
+     * Main class for the LGL Shortcodes plugin.
+     * Manages the registration, parameter parsing, and template routing of all shortcodes.
+     */
+    class LGL_Shortcodes
+    {
+        /**
+         * Initializes the plugin by hooking into the WordPress lifecycle.
+         *
+         * @return void
+         */
+        public function __construct()
+        {
+            add_action('init', array($this, 'register_shortcodes'));
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
+            
+            // AJAX endpoints for dependent dropdowns and search results
+            add_action('wp_ajax_lgl_get_models', array($this, 'ajax_get_models'));
+            add_action('wp_ajax_nopriv_lgl_get_models', array($this, 'ajax_get_models'));
+            
+            add_action('wp_ajax_lgl_fetch_results', array($this, 'ajax_fetch_results'));
+            add_action('wp_ajax_nopriv_lgl_fetch_results', array($this, 'ajax_fetch_results'));
+        }
 
-		/**
-		 * Initializes the plugin by hooking into the WordPress lifecycle.
-		 *
-		 * @return void
-		 */
-		public function __construct()
-		{
-			add_action('init', array($this, 'register_shortcodes'));
-			add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
-		}
+        /**
+         * Enqueues plugin-specific stylesheets and scripts.
+         * Utilizes the wp_enqueue_scripts hook for front-end asset loading.
+         *
+         * @return void
+         */
+        public function enqueue_assets()
+        {
+            // Enqueue Select2 dependencies
+            wp_enqueue_style('select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0');
+            wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), '4.1.0', true);
 
-		/**
-		 * Enqueues plugin-specific stylesheets and scripts.
-		 * Utilizes the wp_enqueue_scripts hook for front-end asset loading.
-		 *
-		 * @return void
-		 */
-		public function enqueue_assets()
-		{
-			// Enqueue main stylesheet
-			wp_enqueue_style(
-				'lgl-main-css',
-				LGL_SHORTCODES_URL . 'assets/css/main.css',
-				array(),
-				'1.1.0'
-			);
+            // Enqueue main stylesheet
+            wp_enqueue_style(
+                'lgl-main-css',
+                LGL_SHORTCODES_URL . 'assets/css/main.css',
+                array(),
+                '1.1.0'
+            );
 
-			// Enqueue main JavaScript file (footer loaded)
-			wp_enqueue_script(
-				'lgl-main-js',
-				LGL_SHORTCODES_URL . 'assets/js/main.js',
-				array('jquery'),
-				'1.1.0',
-				true
-			);
-		}
+            // Enqueue main JavaScript file (footer loaded)
+            wp_enqueue_script(
+                'lgl-main-js',
+                LGL_SHORTCODES_URL . 'assets/js/main.js',
+                array('jquery', 'select2-js'),
+                '1.1.0',
+                true
+            );
 
+            // Localize AJAX URL for frontend operations
+            wp_localize_script('lgl-main-js', 'lgl_ajax_obj', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce'    => wp_create_nonce('lgl_search_nonce')
+            ));
+        }
 
-		/**
-		 * Registers the defined shortcodes with the WordPress Shortcode API.
-		 * Routes callbacks to a unified template rendering method.
-		 *
-		 * @return void
-		 */
-		public function register_shortcodes()
-		{
-			// Registering the original shortcode and the new search shortcode
-			add_shortcode('lgl_search_results', array($this, 'render_shortcode'));
-			add_shortcode('lgl_search', array($this, 'render_shortcode'));
-		}
+        /**
+         * Registers the defined shortcodes with the WordPress Shortcode API.
+         * Routes callbacks to a unified template rendering method.
+         *
+         * @return void
+         */
+        public function register_shortcodes()
+        {
+            // Registering the original shortcode and the new search shortcode
+            add_shortcode('lgl_search_results', array($this, 'render_shortcode'));
+            add_shortcode('lgl_search', array($this, 'render_shortcode'));
+        }
 
-		/**
-		 * A unified callback function that processes shortcodes and routes them to external template files.
-		 * Uses the shortcode tag to determine the required template name dynamically.
-		 *
-		 * @param array  $atts          The array of attributes passed by the user.
-		 * @param string $content       The enclosed content between opening and closing shortcode tags, if any.
-		 * @param string $shortcode_tag The name of the shortcode tag currently being executed.
-		 * @return string The sanitized and formatted HTML string generated by the required template.
-		 */
-		public function render_shortcode($atts, $content = null, $shortcode_tag = '')
-		{
+        /**
+         * A unified callback function that processes shortcodes and routes them to external template files.
+         * Uses the shortcode tag to determine the required template name dynamically.
+         *
+         * @param array  $atts          The array of attributes passed by the user.
+         * @param string $content       The enclosed content between opening and closing shortcode tags, if any.
+         * @param string $shortcode_tag The name of the shortcode tag currently being executed.
+         * @return string               The sanitized and formatted HTML string generated by the required template.
+         */
+        public function render_shortcode($atts, $content = null, $shortcode_tag = '')
+        {
+            // Set default shortcode attributes. Post type default is 'post'.
+            $attributes = shortcode_atts(array(
+                'post_type' => 'post'
+            ), $atts, $shortcode_tag);
 
-			// Ensure attributes are treated as an array to prevent type errors during extraction
-			$attributes = (array) $atts;
+            // Hand over execution to the template loader
+            return $this->load_template($shortcode_tag, $attributes, $content);
+        }
 
-			// Hand over execution to the template loader
-			return $this->load_template($shortcode_tag, $attributes, $content);
-		}
+        /**
+         * Locates, isolates variables, and loads the requested template file.
+         * Prioritizes theme overrides before falling back to the default plugin template.
+         *
+         * @param string $template_name The base name of the template file (without extension).
+         * @param array  $attributes    The associative array of shortcode attributes.
+         * @param string $content       The enclosed shortcode content.
+         * @return string               The buffered HTML content rendered by the template.
+         */
+        private function load_template($template_name, $attributes, $content)
+        {
+            // 1. Define the default template path inside the plugin's /templates directory
+            $plugin_path = LGL_SHORTCODES_PATH . 'templates/' . $template_name . '.php';
 
-		/**
-		 * Locates, isolates variables, and loads the requested template file.
-		 * Prioritizes theme overrides before falling back to the default plugin template.
-		 *
-		 * @param string $template_name The base name of the template file (without extension).
-		 * @param array  $attributes    The associative array of shortcode attributes.
-		 * @param string $content       The enclosed shortcode content.
-		 * @return string The buffered HTML content rendered by the template.
-		 */
-		private function load_template($template_name, $attributes, $content)
-		{
-			// 1. Define the default template path inside the plugin's /templates directory
-			$plugin_path = LGL_SHORTCODES_PATH . 'templates/' . $template_name . '.php';
+            // 2. Check if the active theme contains an override file (e.g., your-theme/lgl-shortcodes/lgl-search.php)
+            $theme_override = locate_template('lgl-shortcodes/' . $template_name . '.php');
 
-			// 2. Check if the active theme contains an override file (e.g., your-theme/lgl-shortcodes/lgl-search.php)
-			$theme_override = locate_template('lgl-shortcodes/' . $template_name . '.php');
+            // 3. Select the correct file path prioritizing the theme override
+            $file_to_load = ($theme_override) ? $theme_override : $plugin_path;
 
-			// 3. Select the correct file path prioritizing the theme override
-			$file_to_load = ($theme_override) ? $theme_override : $plugin_path;
+            // 4. Return an HTML comment for debugging if the template does not exist
+            if (! file_exists($file_to_load)) {
+                return '';
+            }
 
-			// 4. Return an HTML comment for debugging if the template does not exist
-			if (! file_exists($file_to_load)) {
-				return '';
-			}
+            // 5. Extract attributes into individual variables for cleaner usage within the template file
+            // EXTR_SKIP prevents existing variables in this method's scope from being accidentally overwritten
+            extract($attributes, EXTR_SKIP);
 
-			// 5. Extract attributes into individual variables for cleaner usage within the template file
-			// EXTR_SKIP prevents existing variables in this method's scope from being accidentally overwritten
-			extract($attributes, EXTR_SKIP);
+            // 6. Initialize output buffering to safely capture the included file's output
+            ob_start();
+            include $file_to_load;
+            return ob_get_clean();
+        }
 
-			// 6. Initialize output buffering to safely capture the included file's output
-			ob_start();
-			include $file_to_load;
-			return ob_get_clean();
-		}
-	}
+        /**
+         * Retrieves unique meta values for a specific meta key within a given post type.
+         * Executes a direct SQL query for optimized distinct value extraction.
+         *
+         * @param string $post_type The post type to query.
+         * @param string $meta_key  The meta key to target.
+         * @return array            An array of distinct meta values.
+         */
+        public static function get_unique_meta_values($post_type, $meta_key)
+        {
+            global $wpdb;
+            
+            $query = $wpdb->prepare(
+                "SELECT DISTINCT pm.meta_value FROM {$wpdb->postmeta} pm
+                 INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+                 WHERE p.post_type = %s AND p.post_status = 'publish' 
+                 AND pm.meta_key = %s AND pm.meta_value != ''
+                 ORDER BY pm.meta_value ASC",
+                $post_type,
+                $meta_key
+            );
+            
+            return $wpdb->get_col($query);
+        }
 
-	// Instantiate the plugin architecture
-	new LGL_Shortcodes();
+        /**
+         * AJAX handler to fetch child taxonomy terms (models) based on a parent term ID (make).
+         * Returns a JSON-encoded array structured for Select2 parsing.
+         *
+         * @return void
+         */
+        public function ajax_get_models()
+        {
+            check_ajax_referer('lgl_search_nonce', 'nonce');
+
+            $parent_id = isset($_POST['make_id']) ? intval($_POST['make_id']) : 0;
+            
+            if ($parent_id <= 0) {
+                wp_send_json_success(array());
+            }
+
+            $terms = get_terms(array(
+                'taxonomy'   => 'listing-make-model',
+                'hide_empty' => false,
+                'parent'     => $parent_id,
+            ));
+
+            $results = array();
+            if (!is_wp_error($terms) && !empty($terms)) {
+                foreach ($terms as $term) {
+                    $results[] = array(
+                        'id'   => $term->term_id,
+                        'text' => $term->name
+                    );
+                }
+            }
+
+            wp_send_json_success($results);
+        }
+
+        /**
+         * AJAX handler to fetch and render the filtered search results.
+         * Compiles taxonomy and meta queries based on serialized form data.
+         *
+         * @return void
+         */
+        public function ajax_fetch_results()
+        {
+            check_ajax_referer('lgl_search_nonce', 'nonce');
+
+            $post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : 'post';
+            $form_data = array();
+            
+            // Parse serialized form data
+            if (isset($_POST['form_data'])) {
+                parse_str($_POST['form_data'], $form_data);
+            }
+
+            $args = array(
+                'post_type'      => $post_type,
+                'post_status'    => 'publish',
+                'posts_per_page' => 9, 
+                'meta_query'     => array('relation' => 'AND'),
+                'tax_query'      => array('relation' => 'AND')
+            );
+
+            // Handle Sorting if passed via sort_order dropdown (matching user markup)
+            if (!empty($form_data['sort_order'])) {
+                switch ($form_data['sort_order']) {
+                    case 'date_low':
+                        $args['orderby'] = 'date';
+                        $args['order']   = 'ASC';
+                        break;
+                    case 'price_high':
+                        $args['orderby']  = 'meta_value_num';
+                        $args['meta_key'] = 'price';
+                        $args['order']    = 'DESC';
+                        break;
+                    case 'price_low':
+                        $args['orderby']  = 'meta_value_num';
+                        $args['meta_key'] = 'price';
+                        $args['order']    = 'ASC';
+                        break;
+                    case 'date_high':
+                    default:
+                        $args['orderby'] = 'date';
+                        $args['order']   = 'DESC';
+                        break;
+                }
+            }
+
+            // Meta Queries
+            if (!empty($form_data['condition'])) {
+                $args['meta_query'][] = array(
+                    'key'     => 'condition',
+                    'value'   => sanitize_text_field($form_data['condition']),
+                    'compare' => '='
+                );
+            }
+
+            if (!empty($form_data['berth'])) {
+                $args['meta_query'][] = array(
+                    'key'     => 'berth',
+                    'value'   => sanitize_text_field($form_data['berth']),
+                    'compare' => '='
+                );
+            }
+
+            // Price Range (Min/Max)
+            $price_min = !empty($form_data['price_min']) ? floatval($form_data['price_min']) : 0;
+            $price_max = !empty($form_data['price_max']) ? floatval($form_data['price_max']) : 0;
+            
+            if ($price_min > 0 || $price_max > 0) {
+                $price_query = array(
+                    'key'  => 'price',
+                    'type' => 'NUMERIC'
+                );
+                if ($price_min > 0 && $price_max > 0) {
+                    $price_query['value']   = array($price_min, $price_max);
+                    $price_query['compare'] = 'BETWEEN';
+                } elseif ($price_min > 0) {
+                    $price_query['value']   = $price_min;
+                    $price_query['compare'] = '>=';
+                } else {
+                    $price_query['value']   = $price_max;
+                    $price_query['compare'] = '<=';
+                }
+                $args['meta_query'][] = $price_query;
+            }
+
+            // Tax Queries
+            $make_id  = !empty($form_data['listing_make']) ? intval($form_data['listing_make']) : 0;
+            $model_id = !empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
+
+            if ($model_id > 0) {
+                // If model is selected, filter by model (which inherently belongs to the make)
+                $args['tax_query'][] = array(
+                    'taxonomy' => 'listing-make-model',
+                    'field'    => 'term_id',
+                    'terms'    => $model_id
+                );
+            } elseif ($make_id > 0) {
+                // If only make is selected
+                $args['tax_query'][] = array(
+                    'taxonomy' => 'listing-make-model',
+                    'field'    => 'term_id',
+                    'terms'    => $make_id
+                );
+            }
+
+            // Execute Query
+            $query = new WP_Query($args);
+
+            ob_start();
+            
+            // Render specific block logic to maintain the exact DOM structure requested.
+            if ($query->have_posts()) {
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    // Load isolated template component for the iteration to ensure maintainability
+                    include LGL_SHORTCODES_PATH . 'templates/partials/result-item.php';
+                }
+                wp_reset_postdata();
+            } else {
+                echo '<div class="bt-no-results">No vehicles found matching your criteria.</div>';
+            }
+
+            $html = ob_get_clean();
+
+            wp_send_json_success(array(
+                'html'  => $html,
+                'count' => $query->found_posts
+            ));
+        }
+    }
+
+    // Instantiate the plugin architecture
+    new LGL_Shortcodes();
 }
