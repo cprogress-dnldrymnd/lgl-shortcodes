@@ -60,7 +60,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 'lgl-main-css',
                 LGL_SHORTCODES_URL . 'assets/css/main.css',
                 array(),
-                '1.1.0'
+                '1.1.1'
             );
 
             // Enqueue main JavaScript file (footer loaded)
@@ -68,7 +68,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 'lgl-main-js',
                 LGL_SHORTCODES_URL . 'assets/js/main.js',
                 array('jquery', 'select2-js'),
-                '1.1.0',
+                '1.1.1',
                 true
             );
 
