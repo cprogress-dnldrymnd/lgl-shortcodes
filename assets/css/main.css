@@ -456,9 +456,9 @@
     flex-wrap: wrap;
     gap: 30px;
     margin-bottom: 40px !important; }
-    #lgl-primary .lgl-holder .lgl-post--wrap .bt-post--main {
+    #lgl-primary .lgl-holder .lgl-post--wrap .lgl-post--main {
       width: calc(66.66% - 15px); }
-    #lgl-primary .lgl-holder .lgl-post--wrap .bt-post--sidebar {
+    #lgl-primary .lgl-holder .lgl-post--wrap .lgl-post--sidebar {
       width: calc(33.33% - 15px); }
 
 /*# sourceMappingURL=main.css.map */
