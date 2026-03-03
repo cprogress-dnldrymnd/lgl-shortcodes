@@ -833,7 +833,7 @@
         position: relative;
         transition: all 0.3s;
         span {
-                position: relative;
+            position: relative;
         }
         &:before {
             background: var(--lgl-color-white);
@@ -857,9 +857,21 @@
     }
 }
 
-
 .lgl-panel-item {
     &:not(.lgl-is-active) {
         display: none;
+    }
+}
+
+.lgl-title-ss {
+    display: flex;
+    gap: 16px;
+    &:before {
+        content: '';
+        width: 5px;
+        display: block;
+        height: 100%;
+        background: transparent linear-gradient(90deg, var(--lgl-color-primary) 0%, var(--lgl-color-tertiary) 100%) 0%
+            0% no-repeat padding-box;
     }
 }
