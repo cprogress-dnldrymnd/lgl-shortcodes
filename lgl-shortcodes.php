@@ -16,6 +16,7 @@ if (! defined('ABSPATH')) {
 
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
+define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
 
 if (! class_exists('LGL_Shortcodes')) {
 
@@ -48,7 +49,7 @@ if (! class_exists('LGL_Shortcodes')) {
             // Enqueue main stylesheet
             wp_enqueue_style(
                 'lgl-main-css',
-                LGL_SHORTCODES_PATH . 'assets/css/main.css',
+                LGL_SHORTCODES_URL . 'assets/css/main.css',
                 array(),
                 '1.1.0'
             );
@@ -56,7 +57,7 @@ if (! class_exists('LGL_Shortcodes')) {
             // Enqueue main JavaScript file (footer loaded)
             wp_enqueue_script(
                 'lgl-main-js',
-                LGL_SHORTCODES_PATH . 'assets/js/main.js',
+                LGL_SHORTCODES_URL . 'assets/js/main.js',
                 array('jquery'),
                 '1.1.0',
                 true
