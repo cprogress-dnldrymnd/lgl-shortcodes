@@ -216,7 +216,7 @@ get_header();
                                 <?php
                                 include LGL_SHORTCODES_PATH . 'templates/partials/lgl-meta.php';
                                 ?>
-                                <div class="lgl-post--readmore-sidebar">
+                                <div class="lgl-post--part-exchange">
                                     <a href="#">
                                         <?php echo esc_html__('Part-exchange available', 'lgl'); ?>
                                     </a>

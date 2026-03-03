@@ -539,4 +539,11 @@
 #lgl-primary {
   padding-top: 50px; }
 
+.lgl-post--part-exchange {
+  padding: 24px;
+  text-align: center;
+  color: var(--lgl-secondary);
+  font-size: 16px;
+  font-weight: 600; }
+
 /*# sourceMappingURL=main.css.map */
