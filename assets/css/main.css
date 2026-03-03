@@ -52,7 +52,7 @@
       flex-direction: row;
       flex-wrap: wrap;
       align-items: center;
-      gap: 16px; }
+      gap: 0; }
       .lgl-search-container .lgl-filter-form .lgl-price-group label {
         width: 100%;
         margin-bottom: 4px; }
