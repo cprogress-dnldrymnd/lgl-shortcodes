@@ -97,8 +97,11 @@ if (! class_exists('LGL_Shortcodes')) {
 		public function enqueue_assets()
 		{
 			// Enqueue Select2 dependencies
-			wp_enqueue_style('select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0');
-			wp_enqueue_script('select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), '4.1.0', true);
+			wp_enqueue_style('select2', LGL_SHORTCODES_URL . 'assets/libs/select2/css/select2.min.css');
+			wp_enqueue_style('slick', LGL_SHORTCODES_URL . 'assets/libs/slick/css/slick.min.css');
+
+			wp_enqueue_script('slick', LGL_SHORTCODES_URL . 'assets/libs/slick/js/slick.min.js', array('jquery'), '4.1.0', true);
+			wp_enqueue_script('select2', LGL_SHORTCODES_URL . 'assets/libs/select2/js/select2.min.js', array('jquery'), '4.1.0', true);
 
 			// Enqueue main stylesheet
 			wp_enqueue_style(

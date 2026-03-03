@@ -7,6 +7,7 @@
     $(document).ready(function () {
         search_form();
         add_to_wishlist();
+        gallery_slider();
     });
 
     /**
@@ -215,5 +216,38 @@
                 }
             });
         });
+    }
+
+    function gallery_slider() {
+        /* Gallery Slider */
+        function AutoArtGallerSlider() {
+            if ($('.js-gallery-slider').length > 0) {
+                $('.js-gallery-slider-for').slick({
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    fade: true,
+                    arrows: false,
+                    asNavFor: '.js-gallery-slider-nav',
+                    prevArrow: '<button type=\"button\" class=\"slick-prev\">Prev</button>',
+                    nextArrow: '<button type=\"button\" class=\"slick-next\">Next</button>'
+                });
+                $('.js-gallery-slider-nav').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    arrows: false,
+                    focusOnSelect: true,
+                    asNavFor: '.js-gallery-slider-for',
+                    responsive: [
+                        {
+                            breakpoint: 600,
+                            settings: {
+                                slidesToShow: 3
+                            }
+                        }
+                    ]
+                });
+            }
+        }
+
     }
 })(jQuery);
