@@ -18,7 +18,9 @@
   .lgl-search-container .lgl-filter-form {
     display: flex;
     gap: 0;
-    align-items: center; }
+    align-items: center;
+    background: #fff;
+    border-radius: 10px; }
     .lgl-search-container .lgl-filter-form .lgl-filter-group {
       display: flex;
       flex-direction: column;
@@ -81,9 +83,7 @@
   .lgl-search-container .select2-container {
     min-height: 64px;
     display: flex;
-    align-items: center;
-    padding-left: 24px;
-    padding-right: 15px; }
+    align-items: center; }
     @media (max-width: 991px) {
       .lgl-search-container .select2-container {
         padding-left: 15px; } }
