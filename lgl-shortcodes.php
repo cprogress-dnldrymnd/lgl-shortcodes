@@ -32,6 +32,13 @@ if (! class_exists('LGL_Shortcodes')) {
 		 *
 		 * @return void
 		 */
+
+		/**
+		 * Array of custom templates provided by the plugin.
+		 * Key: filename, Value: Display Name in backend.
+		 * @var array
+		 */
+		protected $custom_templates;
 		public function __construct()
 		{
 			add_action('init', array($this, 'register_shortcodes'));
@@ -47,7 +54,68 @@ if (! class_exists('LGL_Shortcodes')) {
 			add_action('wp_ajax_lgl_add_to_wishlist', array($this, 'ajax_add_to_wishlist'));
 			// Note: Wishlists usually require a logged-in user. If you want this for guests, you'd need a cookie/session approach, not user meta. 
 			// We'll leave nopriv off to enforce login, or handle it explicitly.
+
+			// Define custom templates
+			$this->custom_templates = array(
+				'single-lgl.php' => 'LGL Custom Single Template'
+			);
+
+			// Register template for specific post types (modify this array as needed)
+			$supported_post_types = array('caravan');
+			foreach ($supported_post_types as $post_type) {
+				add_filter("theme_{$post_type}_templates", array($this, 'register_plugin_templates'));
+			}
+
+			// Intercept frontend rendering to load the plugin file
+			add_filter('template_include', array($this, 'load_plugin_template'));
 		}
+
+
+		/**
+		 * Injects the plugin's custom templates into the WordPress backend 'Post Attributes' dropdown.
+		 *
+		 * @param array $templates The existing array of templates available for the post type.
+		 * @return array The merged array containing the plugin templates.
+		 */
+		public function register_plugin_templates($templates)
+		{
+			// Merge existing theme templates with our plugin templates
+			$templates = array_merge($templates, $this->custom_templates);
+			return $templates;
+		}
+
+		/**
+         * Intercepts the WordPress template hierarchy to load the custom file from the plugin directory
+         * if the user has selected it in the backend.
+         *
+         * @param string $template The path to the default template WordPress intends to load.
+         * @return string The overridden template path if conditions are met, otherwise the default.
+         */
+        public function load_plugin_template($template)
+        {
+            global $post;
+
+            // Failsafe: return default if no post context exists
+            if (!$post) {
+                return $template;
+            }
+
+            // Retrieve the saved template assigned to this specific post
+            $saved_template = get_post_meta($post->ID, '_wp_page_template', true);
+
+            // Check if the saved template belongs to our plugin array
+            if (isset($this->custom_templates[$saved_template])) {
+                // Construct path to the plugin's /templates/ directory
+                $plugin_template = LGL_SHORTCODES_PATH . 'templates/' . $saved_template;
+
+                // Load plugin template if it exists, otherwise fallback to theme default
+                if (file_exists($plugin_template)) {
+                    return $plugin_template;
+                }
+            }
+
+            return $template;
+        }
 
 		/**
 		 * Enqueues plugin-specific stylesheets and scripts.
@@ -260,157 +328,157 @@ if (! class_exists('LGL_Shortcodes')) {
 		}
 
 		/**
-         * AJAX handler to fetch and render the filtered search results and pagination UI.
-         * Compiles taxonomy and meta queries based on serialized form data.
-         *
-         * @return void
-         */
-        public function ajax_fetch_results()
-        {
-            check_ajax_referer('lgl_search_nonce', 'nonce');
+		 * AJAX handler to fetch and render the filtered search results and pagination UI.
+		 * Compiles taxonomy and meta queries based on serialized form data.
+		 *
+		 * @return void
+		 */
+		public function ajax_fetch_results()
+		{
+			check_ajax_referer('lgl_search_nonce', 'nonce');
 
-            $post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : 'post';
-            $paged     = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1; // Sanitize and set current page
-            $form_data = array();
+			$post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : 'post';
+			$paged     = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1; // Sanitize and set current page
+			$form_data = array();
 
-            // Parse serialized form data
-            if (isset($_POST['form_data'])) {
-                parse_str($_POST['form_data'], $form_data);
-            }
+			// Parse serialized form data
+			if (isset($_POST['form_data'])) {
+				parse_str($_POST['form_data'], $form_data);
+			}
 
-            $args = array(
-                'post_type'      => $post_type,
-                'post_status'    => 'publish',
-                'posts_per_page' => 9,
-                'paged'          => $paged, // Inject pagination state
-                'meta_query'     => array('relation' => 'AND'),
-                'tax_query'      => array('relation' => 'AND')
-            );
+			$args = array(
+				'post_type'      => $post_type,
+				'post_status'    => 'publish',
+				'posts_per_page' => 9,
+				'paged'          => $paged, // Inject pagination state
+				'meta_query'     => array('relation' => 'AND'),
+				'tax_query'      => array('relation' => 'AND')
+			);
 
-            // Handle Sorting if passed via sort_order dropdown (matching user markup)
-            if (!empty($form_data['sort_order'])) {
-                switch ($form_data['sort_order']) {
-                    case 'date_low':
-                        $args['orderby'] = 'date';
-                        $args['order']   = 'ASC';
-                        break;
-                    case 'price_high':
-                        $args['orderby']  = 'meta_value_num';
-                        $args['meta_key'] = 'price';
-                        $args['order']    = 'DESC';
-                        break;
-                    case 'price_low':
-                        $args['orderby']  = 'meta_value_num';
-                        $args['meta_key'] = 'price';
-                        $args['order']    = 'ASC';
-                        break;
-                    case 'date_high':
-                    default:
-                        $args['orderby'] = 'date';
-                        $args['order']   = 'DESC';
-                        break;
-                }
-            }
+			// Handle Sorting if passed via sort_order dropdown (matching user markup)
+			if (!empty($form_data['sort_order'])) {
+				switch ($form_data['sort_order']) {
+					case 'date_low':
+						$args['orderby'] = 'date';
+						$args['order']   = 'ASC';
+						break;
+					case 'price_high':
+						$args['orderby']  = 'meta_value_num';
+						$args['meta_key'] = 'price';
+						$args['order']    = 'DESC';
+						break;
+					case 'price_low':
+						$args['orderby']  = 'meta_value_num';
+						$args['meta_key'] = 'price';
+						$args['order']    = 'ASC';
+						break;
+					case 'date_high':
+					default:
+						$args['orderby'] = 'date';
+						$args['order']   = 'DESC';
+						break;
+				}
+			}
 
-            // Meta Queries
-            if (!empty($form_data['condition'])) {
-                $args['meta_query'][] = array(
-                    'key'     => 'condition',
-                    'value'   => sanitize_text_field($form_data['condition']),
-                    'compare' => '='
-                );
-            }
+			// Meta Queries
+			if (!empty($form_data['condition'])) {
+				$args['meta_query'][] = array(
+					'key'     => 'condition',
+					'value'   => sanitize_text_field($form_data['condition']),
+					'compare' => '='
+				);
+			}
 
-            if (!empty($form_data['berth'])) {
-                $args['meta_query'][] = array(
-                    'key'     => 'berth',
-                    'value'   => sanitize_text_field($form_data['berth']),
-                    'compare' => '='
-                );
-            }
+			if (!empty($form_data['berth'])) {
+				$args['meta_query'][] = array(
+					'key'     => 'berth',
+					'value'   => sanitize_text_field($form_data['berth']),
+					'compare' => '='
+				);
+			}
 
-            // Price Range (Min/Max)
-            $price_min = !empty($form_data['price_min']) ? floatval($form_data['price_min']) : 0;
-            $price_max = !empty($form_data['price_max']) ? floatval($form_data['price_max']) : 0;
+			// Price Range (Min/Max)
+			$price_min = !empty($form_data['price_min']) ? floatval($form_data['price_min']) : 0;
+			$price_max = !empty($form_data['price_max']) ? floatval($form_data['price_max']) : 0;
 
-            if ($price_min > 0 || $price_max > 0) {
-                $price_query = array(
-                    'key'  => 'price',
-                    'type' => 'NUMERIC'
-                );
-                if ($price_min > 0 && $price_max > 0) {
-                    $price_query['value']   = array($price_min, $price_max);
-                    $price_query['compare'] = 'BETWEEN';
-                } elseif ($price_min > 0) {
-                    $price_query['value']   = $price_min;
-                    $price_query['compare'] = '>=';
-                } else {
-                    $price_query['value']   = $price_max;
-                    $price_query['compare'] = '<=';
-                }
-                $args['meta_query'][] = $price_query;
-            }
+			if ($price_min > 0 || $price_max > 0) {
+				$price_query = array(
+					'key'  => 'price',
+					'type' => 'NUMERIC'
+				);
+				if ($price_min > 0 && $price_max > 0) {
+					$price_query['value']   = array($price_min, $price_max);
+					$price_query['compare'] = 'BETWEEN';
+				} elseif ($price_min > 0) {
+					$price_query['value']   = $price_min;
+					$price_query['compare'] = '>=';
+				} else {
+					$price_query['value']   = $price_max;
+					$price_query['compare'] = '<=';
+				}
+				$args['meta_query'][] = $price_query;
+			}
 
-            // Tax Queries
-            $make_id  = !empty($form_data['listing_make']) ? intval($form_data['listing_make']) : 0;
-            $model_id = !empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
+			// Tax Queries
+			$make_id  = !empty($form_data['listing_make']) ? intval($form_data['listing_make']) : 0;
+			$model_id = !empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
 
-            if ($model_id > 0) {
-                // If model is selected, filter by model (which inherently belongs to the make)
-                $args['tax_query'][] = array(
-                    'taxonomy' => 'listing-make-model',
-                    'field'    => 'term_id',
-                    'terms'    => $model_id
-                );
-            } elseif ($make_id > 0) {
-                // If only make is selected
-                $args['tax_query'][] = array(
-                    'taxonomy' => 'listing-make-model',
-                    'field'    => 'term_id',
-                    'terms'    => $make_id
-                );
-            }
+			if ($model_id > 0) {
+				// If model is selected, filter by model (which inherently belongs to the make)
+				$args['tax_query'][] = array(
+					'taxonomy' => 'listing-make-model',
+					'field'    => 'term_id',
+					'terms'    => $model_id
+				);
+			} elseif ($make_id > 0) {
+				// If only make is selected
+				$args['tax_query'][] = array(
+					'taxonomy' => 'listing-make-model',
+					'field'    => 'term_id',
+					'terms'    => $make_id
+				);
+			}
 
-            // Execute Query
-            $query = new WP_Query($args);
+			// Execute Query
+			$query = new WP_Query($args);
 
-            ob_start();
+			ob_start();
 
-            // Render specific block logic to maintain the exact DOM structure requested.
-            if ($query->have_posts()) {
-                while ($query->have_posts()) {
-                    $query->the_post();
-                    // Load isolated template component for the iteration to ensure maintainability
-                    include LGL_SHORTCODES_PATH . 'templates/partials/result-item.php';
-                }
-            } else {
-                echo '<div class="bt-no-results">No vehicles found matching your criteria.</div>';
-            }
+			// Render specific block logic to maintain the exact DOM structure requested.
+			if ($query->have_posts()) {
+				while ($query->have_posts()) {
+					$query->the_post();
+					// Load isolated template component for the iteration to ensure maintainability
+					include LGL_SHORTCODES_PATH . 'templates/partials/result-item.php';
+				}
+			} else {
+				echo '<div class="bt-no-results">No vehicles found matching your criteria.</div>';
+			}
 
-            $html = ob_get_clean();
+			$html = ob_get_clean();
 
-            // Construct Pagination HTML payload
-            $pagination_html = '';
-            if ($query->max_num_pages > 1) {
-                $pagination_html = paginate_links(array(
-                    'base'      => '%_%',
-                    'format'    => '?paged=%#%',
-                    'current'   => $paged,
-                    'total'     => $query->max_num_pages,
-                    'prev_text' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                    'next_text' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                    'type'      => 'list',
-                    'add_args'  => false
-                ));
-            }
-            wp_reset_postdata();
+			// Construct Pagination HTML payload
+			$pagination_html = '';
+			if ($query->max_num_pages > 1) {
+				$pagination_html = paginate_links(array(
+					'base'      => '%_%',
+					'format'    => '?paged=%#%',
+					'current'   => $paged,
+					'total'     => $query->max_num_pages,
+					'prev_text' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+					'next_text' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+					'type'      => 'list',
+					'add_args'  => false
+				));
+			}
+			wp_reset_postdata();
 
-            wp_send_json_success(array(
-                'html'       => $html,
-                'pagination' => $pagination_html,
-                'count'      => $query->found_posts
-            ));
-        }
+			wp_send_json_success(array(
+				'html'       => $html,
+				'pagination' => $pagination_html,
+				'count'      => $query->found_posts
+			));
+		}
 	}
 
 	// Instantiate the plugin architecture
