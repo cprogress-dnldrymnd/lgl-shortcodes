@@ -115,7 +115,7 @@ if (! class_exists('LGL_Shortcodes')) {
 			wp_enqueue_script(
 				'lgl-main-js',
 				LGL_SHORTCODES_URL . 'assets/js/main.js',
-				array('jquery', 'select2'),
+				array('jquery', 'select2', 'slick'),
 				LGL_SHORTCODES_VERSION,
 				true
 			);
