@@ -52,17 +52,6 @@
         .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="number"]::placeholder,
         .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="text"]::placeholder {
           color: #a0a0a0; }
-    .lgl-search-container .lgl-filter-form .lgl-price-group {
-      flex-direction: row;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0; }
-      .lgl-search-container .lgl-filter-form .lgl-price-group label {
-        width: 100%;
-        margin-bottom: 4px; }
-      .lgl-search-container .lgl-filter-form .lgl-price-group input {
-        flex: 1;
-        min-width: 120px; }
     .lgl-search-container .lgl-filter-form .lgl-submit-group {
       margin-top: 8px; }
       .lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit {
