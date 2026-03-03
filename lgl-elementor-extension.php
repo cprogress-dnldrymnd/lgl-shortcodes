@@ -61,11 +61,12 @@ final class LGL_Elementor_Extension
 	 * Load external theme framework
 	 *
 	 * Executes the theme-level framework load as required. 
+	 * Hooked to 'plugins_loaded' to ensure the WordPress environment is fully initialized.
 	 * Note: Using get_template_directory() creates a hard dependency between this plugin and the active theme.
 	 *
 	 * @return void
 	 */
-	private function load_theme_framework()
+	public function load_theme_framework()
 	{
 		$framework_path = get_template_directory() . '/framework/widget-load.php';
 		if (file_exists($framework_path)) {
