@@ -343,7 +343,7 @@
           gap: 13px;
           font-family: var(--secondary-font); }
           .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout .bt-post .bt-post--infor .bt-post--readmore a:hover {
-            color: var(--lgl-secondary); }
+            background-color: var(--lgl-secondary); }
           .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout .bt-post .bt-post--infor .bt-post--readmore a svg {
             width: 20px;
             height: 20px; }
