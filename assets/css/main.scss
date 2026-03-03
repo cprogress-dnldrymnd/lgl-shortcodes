@@ -2,6 +2,7 @@
 // 1. CSS Variables Implementation (Design System)
 // ==========================================================================
 :root {
+    --secondary-font: "Poppins", sans-serif;
     --lgl-light-blue-gray: #ececec;
     --lgl-white: #ffffff;
     --lgl-electric-blue: #007bff;
@@ -420,14 +421,17 @@
                     a {
                         display: flex;
                         align-items: center;
-                        justify-content: space-between;
+                        justify-content: center;
                         background-color: var(--lgl-primary);
-                        font-weight: 700;
+                        font-weight: 600;
                         text-decoration: none;
-                        font-size: 14px;
+                        font-size: 16px;
                         text-transform: uppercase;
                         transition: color 0.3s ease;
                         color: var(--lgl-accent-2);
+                        padding: 20px;
+                        gap: 13px;
+                        font-family: var(--secondary-font);
                         &:hover {
                             color: var(--lgl-electric-blue);
                         }
