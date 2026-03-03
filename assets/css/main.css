@@ -686,5 +686,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px; }
+  .lgl-meta-list .lgl-meta-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0; }
 
 /*# sourceMappingURL=main.css.map */
