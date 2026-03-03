@@ -682,6 +682,7 @@
     border: 1px solid var(--lgl-gray);
     border-radius: 0px 0px 25px 25px;
     overflow: hidden;
+    margin-bottom: 15px;
 }
 
 .lgl-sale-icon-btn {
@@ -731,7 +732,6 @@
     font-size: 16px;
     line-height: 1;
     font-weight: 600;
-    margin-bottom: 15px;
 }
 
 .lgl-finance-label {
@@ -772,5 +772,24 @@
     font-weight: bold;
     border-radius: 10px;
     text-align: center;
-    width: 100%;
+    border: 1px solid;
+    &.lgl-btn-secondary {
+        background-color: var(--lgl-secondary);
+        color: var(--lgl-tertiary);
+        border-color: var(--lgl-secondary);
+    }
+    &.lgl-btn-primary {
+        background-color: var(--lgl-primary);
+        color: var(--lgl-tertiary);
+        border-color: var(--lgl-primary);
+    }
+    &.lgl-btn-accent {
+        background-color: var(--lgl-accent);
+        color: var(--lgl-secondary);
+        border-color: var(--lgl-accent);
+    }
+    &.lgl-btn-outline {
+        color: var(--lgl-secondary);
+        border-color: var(--lgl-secondary);
+    }
 }

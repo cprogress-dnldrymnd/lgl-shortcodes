@@ -243,7 +243,7 @@ $post_id = get_the_ID();
                                     <?php echo esc_html__('FINANCE CALCULATOR', 'lgl'); ?>
                                 </a>
 
-                                <a class="lgl-btn lgl-btn-primary" href="#lgl-tab-overview">
+                                <a class="lgl-btn lgl-btn-accent" href="#lgl-tab-overview">
                                     <?php echo esc_html__('ENQUIRE NOW', 'lgl'); ?>
                                 </a>
 
