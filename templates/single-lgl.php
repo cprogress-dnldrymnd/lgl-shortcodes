@@ -24,7 +24,7 @@ $post_id = get_the_ID();
 <main id="lgl-primary" class="lgl-site-main single-lgl">
     <div class="lgl-holder">
         <?php
-        $interior_features = get_field('car_interior_features');
+        $feature = get_field('car_feature');
         $exterior_features = get_field('car_exterior_features'); // <-- make sure your ACF field name matches this
         $floor_plan        = get_field('car_floor_plan');
         $warranty          = get_field('car_warranty');
@@ -67,6 +67,7 @@ $post_id = get_the_ID();
         $mileage = get_post_meta($post_id, 'mileage', true);
         $year = get_post_meta($post_id, 'year', true);
         $condition = get_post_meta($post_id, 'condition', true);
+        $feature = get_post_meta($post_id, 'feature', true);
 
         ?>
         <article <?php post_class('lgl-post'); ?>>
@@ -336,16 +337,12 @@ $post_id = get_the_ID();
                             <span><?php echo esc_html__('Description', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
-                    <?php if (!empty($interior_features)) { ?>
+                    <?php if (!empty($feature)) { ?>
                         <a href="#bt_panel_interior" class="lgl-nav-item">
                             <span><?php echo esc_html__('Interior features', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
-                    <?php if (!empty($exterior_features)) { ?>
-                        <a href="#bt_panel_exterior" class="lgl-nav-item">
-                            <span><?php echo esc_html__('Exterior features', 'lgl'); ?></span>
-                        </a>
-                    <?php } ?>
+                
                     <?php if (!empty($floor_plan)) { ?>
                         <a href="#bt_panel_floorplan" class="lgl-nav-item">
                             <span><?php echo esc_html__('Floor plan', 'lgl'); ?></span>
@@ -560,14 +557,14 @@ $post_id = get_the_ID();
                         </div>
                     <?php } ?>
 
-                    <?php if (!empty($interior_features)) { ?>
+                    <?php if (!empty($feature)) { ?>
                         <div id="bt_panel_interior" class="lgl-panel-item lgl-panel-interior">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
                                     <span><?php echo esc_html__('Interior features', 'lgl'); ?></span>
                                 </h3>
                                 <div class="lgl-content-ss">
-                                    <?php echo wp_kses_post($interior_features); ?>
+                                    <?php echo wp_kses_post($feature); ?>
                                 </div>
                             </div>
                         </div>
