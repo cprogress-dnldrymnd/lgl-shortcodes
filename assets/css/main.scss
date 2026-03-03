@@ -648,3 +648,17 @@
         }
     }
 }
+
+.lgl-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0px;
+}
+.lgl-sale-card {
+    background: var(--lgl-secondary);
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    padding: 40px 40px 0px 0px;
+}
