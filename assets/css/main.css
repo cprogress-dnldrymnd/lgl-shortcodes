@@ -186,7 +186,7 @@
         border-color: #f1f1f1; }
   .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(418px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(318px, 1fr));
     gap: 24px;
     transition: opacity 0.3s ease; }
     @media (max-width: 480px) {
