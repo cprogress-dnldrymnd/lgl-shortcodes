@@ -68,8 +68,25 @@ if (! class_exists('LGL_Shortcodes')) {
 
 			// Intercept frontend rendering to load the plugin file
 			add_filter('template_include', array($this, 'load_plugin_template'));
-		}
 
+			// Inject page-attributes support into the caravan CPT
+			add_action('init', array($this, 'add_cpt_support'), 20);
+		}
+		
+		/**
+		 * Appends additional feature support to externally registered custom post types.
+		 * Specifically injects 'page-attributes' into the 'caravan' CPT to enable the 
+		 * WordPress backend template selection dropdown. Runs at a late init priority.
+		 *
+		 * @return void
+		 */
+		public function add_cpt_support()
+		{
+			// Verify the post type exists before attempting to modify it
+			if (post_type_exists('caravan')) {
+				add_post_type_support('caravan', 'page-attributes');
+			}
+		}
 
 		/**
 		 * Injects the plugin's custom templates into the WordPress backend 'Post Attributes' dropdown.
