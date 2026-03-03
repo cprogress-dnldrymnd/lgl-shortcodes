@@ -30,7 +30,7 @@ foreach ($schema as $key => $data) {
 
         $output .= sprintf(
             '<div class="lgl-meta-item %1$s">
-            <span class="lgl-meta-icon-label">%2$s</span>
+            <span class="lgl-meta-icon-label">
                     %2$s
                     <span class="lgl-label">%3$s</span></span><span class="lgl-value">%4$s</span>
                 </div>',
