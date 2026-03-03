@@ -57,7 +57,7 @@
             @media (max-width: 1024px) {
                 --width: 50%;
             }
-              @media (max-width: 575px) {
+            @media (max-width: 575px) {
                 --width: 100%;
             }
             label {
@@ -327,10 +327,13 @@
                             color 0.3s ease,
                             transform 0.2s ease;
 
-                        &:hover,
-                        &.added {
+                        &:hover {
                             color: var(--lgl-electric-blue);
                             transform: scale(1.05);
+                        }
+                        &.added {
+                            color: var(--lgl-accent-2);
+                            background: var(--lgl-secondary);
                         }
 
                         svg {
