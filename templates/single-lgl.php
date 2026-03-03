@@ -19,7 +19,7 @@ get_header();
     <?php var_dump(get_post_meta(get_the_ID())); ?>
 </pre>
 
-<main id="lgl-primary" class="lgl-site-main">
+<main id="lgl-primary" class="lgl-site-main single-lgl">
     <div class="lgl-holder">
         <?php
         $interior_features = get_field('car_interior_features');

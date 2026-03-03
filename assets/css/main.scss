@@ -262,7 +262,7 @@
     // Grid Architecture
     .lgl-grid-layout.lgl-grid-layout {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(318px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(418px, 1fr));
         gap: 24px;
         transition: opacity 0.3s ease; // For AJAX loading state
         @media (max-width: 480px) {
@@ -599,7 +599,7 @@
     }
 }
 
-.lgl-holder {
+.single-lgl .lgl-holder {
     padding-left: 20px;
     padding-right: 20px;
     max-width: 1300px;
