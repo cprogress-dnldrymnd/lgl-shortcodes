@@ -7,6 +7,19 @@
 
 $conditions = LGL_Shortcodes::get_unique_meta_values($post_type, 'condition');
 $berths     = LGL_Shortcodes::get_unique_meta_values($post_type, 'berth');
+$raw_prices = LGL_Shortcodes::get_unique_meta_values($post_type, 'price');
+
+// Sanitize and sort prices numerically to ensure correct sequential display
+$prices = array();
+if (!empty($raw_prices)) {
+    foreach ($raw_prices as $price) {
+        if (is_numeric($price)) {
+            $prices[] = (float) $price;
+        }
+    }
+}
+$prices = array_unique($prices);
+sort($prices, SORT_NUMERIC);
 
 // Fetch top-level terms for the 'Make'
 $makes = get_terms(array(
@@ -34,7 +47,7 @@ $makes = get_terms(array(
             <label for="lgl_model">Model</label>
             <select name="listing_model" id="lgl_model" class="lgl-select2" data-placeholder="Select Model" disabled>
                 <option value="">Select Make First</option>
-                </select>
+            </select>
         </div>
 
         <div class="lgl-filter-group">
@@ -58,8 +71,19 @@ $makes = get_terms(array(
         </div>
 
         <div class="lgl-filter-group lgl-price-group">
-            <input type="number" name="price_min" id="lgl_price_min" placeholder="Min Price">
-            <input type="number" name="price_max" id="lgl_price_max" placeholder="Max Price">
+            <select name="price_min" id="lgl_price_min" class="lgl-select2" data-placeholder="Min Price">
+                <option value="">Min Price</option>
+                <?php foreach ($prices as $price) : ?>
+                    <option value="<?php echo esc_attr($price); ?>"><?php echo esc_html('$' . number_format($price, 0)); ?></option>
+                <?php endforeach; ?>
+            </select>
+            
+            <select name="price_max" id="lgl_price_max" class="lgl-select2" data-placeholder="Max Price">
+                <option value="">Max Price</option>
+                <?php foreach ($prices as $price) : ?>
+                    <option value="<?php echo esc_attr($price); ?>"><?php echo esc_html('$' . number_format($price, 0)); ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div class="lgl-filter-group lgl-submit-group">
