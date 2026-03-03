@@ -108,8 +108,10 @@ jQuery(document).ready(function ($) {
                 if (response.success) {
                     if (response.data.status === 'added') {
                         $btn.addClass('added');
+                        alert('Added to wishlist!');
                     } else if (response.data.status === 'removed') {
                         $btn.removeClass('added');
+                        alert('Removed from wishlist!');
                     }
                 } else {
                     alert('Error updating wishlist: ' + (response.data || 'Unknown error.'));
