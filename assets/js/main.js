@@ -8,8 +8,19 @@
         search_form();
         add_to_wishlist();
         gallery_slider();
+        tabs();
     });
 
+
+    function tabs() {
+        if ($('.lgl-tabs-js').length > 0) {
+            $('.lgl-tabs-js .lgl-nav-item').on('click', function (e) {
+                e.preventDefault();
+                $(this).addClass('lgl-is-active').siblings().removeClass('lgl-is-active');
+                $($.attr(this, 'href')).addClass('lgl-is-active').siblings().removeClass('lgl-is-active');
+            });
+        }
+    }
     /**
          * Initializes the search form features.
          * Binds Select2, handles dependent make/model dropdowns, and manages the AJAX submission and pagination UI.
