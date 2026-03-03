@@ -131,7 +131,7 @@ function add_to_wishlist() {
 
         $btn.addClass('processing');
 
-        $.ajax({
+        jQuery.ajax({
             url: lgl_ajax_obj.ajax_url,
             type: 'POST',
             data: {
