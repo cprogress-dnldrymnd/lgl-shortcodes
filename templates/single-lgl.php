@@ -175,7 +175,7 @@ get_header();
                                         </a>
 
 
-                                        <a class="lgl-icon-btn lgl-wishlist-btn" href="#"  data-title="<?php echo get_the_title(); ?>" data-id="<?php echo get_the_ID(); ?>">
+                                        <a class="lgl-icon-btn lgl-wishlist-btn" href="#" data-title="<?php echo get_the_title(); ?>" data-id="<?php echo get_the_ID(); ?>">
                                             <svg width="25" height="25" viewBox="0 0 25 25" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M14.9916 18.8679C14.3066 19.4224 13.4266 19.7282 12.5129 19.7282C11.6004 19.7282 10.7179 19.4236 10.0054 18.8512C5.51289 15.2466 2.65289 13.3342 2.50414 9.41186C2.34789 5.26103 7.12289 3.74375 10.0504 7.15438C10.6429 7.84341 11.5329 8.2385 12.4929 8.2385C13.4616 8.2385 14.3579 7.83864 14.9516 7.14128C17.8154 3.78539 22.7179 5.21462 22.4941 9.53324C22.2941 13.3747 19.3241 15.3585 14.9916 18.8679ZM12.9841 5.72634C12.8616 5.87033 12.6766 5.94292 12.4929 5.94292C12.3129 5.94292 12.1341 5.87271 12.0141 5.73348C7.58539 0.574693 -0.234601 3.14396 0.0053982 9.49159C0.196648 14.5433 3.95664 17.0471 8.38414 20.5994C9.56788 21.549 11.0404 22.0238 12.5129 22.0238C13.9891 22.0238 15.4641 21.5466 16.6454 20.5898C21.0241 17.0424 24.7366 14.5552 24.9904 9.64154C25.3279 3.1523 17.4016 0.546134 12.9841 5.72634Z" />
                                             </svg>
@@ -213,68 +213,10 @@ get_header();
                             ?>
 
                             <div class="lgl-sale-meta-bottom">
-                                <div class="lgl-post--meta">
-                                    <div class="lgl-post--meta-row">
 
-                                        <div class="lgl-post--meta-col">
-                                            <div class="lgl-post--meta-item lgl-post--mileage">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15.692" viewBox="0 0 17 15.692">
-                                                    <g id="Icon_ionic-ios-calendar" data-name="Icon ionic-ios-calendar" transform="translate(0 0)">
-                                                        <path id="Path_119" data-name="Path 119" d="M18.74,6.75H17.106v.981a.328.328,0,0,1-.327.327h-.654a.328.328,0,0,1-.327-.327V6.75H7.952v.981a.328.328,0,0,1-.327.327H6.971a.328.328,0,0,1-.327-.327V6.75H5.01A1.639,1.639,0,0,0,3.375,8.385V19.5A1.639,1.639,0,0,0,5.01,21.135H18.74A1.639,1.639,0,0,0,20.375,19.5V8.385A1.639,1.639,0,0,0,18.74,6.75Zm.327,12.26a.82.82,0,0,1-.817.817H5.5a.82.82,0,0,1-.817-.817V11.654a.328.328,0,0,1,.327-.327H18.74a.328.328,0,0,1,.327.327Z" transform="translate(-3.375 -5.442)" fill="#00235d" />
-                                                        <path id="Path_120" data-name="Path 120" d="M10.308,4.827A.328.328,0,0,0,9.981,4.5H9.327A.328.328,0,0,0,9,4.827v.981h1.308Z" transform="translate(-5.731 -4.5)" fill="#00235d" />
-                                                        <path id="Path_121" data-name="Path 121" d="M26.058,4.827a.328.328,0,0,0-.327-.327h-.654a.328.328,0,0,0-.327.327v.981h1.308Z" transform="translate(-12.327 -4.5)" fill="#00235d" />
-                                                    </g>
-                                                </svg>
-
-                                                <span class="lgl-label"><?php echo esc_html__('Year', 'autoart'); ?></span>
-                                                <span class="lgl-value"><?php echo !empty($year) ? esc_html($year) : esc_html__('N/A', 'autoart'); ?></span>
-                                            </div>
-                                        </div>
-
-                                        <div class="lgl-post--meta-col">
-                                            <div class="lgl-post--meta-item lgl-post--fuel-type">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14.871" height="16.995" viewBox="0 0 14.871 16.995">
-                                                    <path id="Icon_fa-regular-user" data-name="Icon fa-regular-user" d="M10.091,4.249A2.656,2.656,0,1,0,7.436,6.9,2.656,2.656,0,0,0,10.091,4.249Zm-6.9,0A4.249,4.249,0,1,1,7.436,8.5,4.249,4.249,0,0,1,3.187,4.249ZM1.636,15.4h11.6a4.327,4.327,0,0,0-4.282-3.718H5.919A4.327,4.327,0,0,0,1.636,15.4ZM0,16.01a5.917,5.917,0,0,1,5.919-5.919H8.952a5.917,5.917,0,0,1,5.919,5.919.986.986,0,0,1-.986.986H.986A.986.986,0,0,1,0,16.01Z" fill="#00235d" />
-                                                </svg>
-
-                                                <span class="lgl-label"><?php echo esc_html__('Berth', 'autoart'); ?></span>
-                                                <span class="lgl-value">
-                                                    <?php
-                                                    if (!empty($berth_terms) && !is_wp_error($berth_terms)) {
-                                                        $t = reset($berth_terms);
-                                                        echo esc_html($t->name);
-                                                    } else {
-                                                        echo esc_html__('N/A', 'autoart');
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="lgl-post--meta-col">
-                                            <div class="lgl-post--meta-item lgl-post--transmission">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="17.368" height="13.646" viewBox="0 0 17.368 13.646">
-                                                    <g id="noun-mileage-4955087" transform="translate(-2 -5)">
-                                                        <g id="Group_1562" data-name="Group 1562" transform="translate(2 5)">
-                                                            <path id="Path_1150" data-name="Path 1150" d="M99.266,110.3h1.215a.62.62,0,1,0,0-1.241H99.266A7.409,7.409,0,0,1,101,104.879l.858.858a.62.62,0,0,0,.877-.877l-.858-.858a7.411,7.411,0,0,1,4.185-1.736v1.215a.62.62,0,1,0,1.241,0v-1.215A7.409,7.409,0,0,1,111.489,104l-.858.858a.62.62,0,0,0,.877.877l.858-.858a7.411,7.411,0,0,1,1.736,4.185h-1.215a.62.62,0,1,0,0,1.241H114.1a7.392,7.392,0,0,1-1.146,3.387.62.62,0,1,0,1.045.67,8.684,8.684,0,1,0-14.634,0,.62.62,0,1,0,1.045-.67A7.392,7.392,0,0,1,99.266,110.3Z" transform="translate(-98 -101)" fill="#00235d" fill-rule="evenodd" />
-                                                            <path id="Path_1151" data-name="Path 1151" d="M111.2,114.753a1.863,1.863,0,1,0,1.074.621l1.988-3.443a.62.62,0,1,0-1.074-.62Zm-.34,1.21a.62.62,0,1,1-.62.62A.621.621,0,0,1,110.861,115.962Z" transform="translate(-102.177 -104.797)" fill="#00235d" fill-rule="evenodd" />
-                                                        </g>
-                                                    </g>
-                                                </svg>
-
-                                                <span class="lgl-label"><?php echo esc_html__('Mileage', 'autoart'); ?></span>
-                                                <span class="lgl-value">
-                                                    <?php echo !empty($mileage) ? esc_html(number_format((float)$mileage, 0)) . esc_html__(' km', 'autoart') : esc_html__('N/A', 'autoart'); ?>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
+                                <?php
+                                include LGL_SHORTCODES_PATH . 'templates/partials/lgl-meta.php';
+                                ?>
                                 <div class="lgl-post--readmore-sidebar">
                                     <a href="#">
                                         <?php echo esc_html__('Part-exchange available', 'autoart'); ?>
