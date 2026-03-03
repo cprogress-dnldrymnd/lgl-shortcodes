@@ -695,7 +695,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 15px 0;
-    font-size: 16px; }
+    font-size: 16px;
+    border-bottom: 1px solid var(--lgl-color-gray); }
     .lgl-meta-list .lgl-meta-item .lgl-meta-icon-label {
       display: flex;
       align-items: center;
