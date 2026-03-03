@@ -119,7 +119,7 @@ function add_to_wishlist() {
     }
 
     // Handle Wishlist Click
-    jQuery(document).on('click', '.bt-car-wishlist-btn', function (e) {
+    jQuery(document).on('click', '.lgl-wishlist-btn', function (e) {
         e.preventDefault();
 
         let $btn = jQuery(this);
