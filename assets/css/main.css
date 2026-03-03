@@ -175,6 +175,8 @@
       transition: box-shadow 0.3s ease, transform 0.3s ease; }
       .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout .bt-post:hover {
         box-shadow: 0 12px 24px rgba(25, 42, 62, 0.08); }
+      .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout .bt-post .bt-post--info-inner {
+        padding: 36px; }
       .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout .bt-post .bt-post--thumbnail {
         position: relative;
         aspect-ratio: 16/10;
