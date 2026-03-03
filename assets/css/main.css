@@ -565,7 +565,7 @@
   font-size: 16px;
   font-family: var(--secondary-font); }
 
-.lgl-condition {
+.lgl-condition-tag {
   background-color: var(--lgl-accent);
   color: var(--lgl-secondary);
   line-height: 1;
@@ -575,7 +575,7 @@
   font-weight: 600;
   font-family: var(--secondary-font);
   position: relative; }
-  .lgl-condition:before {
+  .lgl-condition-tag:before {
     content: "";
     width: 30px;
     position: absolute;
