@@ -209,7 +209,7 @@
     width: 100%;
 
     // Topbar Controls (Count & Sorting)
-    .bt-car-topbar {
+    .lgl-topbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -217,12 +217,12 @@
         padding-bottom: 40px;
         margin-bottom: 50px;
 
-        .bt-car-results-block {
+        .lgl-results-block {
             color: var(--lgl-dark-gray);
             font-size: 16px;
         }
 
-        .bt-car-sort-block {
+        .lgl-sort-block {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -238,7 +238,7 @@
     }
 
     // Grid Architecture
-    .bt-car-grid-layout.bt-car-grid-layout {
+    .lgl-grid-layout.lgl-grid-layout {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 32px;
