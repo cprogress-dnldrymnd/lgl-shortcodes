@@ -663,6 +663,12 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     padding: 25px;
     color: var(--lgl-white);
+    .lgl-wishlist-btn {
+        &.added {
+            color: var(--lgl-secondary) !important;
+            background: var(--lgl-accent) !important;
+        }
+    }
 }
 .lgl-sale-meta-bottom {
     background: var(--lgl-white);
