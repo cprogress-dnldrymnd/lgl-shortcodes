@@ -423,8 +423,8 @@
       font-family: var(--primary-font); }
       .lgl-pagination-wrap .page-numbers li a.current,
       .lgl-pagination-wrap .page-numbers li span.current {
-        background-color: var(--lgl-primary);
-        color: var(--lgl-white);
+        background-color: var(--lgl-accent);
+        color: var(--lgl-primary);
         box-shadow: 0 4px 10px rgba(0, 55, 147, 0.2); }
       .lgl-pagination-wrap .page-numbers li a:hover:not(.current),
       .lgl-pagination-wrap .page-numbers li span:hover:not(.current) {

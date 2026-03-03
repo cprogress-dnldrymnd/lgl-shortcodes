@@ -571,8 +571,8 @@
                 font-family: var(--primary-font);
 
                 &.current {
-                    background-color: var(--lgl-primary);
-                    color: var(--lgl-white);
+                    background-color: var(--lgl-accent);
+                    color: var(--lgl-primary);
                     box-shadow: 0 4px 10px rgba(0, 55, 147, 0.2);
                 }
 
