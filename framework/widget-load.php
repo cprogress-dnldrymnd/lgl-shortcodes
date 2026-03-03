@@ -1,4 +1,7 @@
 <?php
+
+namespace LGLArtElementorWidgets;
+
 /**
  * Class ElementorWidgets
  *

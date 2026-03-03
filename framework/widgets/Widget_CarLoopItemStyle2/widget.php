@@ -1,5 +1,5 @@
 <?php
-namespace AutoArtElementorWidgets\Widgets\CarLoopItemStyle2;
+namespace LGLArtElementorWidgets\Widgets\CarLoopItemStyle2;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;

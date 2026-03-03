@@ -1,5 +1,5 @@
 <?php
-namespace AutoArtElementorWidgets\Widgets\CarsSearch;
+namespace LGLArtElementorWidgets\Widgets\CarsSearch;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;

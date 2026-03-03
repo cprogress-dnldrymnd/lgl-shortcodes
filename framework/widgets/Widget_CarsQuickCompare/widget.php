@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoArtElementorWidgets\Widgets\CarsQuickCompare;
+namespace LGLArtElementorWidgets\Widgets\CarsQuickCompare;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;

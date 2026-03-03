@@ -1,5 +1,5 @@
 <?php
-namespace AutoArtElementorWidgets\Widgets\CarsCompare;
+namespace LGLArtElementorWidgets\Widgets\CarsCompare;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;

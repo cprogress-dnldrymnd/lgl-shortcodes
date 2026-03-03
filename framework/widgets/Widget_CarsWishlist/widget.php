@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoArtElementorWidgets\Widgets\CarsWishlist;
+namespace LGLArtElementorWidgets\Widgets\CarsWishlist;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;

@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoArtElementorWidgets\Widgets\CarsGridList;
+namespace LGLArtElementorWidgets\Widgets\CarsGridList;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
