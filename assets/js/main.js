@@ -64,17 +64,24 @@
             e.preventDefault();
 
             let href = $(this).attr('href');
+
+            // Extract the page number using regex
             let match = href.match(/paged=(\d+)/);
 
+            // If match is found, parse it. If null (WordPress stripped it for Page 1), default to 1.
             if (match) {
                 currentPage = parseInt(match[1], 10);
-                execute_search();
-
-                // UX: Scroll back to top of results when paginating
-                $('html, body').animate({
-                    scrollTop: $('.lgl-results-wrapper').offset().top - 40
-                }, 400);
+            } else {
+                currentPage = 1;
             }
+
+            // Execute the AJAX fetch with the updated page state
+            execute_search();
+
+            // UX: Scroll back to top of results when paginating
+            $('html, body').animate({
+                scrollTop: $('.lgl-results-wrapper').offset().top - 40
+            }, 400);
         });
 
         /**
