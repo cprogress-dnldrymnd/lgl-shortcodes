@@ -1,87 +1,300 @@
-/*
-Error: Undefined variable: "$break-md".
-        on line 127 of main.scss
+:root {
+  --lgl-c-light-blue-grey: #ececec;
+  --lgl-c-deep-dark-blue: #192a3e;
+  --lgl-c-pure-white: #ffffff;
+  --lgl-c-strong-blue: #003793;
+  --lgl-c-electric-blue: #007bff;
+  --lgl-c-dark-grey-text: #3d3d3d;
+  --lgl-c-medium-light-grey: #e8ecee;
+  --lgl-c-soft-grey: #f5f5f5;
+  --lgl-c-input-border: #e8ecee; }
 
-122:         display: flex;
-123:         align-items: center;
-124:         padding-left: 24px;
-125:         padding-right: 15px;
-126: 
-127:         @media (max-width: $break-md) {
-128:             padding-left: 15px;
-129:         }
-130: 
-131:         @media (max-width: 640.98px) {
-132:             min-height: 48px;
+.lgl-search-container {
+  padding: 32px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  background-color: var(--lgl-c-strong-blue);
+  padding: 30px; }
+  .lgl-search-container .lgl-filter-form {
+    display: flex;
+    gap: 0;
+    align-items: center; }
+    .lgl-search-container .lgl-filter-form .lgl-filter-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center; }
+      .lgl-search-container .lgl-filter-form .lgl-filter-group label {
+        font-size: 13px;
+        color: var(--lgl-c-dark-grey-text);
+        margin-bottom: 8px;
+        font-weight: 500;
+        opacity: 0.8;
+        display: none; }
+      .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="number"],
+      .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="text"] {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid var(--lgl-c-input-border);
+        border-radius: 6px;
+        background-color: var(--lgl-c-soft-grey);
+        color: var(--lgl-c-dark-grey-text);
+        font-size: 14px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="number"]:focus,
+        .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="text"]:focus {
+          border-color: var(--lgl-c-electric-blue);
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); }
+        .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="number"]::placeholder,
+        .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="text"]::placeholder {
+          color: #a0a0a0; }
+    .lgl-search-container .lgl-filter-form .lgl-price-group {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0; }
+      .lgl-search-container .lgl-filter-form .lgl-price-group label {
+        width: 100%;
+        margin-bottom: 4px; }
+      .lgl-search-container .lgl-filter-form .lgl-price-group input {
+        flex: 1;
+        min-width: 120px; }
+    .lgl-search-container .lgl-filter-form .lgl-submit-group {
+      margin-top: 8px; }
+      .lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit {
+        background-color: var(--lgl-c-strong-blue);
+        color: var(--lgl-c-pure-white);
+        border: none;
+        padding: 16px 32px;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        width: fit-content; }
+        .lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit:hover {
+          background-color: var(--lgl-c-deep-dark-blue); }
+        .lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit:active {
+          transform: translateY(1px); }
+  .lgl-search-container .select2-container {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    padding-right: 15px; }
+    @media (max-width: 991px) {
+      .lgl-search-container .select2-container {
+        padding-left: 15px; } }
+    @media (max-width: 767px) {
+      .lgl-search-container .select2-container {
+        min-height: 48px; } }
+    .lgl-search-container .select2-container .selection {
+      height: 64px;
+      width: 100%; }
+      @media (max-width: 767px) {
+        .lgl-search-container .select2-container .selection {
+          height: 48px; } }
+    .lgl-search-container .select2-container .select2-selection--single {
+      height: 64px;
+      gap: 18px;
+      padding: 0;
+      justify-content: flex-start;
+      gap: 0;
+      border: none;
+      border-radius: 0; }
+      @media (max-width: 767px) {
+        .lgl-search-container .select2-container .select2-selection--single {
+          height: 48px; } }
+      @media (max-width: 767px) {
+        .lgl-search-container .select2-container .select2-selection--single {
+          justify-content: space-between; } }
+    @media (max-width: 767px) {
+      .lgl-search-container .select2-container .select2-selection__arrow {
+        width: 20px;
+        height: 48px; } }
+    .lgl-search-container .select2-container .select2-selection__rendered {
+      padding: 0;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400; }
+  .lgl-search-container .select2-container--default {
+    width: 100% !important; }
+    .lgl-search-container .select2-container--default .select2-selection--single {
+      height: 50px;
+      border: 1px solid var(--lgl-c-input-border);
+      border-radius: 6px;
+      background-color: var(--lgl-c-soft-grey);
+      display: flex;
+      align-items: center; }
+      .lgl-search-container .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: var(--lgl-c-dark-grey-text);
+        font-size: 14px;
+        padding-left: 16px;
+        line-height: normal; }
+      .lgl-search-container .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 100%;
+        right: 12px; }
+        .lgl-search-container .select2-container--default .select2-selection--single .select2-selection__arrow b {
+          border-color: var(--lgl-c-dark-grey-text) transparent transparent transparent;
+          border-width: 5px 4px 0 4px; }
+    .lgl-search-container .select2-container--default.select2-container--open .select2-selection--single {
+      border-color: var(--lgl-c-electric-blue); }
 
-Backtrace:
-main.scss:127
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/script/tree/variable.rb:49:in `_perform'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/script/tree/node.rb:50:in `perform'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:551:in `block in run_interp_no_strip'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:549:in `map'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:549:in `run_interp_no_strip'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:556:in `run_interp'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:521:in `visit_media'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:79:in `block in with_base'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:135:in `with_frame'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:79:in `with_base'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:158:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:440:in `block (2 levels) in visit_rule'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:440:in `map'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:440:in `block in visit_rule'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:438:in `visit_rule'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:79:in `block in with_base'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:135:in `with_frame'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:79:in `with_base'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:158:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:440:in `block (2 levels) in visit_rule'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:440:in `map'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:440:in `block in visit_rule'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:438:in `visit_rule'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:79:in `block in with_base'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:135:in `with_frame'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/stack.rb:79:in `with_base'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:158:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:52:in `map'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:52:in `visit_children'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:36:in `block in visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:157:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/visitors/perform.rb:10:in `visit'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/root_node.rb:36:in `css_tree'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/engine.rb:389:in `_render_with_sourcemap'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/engine.rb:307:in `render_with_sourcemap'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/plugin/compiler.rb:462:in `update_stylesheet'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/plugin/compiler.rb:209:in `each'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/plugin/compiler.rb:443:in `on_file_changed'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-3.7.4/lib/sass/plugin/compiler.rb:320:in `block in watch'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/event/config.rb:23:in `call'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:115:in `_process_changes'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:19:in `block in loop_for'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:15:in `loop'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:15:in `loop_for'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/event/loop.rb:84:in `_wait_for_changes'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/event/loop.rb:42:in `block in setup'
-C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/sass-listen-4.0.0/lib/sass-listen/internals/thread_pool.rb:6:in `block in add'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: Undefined variable: \"$break-md\".\A         on line 127 of main.scss\A \A 122:         display: flex;\A 123:         align-items: center;\A 124:         padding-left: 24px;\A 125:         padding-right: 15px;\A 126: \A 127:         @media (max-width: $break-md) {\A 128:             padding-left: 15px;\A 129:         }\A 130: \A 131:         @media (max-width: 640.98px) {\A 132:             min-height: 48px;"; }
+.lgl-results-wrapper {
+  width: 100%; }
+  .lgl-results-wrapper .bt-car-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--lgl-c-medium-light-grey);
+    padding-bottom: 16px;
+    margin-bottom: 32px; }
+    .lgl-results-wrapper .bt-car-topbar .bt-car-results-block {
+      color: var(--lgl-c-dark-grey-text);
+      font-size: 14px;
+      opacity: 0.7; }
+    .lgl-results-wrapper .bt-car-topbar .bt-car-sort-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--lgl-c-dark-grey-text); }
+      .lgl-results-wrapper .bt-car-topbar .bt-car-sort-block .bt-sort-title {
+        opacity: 0.7; }
+      .lgl-results-wrapper .bt-car-topbar .bt-car-sort-block .select2-container--default .select2-selection--single {
+        height: 40px;
+        background-color: transparent; }
+  .lgl-results-wrapper .bt-car-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
+    transition: opacity 0.3s ease; }
+    .lgl-results-wrapper .bt-car-grid-layout .bt-post {
+      background-color: var(--lgl-c-pure-white);
+      border: 1px solid var(--lgl-c-medium-light-grey);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.3s ease, transform 0.3s ease; }
+      .lgl-results-wrapper .bt-car-grid-layout .bt-post:hover {
+        box-shadow: 0 12px 24px rgba(25, 42, 62, 0.08);
+        transform: translateY(-4px); }
+      .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail {
+        position: relative;
+        aspect-ratio: 16/10;
+        overflow: hidden; }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease; }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail:hover img {
+          transform: scale(1.04); }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail .bt-post--icon-btn {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          display: flex;
+          gap: 8px; }
+          .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail .bt-post--icon-btn a {
+            background: var(--lgl-c-pure-white);
+            color: var(--lgl-c-dark-grey-text);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: color 0.3s ease, transform 0.2s ease; }
+            .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail .bt-post--icon-btn a:hover, .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail .bt-post--icon-btn a.added {
+              color: var(--lgl-c-electric-blue);
+              transform: scale(1.05); }
+            .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--thumbnail .bt-post--icon-btn a svg {
+              width: 18px;
+              height: 18px; }
+      .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--body {
+          font-size: 11px;
+          color: var(--lgl-c-electric-blue);
+          text-transform: uppercase;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          margin-bottom: 12px; }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--price {
+          font-size: 22px;
+          font-weight: 700;
+          color: var(--lgl-c-deep-dark-blue);
+          margin-bottom: 8px; }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--title {
+          font-size: 18px;
+          margin: 0 0 20px 0;
+          line-height: 1.4; }
+          .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--title a {
+            color: var(--lgl-c-dark-grey-text);
+            text-decoration: none;
+            transition: color 0.3s ease; }
+            .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--title a:hover {
+              color: var(--lgl-c-electric-blue); }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta {
+          border-top: 1px solid var(--lgl-c-medium-light-grey);
+          border-bottom: 1px solid var(--lgl-c-medium-light-grey);
+          padding: 16px 0;
+          margin-bottom: 20px;
+          margin-top: auto; }
+          .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta .bt-post--meta-row {
+            display: flex;
+            justify-content: space-between; }
+            .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta .bt-post--meta-row .bt-post--meta-col {
+              flex: 1;
+              text-align: center; }
+              .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta .bt-post--meta-row .bt-post--meta-col:not(:last-child) {
+                border-right: 1px solid var(--lgl-c-medium-light-grey); }
+            .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta .bt-post--meta-row .bt-post--meta-item {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              font-size: 12px;
+              color: var(--lgl-c-dark-grey-text); }
+              .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta .bt-post--meta-row .bt-post--meta-item svg {
+                margin-bottom: 8px;
+                fill: var(--lgl-c-dark-grey-text);
+                opacity: 0.7; }
+              .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta .bt-post--meta-row .bt-post--meta-item .bt-label {
+                opacity: 0.6;
+                margin-bottom: 2px;
+                font-size: 11px;
+                text-transform: uppercase; }
+              .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--meta .bt-post--meta-row .bt-post--meta-item .bt-value {
+                font-weight: 700; }
+        .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--readmore a {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: var(--lgl-c-strong-blue);
+          font-weight: 700;
+          text-decoration: none;
+          font-size: 14px;
+          text-transform: uppercase;
+          transition: color 0.3s ease; }
+          .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--readmore a:hover {
+            color: var(--lgl-c-electric-blue); }
+          .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--readmore a svg {
+            width: 20px;
+            height: 20px; }
+
+#lgl-loader {
+  display: block;
+  text-align: center;
+  padding: 40px;
+  font-weight: bold;
+  color: var(--lgl-c-strong-blue); }
+
+/*# sourceMappingURL=main.css.map */
