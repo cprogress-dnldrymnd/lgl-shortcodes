@@ -216,14 +216,18 @@
         padding: 0;
         display: flex;
         flex-direction: column;
-        flex-grow: 1; }
+        flex-grow: 1;
+        position: relative; }
         .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout .bt-post .bt-post--infor .bt-post--body {
-          font-size: 11px;
-          color: var(--lgl-electric-blue);
-          text-transform: uppercase;
-          font-weight: 800;
-          letter-spacing: 0.5px;
-          margin-bottom: 12px; }
+          color: var(--lgl-secondary);
+          font-family: "Poppins", Sans-serif;
+          font-size: 0.8em;
+          font-weight: 600;
+          position: absolute;
+          top: 0;
+          left: -1px;
+          padding: 10px 30px;
+          border-radius: 0 10px 10px 0; }
         .lgl-results-wrapper .lgl-grid-layout.lgl-grid-layout .bt-post .bt-post--infor .bt-post--price {
           font-size: 22px;
           font-weight: 700;
