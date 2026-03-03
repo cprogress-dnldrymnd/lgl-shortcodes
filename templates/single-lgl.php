@@ -26,10 +26,6 @@ get_header();
         $exterior_features = get_field('car_exterior_features'); // <-- make sure your ACF field name matches this
         $floor_plan        = get_field('car_floor_plan');
         $warranty          = get_field('car_warranty');
-        $berth_terms = get_the_terms(get_the_ID(), 'car_berth');
-        $berth_value = (!empty($berth_terms) && !is_wp_error($berth_terms)) ? $berth_terms[0]->name : '';
-        $mileage = get_field('car_mileage');
-        $year = get_field('car_year');
         $price = get_field('car_price');
         $location = get_field('car_location');
         $map_link = get_field('car_map_link');
@@ -65,7 +61,10 @@ get_header();
 
 
         $gallery = convertStringToIntArray(get_post_meta(get_the_ID(), '_listing_gallery_ids', true));
-
+        $price = get_post_meta($post_id, 'price', true);
+        $berth = get_post_meta($post_id, 'berth', true);
+        $mileage = get_post_meta($post_id, 'mileage', true);
+        $year = get_post_meta($post_id, 'year', true);
 
         ?>
         <article <?php post_class('lgl-post'); ?>>
