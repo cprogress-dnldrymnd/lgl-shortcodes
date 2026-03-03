@@ -55,12 +55,7 @@ final class LGL_Elementor_Extension
 	{
 		add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_styles']);
 		add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueue_scripts']);
-
-		// Remove the register_widgets hook from the main plugin entirely, 
-		// as widget-load.php now handles it natively.
-
-		// Load the framework immediately so its hooks attach in time.
-		$this->load_theme_framework();
+		add_action('plugins_loaded', [$this, 'load_theme_framework']);
 	}
 	/**
 	 * Load external theme framework
