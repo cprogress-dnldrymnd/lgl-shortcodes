@@ -160,7 +160,8 @@
       .lgl-results-wrapper .bt-car-topbar .bt-car-sort-block .bt-sort-title {
         opacity: 0.7; }
       .lgl-results-wrapper .bt-car-topbar .bt-car-sort-block .select2-container--default .select2-selection--single {
-        background-color: #f1f1f1; }
+        background-color: #f1f1f1;
+        border-color: #f1f1f1; }
   .lgl-results-wrapper .bt-car-grid-layout {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
