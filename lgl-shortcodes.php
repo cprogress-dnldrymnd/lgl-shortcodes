@@ -16,7 +16,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '1.1.3');
+define('LGL_SHORTCODES_VERSION', '1.1.4');
 
 if (! class_exists('LGL_Shortcodes')) {
 
