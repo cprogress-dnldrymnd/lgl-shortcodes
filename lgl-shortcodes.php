@@ -107,7 +107,7 @@ if (! class_exists('LGL_Shortcodes')) {
 			wp_enqueue_style(
 				'lgl-main-css',
 				LGL_SHORTCODES_URL . 'assets/css/main.css',
-				array(),
+				array('select2', 'slick'),
 				LGL_SHORTCODES_VERSION
 			);
 
