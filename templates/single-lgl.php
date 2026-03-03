@@ -670,6 +670,687 @@ get_header();
                 </div>
             </div>
 
+            <style>
+                .lgl-site-titlebar--overlay {
+                    background-color: #001537 !important;
+                    opacity: 1 !important;
+                }
+
+                /* ========== Contact ========== */
+                .lgl-contact-list {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    display: grid;
+                    gap: 0px;
+                }
+
+                .lgl-contact-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    color: #0b245a;
+                    font-weight: 600;
+                }
+
+                .lgl-contact-item a {
+                    color: inherit;
+                    text-decoration: none;
+                }
+
+                .lgl-contact-item a:hover {
+                    text-decoration: underline;
+                }
+
+                .lgl-contact-icon {
+                    width: 22px;
+                    height: 22px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .lgl-contact-title {
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 600;
+                    font-size: 20px;
+                    color: #001537;
+                    margin-bottom: 12px;
+                }
+
+                .lgl-contact-item,
+                .lgl-contact-item a {
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 600;
+                    font-size: 16px;
+                    color: #001537;
+                    text-decoration: none;
+                }
+
+                /* Desktop only */
+                #bt_main {
+                    background-color: #F7FAFF !important;
+                }
+
+                .lgl-post--sidebar {
+                    height: auto !important;
+                    min-height: unset !important;
+                }
+
+                .lgl-post--sidebar,
+                .lgl-sidebar-wrap {
+                    align-self: flex-start !important;
+                }
+
+                /* ========== Sale card ========== */
+                .lgl-sale-card {
+                    background: #001537;
+                    border-radius: 20px 20px 0px 0px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+                    padding: 40px 40px 0px 0px;
+                }
+
+                .lgl-sale-top {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    margin-bottom: 10px;
+                }
+
+                .lgl-sale-body {
+                    display: inline-flex;
+                    gap: 6px;
+                    flex-wrap: wrap;
+                }
+
+                .lgl-sale-body a {
+                    display: inline-block;
+                    padding: 6px 25px;
+                    border-radius: 0 9px 9px 0;
+                    background: #F6D100;
+                    font-weight: 600;
+                    font-size: 16px;
+                    font-family: 'Poppins', sans-serif;
+                }
+
+                .lgl-sale-icon-btn {
+                    display: flex;
+                    gap: 8px;
+                }
+
+                .lgl-sale-icon-btn .lgl-icon-btn {
+                    width: 38px;
+                    height: 38px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 10px;
+                    background: #f2f4f7;
+                }
+
+                .lgl-sale-price {
+                    font-size: 34px;
+                    font-weight: 900;
+                    line-height: 1.1;
+                    margin: 25px 25px 0px;
+                    color: #F7FAFF !important;
+                }
+
+                .lgl-finance-label {
+                    margin: 5px 0px 15px 25px !important;
+                    font-size: 18px;
+                    color: #00E6F6 !important;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 650;
+                }
+
+                .lgl-finance-value {
+                    font-size: 18px;
+                    line-height: 1.1;
+                    margin-top: 4px;
+                    color: #00E6F6 !important;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 650;
+                }
+
+                .lgl-finance-value span {
+                    font-size: 18px;
+                    opacity: .9;
+                    margin-left: 6px;
+                    color: #00E6F6 !important;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 650;
+                }
+
+                .lgl-finance-note {
+                    font-size: 16px;
+                    opacity: .85;
+                    margin-top: 6px;
+                }
+
+                .lgl-sale-actions {
+                    display: grid;
+                    gap: 10px;
+                    margin: 12px 0 6px;
+                }
+
+                .lgl-btn-primary,
+                .lgl-btn-calculator,
+                .lgl-btn-outline {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 10px;
+                    padding: 20px 0px;
+                }
+
+                .lgl-btn-calculator {
+                    color: #00E6F6;
+                    background: #001537;
+                    font-size: #001537;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 700;
+                }
+
+                .lgl-btn-calculator:hover {
+                    color: #00E6F6 !important;
+                }
+
+                .lgl-btn-primary {
+                    color: #001537;
+                    background: #F6D100;
+                    font-size: 18px;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 700;
+                }
+
+                .lgl-btn-outline {
+                    border: 1px solid #001537;
+                    color: #001537;
+                    background: #F7FAFF;
+                    font-size: 18px;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 700;
+                }
+
+                .lgl-sale-offer {
+                    margin-top: 10px;
+                }
+
+                .lgl-sale-actions-outside,
+                .lgl-sale-offer-outside {
+                    margin-top: 15px;
+                    display: grid;
+                    gap: 20px;
+                }
+
+                .lgl-sale-actions-outside a,
+                .lgl-sale-offer-outside a {
+                    width: 100%;
+                }
+
+                /* Fix: allow buttons outside .lgl-sale-card to show fully (no clipping) */
+                .lgl-sidebar-block.lgl-sale-block,
+                .lgl-sidebar-block.lgl-sale-block * {
+                    overflow: visible;
+                }
+
+                .lgl-post--sidebar,
+                .lgl-sidebar-wrap,
+                .lgl-sidebar-block.lgl-sale-block {
+                    overflow: visible !important;
+                    border: none !important;
+                    border-radius: 20px 20px 0px 0px !important;
+                    padding: 0 !important;
+                }
+
+                .lgl-sale-actions-outside,
+                .lgl-sale-offer-outside {
+                    position: relative;
+                    z-index: 5;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block {
+                    background: transparent !important;
+                    box-shadow: none !important;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                /* ========== Sale meta bottom: 3-column strip + VALUE ON NEXT LINE ========== */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom {
+                    margin-top: 0 !important;
+                    background: #fff !important;
+                    border: 1px solid #969696 !important;
+                    border-radius: 0px 0px 25px 25px !important;
+                    overflow: hidden !important;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    border: 0 !important;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-row {
+                    display: flex !important;
+                    flex-direction: row !important;
+                    flex-wrap: nowrap !important;
+                    align-items: stretch !important;
+                    width: 100% !important;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-col {
+                    flex: 0 0 33.3333% !important;
+                    width: 33.3333% !important;
+                    max-width: 33.3333% !important;
+                    min-width: 0 !important;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-col+.lgl-post--meta-col {
+                    border-left: 1px solid rgba(0, 0, 0, .08) !important;
+                }
+
+                /* Row: icon + a stacked text block */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item {
+                    display: flex !important;
+                    align-items: center !important;
+                    gap: 10px !important;
+                    padding: 16px 18px !important;
+                    color: #001537 !important;
+                }
+
+                /* ✅ KEY FIX: force label+value into a vertical stack */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-label,
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-value {
+                    display: block !important;
+                    width: 100% !important;
+                    line-height: 1.15 !important;
+                    margin: 0 !important;
+                }
+
+                /* If theme sets lgl-label/lgl-value inline or flex, override it */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-label {
+                    font-size: 13px !important;
+                    font-weight: 500 !important;
+                    opacity: .6 !important;
+                    margin-bottom: 3px !important;
+                    /* space before value */
+                    font-family: 'Poppins', sans-serif !important;
+                    color: #001537 !important;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-value {
+                    font-size: 16px !important;
+                    /* smaller like your target */
+                    font-weight: 600 !important;
+                    /* semibold */
+                    font-family: 'Poppins', sans-serif !important;
+                    color: #001537 !important;
+                    white-space: normal !important;
+                    /* allow wrap */
+                }
+
+                /* keep icons consistent */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item svg {
+                    flex: 0 0 auto !important;
+                    width: 26px !important;
+                    height: 26px !important;
+                }
+
+                /* readmore strip like the original */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--readmore-sidebar {
+                    border-top: 1px solid rgba(0, 0, 0, .08) !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--readmore-sidebar a {
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 12px !important;
+                    padding: 16px 18px !important;
+                    font-weight: 800 !important;
+                    text-transform: none !important;
+                    font-family: 'Poppins', sans-serif;
+                    color: #001537;
+                }
+
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--readmore-sidebar,
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--readmore-sidebar * {
+                    position: static !important;
+                }
+
+                .lgl-section-review,
+                .lgl-section-location {
+                    display: none !important;
+                }
+
+                .lgl-tabs--tbnav {
+                    padding: 20px 20px !important;
+                    background-color: #001537 !important;
+                }
+
+                .lgl-title-ss {
+                    z-index: auto !important;
+                }
+
+                .lgl-title-ss span {
+                    background: none !important;
+                }
+
+                .lgl-tabs--tbpanel {
+                    background-color: #FFFFFF !important;
+                }
+
+                /* ========== Car overview meta list (kept as you had) ========== */
+                .lgl-content-ss.lgl-meta-list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0;
+                    background: transparent;
+                    padding: 0;
+                }
+
+                .lgl-content-ss.lgl-meta-list .lgl-meta-item {
+                    width: 50%;
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    padding: 18px 0;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                    border-radius: 0 !important;
+                    background: transparent !important;
+                    box-shadow: none !important;
+                    margin: 0;
+                    border: none !important;
+                }
+
+                .lgl-content-ss.lgl-meta-list .lgl-meta-item:nth-child(odd) {
+                    padding-right: 24px;
+                    border-right: 1px solid rgba(0, 0, 0, 0.12);
+                }
+
+                .lgl-content-ss.lgl-meta-list .lgl-meta-item:nth-child(even) {
+                    padding-left: 24px;
+                }
+
+                .lgl-content-ss.lgl-meta-list .lgl-meta-item svg {
+                    width: 22px;
+                    height: 22px;
+                    flex: 0 0 22px;
+                    color: #111;
+                }
+
+                .lgl-content-ss.lgl-meta-list .lgl-label {
+                    color: #111;
+                    font-weight: 600;
+                    white-space: nowrap;
+                }
+
+                .lgl-content-ss.lgl-meta-list .lgl-value {
+                    margin-left: auto;
+                    text-align: right;
+                    color: #111;
+                    font-weight: 600;
+                }
+
+                .lgl-content-ss.lgl-meta-list .lgl-label::after {
+                    content: "";
+                }
+
+                /* Mobile meta list fixes */
+                @media (max-width: 767px) {
+                    .lgl-content-ss.lgl-meta-list .lgl-meta-item {
+                        display: flex !important;
+                        align-items: center !important;
+                        gap: 12px !important;
+                        padding-left: 0 !important;
+                        text-indent: 0 !important;
+                    }
+
+                    .lgl-content-ss.lgl-meta-list .lgl-meta-item svg {
+                        position: relative !important;
+                        inset: auto !important;
+                        transform: none !important;
+                        width: 22px !important;
+                        height: 22px !important;
+                        flex: 0 0 22px !important;
+                        margin: 0 !important;
+                    }
+
+                    .lgl-content-ss.lgl-meta-list .lgl-label {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        line-height: 1.2 !important;
+                        white-space: nowrap !important;
+                    }
+
+                    .lgl-content-ss.lgl-meta-list .lgl-value {
+                        margin-left: auto !important;
+                        text-align: right !important;
+                        line-height: 1.2 !important;
+                    }
+
+                    .lgl-content-ss.lgl-meta-list .lgl-meta-item .lgl-label,
+                    .lgl-content-ss.lgl-meta-list .lgl-meta-item .lgl-value {
+                        padding-left: 0 !important;
+                    }
+                }
+
+                .lgl-post--readmore a svg path {
+                    stroke: #00E6F6 !important;
+                }
+
+                .lgl-post--body {
+                    background-color: #F6D100 !important;
+                    color: #001537 !important;
+                    font-size: 16px;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 700 !important;
+                }
+
+                .lgl-post--price {
+                    color: #001537 !important;
+                    font-size: 24px !important;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 700 !important;
+                }
+
+                .lgl-post--title {
+                    color: #001537 !important;
+                    font-size: 24px !important;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 700 !important;
+                }
+
+                .lgl-post--readmore a {
+                    background-color: #00235D !important;
+                    color: #00E6F6 !important;
+                    font-size: 16px !important;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 700 !important;
+                }
+
+                /* ✅ FORCE lgl-value onto next line using GRID (bulletproof) */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item {
+                    display: grid !important;
+                    grid-template-columns: 26px 1fr !important;
+                    /* icon | text */
+                    grid-template-rows: auto auto !important;
+                    /* label / value */
+                    column-gap: 10px !important;
+                    row-gap: 2px !important;
+                    align-items: center !important;
+                }
+
+                /* icon left, spans both rows */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item svg {
+                    grid-column: 1 !important;
+                    grid-row: 1 / span 2 !important;
+                    width: 26px !important;
+                    height: 26px !important;
+                }
+
+                /* label top-right */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-label {
+                    grid-column: 2 !important;
+                    grid-row: 1 !important;
+                    display: block !important;
+                    width: 100% !important;
+                    margin: 0 !important;
+
+                    font-family: 'Poppins', sans-serif !important;
+                    font-size: 13px !important;
+                    font-weight: 500 !important;
+                    color: #001537 !important;
+                    opacity: .6 !important;
+                }
+
+                /* ✅ value bottom-right (NEXT LINE) */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-value {
+                    grid-column: 2 !important;
+                    grid-row: 2 !important;
+                    display: block !important;
+                    width: 100% !important;
+                    margin: 0 !important;
+
+                    font-family: 'Poppins', sans-serif !important;
+                    font-size: 16px !important;
+                    font-weight: 600 !important;
+                    color: #001537 !important;
+                    white-space: normal !important;
+                }
+
+                /* If theme sets label/value as flex children, neutralize */
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-label,
+                .lgl-sidebar-block.lgl-sale-block .lgl-sale-meta-bottom .lgl-post--meta-item .lgl-value {
+                    float: none !important;
+                    flex: none !important;
+                }
+
+                @media (max-width: 768px) {
+                    h1.lgl-page-title.lgl-title-under-breadcrumb {
+                        display: block !important;
+                        width: 100% !important;
+                        max-width: calc(100vw - 32px) !important;
+                        /* ensures a real width limit */
+                        overflow: hidden !important;
+                        white-space: nowrap !important;
+                        text-overflow: ellipsis !important;
+                        min-width: 0 !important;
+                    }
+                }
+
+                /* Desktop / default */
+                .lgl-sale-icon-btn {
+                    display: flex;
+                    gap: 12px;
+                    align-items: center;
+                }
+
+                .lgl-sale-icon-btn>a.lgl-icon-btn {
+                    width: 44px !important;
+                    height: 44px !important;
+                    min-width: 44px !important;
+
+                    color: #FFFFFF !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+
+                    border-radius: 50% !important;
+                    background-color: rgba(247, 250, 255, 0.31) !important;
+                    border: 0 !important;
+                    box-shadow: none !important;
+                    text-decoration: none !important;
+                }
+
+                .lgl-sale-icon-btn>a.lgl-icon-btn svg {
+                    width: 20px !important;
+                    height: 20px !important;
+                    display: block !important;
+                }
+
+                .lgl-sale-icon-btn>a.lgl-icon-btn:hover {
+                    background-color: rgba(247, 250, 255, 0.45) !important;
+                }
+
+
+                /* Tablet */
+                @media (max-width: 768px) {
+                    .lgl-sale-icon-btn {
+                        gap: 10px;
+                    }
+
+                    .lgl-sale-icon-btn>a.lgl-icon-btn {
+                        width: 40px !important;
+                        height: 40px !important;
+                        min-width: 40px !important;
+                    }
+
+                    .lgl-sale-icon-btn>a.lgl-icon-btn svg {
+                        width: 18px !important;
+                        height: 18px !important;
+                    }
+                }
+
+                /* Small phones */
+                @media (max-width: 480px) {
+                    .lgl-sale-icon-btn {
+                        gap: 8px;
+                        justify-content: flex-start !important;
+                        padding-right: 0 !important;
+                        margin-right: 0 !important;
+                        margin-left: 50px !important;
+                    }
+
+                    .lgl-sale-icon-btn>a.lgl-icon-btn {
+                        width: 36px !important;
+                        height: 36px !important;
+                        min-width: 36px !important;
+                        margin-right: 0 !important;
+                    }
+
+                    .lgl-sale-icon-btn>a.lgl-icon-btn svg {
+                        width: 16px !important;
+                        height: 16px !important;
+                    }
+
+                }
+
+                /* Make each contact item a clean flex row */
+                .lgl-contact-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    /* space between icon & text */
+                    margin-bottom: 12px;
+                    /* spacing between rows */
+                }
+
+                /* Fixed width icon container */
+                .lgl-contact-item svg,
+                .lgl-contact-item .lgl-contact-icon {
+                    width: 22px;
+                    min-width: 22px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* Align links nicely */
+                .lgl-contact-item a {
+                    text-decoration: none;
+                    display: inline-block;
+                    line-height: 1.4;
+                }
+            </style>
         </article>
     </div>
 </main>
