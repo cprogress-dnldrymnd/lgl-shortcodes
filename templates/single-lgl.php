@@ -13,10 +13,12 @@ if (! defined('ABSPATH')) {
 
 // Load standard WordPress header
 get_header();
+
+$post_id = get_the_ID();
 ?>
 
 <pre style="display: none">
-    <?php var_dump(get_post_meta(get_the_ID())); ?>
+    <?php var_dump(get_post_meta($post_id)); ?>
 </pre>
 
 <main id="lgl-primary" class="lgl-site-main single-lgl">
@@ -32,25 +34,25 @@ get_header();
         $map_iframe = get_field('car_map_iframe');
         $features = get_field('car_features');
         $dealer = get_field('car_dealer');
-        $body_term = get_the_terms(get_the_ID(), 'car_body');
+        $body_term = get_the_terms($post_id, 'car_body');
         $body = !empty($body_term) ? array_pop($body_term) : '';
-        $condition_term = get_the_terms(get_the_ID(), 'car_condition');
+        $condition_term = get_the_terms($post_id, 'car_condition');
         $condition = !empty($condition_term) ? array_pop($condition_term) : '';
-        $make_term = get_the_terms(get_the_ID(), 'car_make');
+        $make_term = get_the_terms($post_id, 'car_make');
         $make = !empty($make_term) ? array_pop($make_term) : '';
-        $model_term = get_the_terms(get_the_ID(), 'car_model');
+        $model_term = get_the_terms($post_id, 'car_model');
         $model = !empty($model_term) ? array_pop($model_term) : '';
-        $fuel_type_term = get_the_terms(get_the_ID(), 'car_fuel_type');
+        $fuel_type_term = get_the_terms($post_id, 'car_fuel_type');
         $fuel_type = !empty($fuel_type_term) ? array_pop($fuel_type_term) : '';
-        $transmission_term = get_the_terms(get_the_ID(), 'car_transmission');
+        $transmission_term = get_the_terms($post_id, 'car_transmission');
         $transmission = !empty($transmission_term) ? array_pop($transmission_term) : '';
-        $door_term = get_the_terms(get_the_ID(), 'car_door');
+        $door_term = get_the_terms($post_id, 'car_door');
         $door = !empty($door_term) ? array_pop($door_term) : '';
-        $engine_term = get_the_terms(get_the_ID(), 'car_engine');
+        $engine_term = get_the_terms($post_id, 'car_engine');
         $engine = !empty($engine_term) ? array_pop($engine_term) : '';
-        $cylinder_term = get_the_terms(get_the_ID(), 'car_cylinder');
+        $cylinder_term = get_the_terms($post_id, 'car_cylinder');
         $cylinder = !empty($cylinder_term) ? array_pop($cylinder_term) : '';
-        $color_term = get_the_terms(get_the_ID(), 'car_color');
+        $color_term = get_the_terms($post_id, 'car_color');
         $color_arr = array();
         if (!empty($color_term)) {
             foreach ($color_term as $color) {
@@ -60,11 +62,11 @@ get_header();
 
 
 
-        $gallery = convertStringToIntArray(get_post_meta(get_the_ID(), '_listing_gallery_ids', true));
-        $price = get_post_meta(get_the_ID(), 'price', true);
-        $berth = get_post_meta(get_the_ID(), 'berth', true);
-        $mileage = get_post_meta(get_the_ID(), 'mileage', true);
-        $year = get_post_meta(get_the_ID(), 'year', true);
+        $gallery = convertStringToIntArray(get_post_meta($post_id, '_listing_gallery_ids', true));
+        $price = get_post_meta($post_id, 'price', true);
+        $berth = get_post_meta($post_id, 'berth', true);
+        $mileage = get_post_meta($post_id, 'mileage', true);
+        $year = get_post_meta($post_id, 'year', true);
 
         ?>
         <article <?php post_class('lgl-post'); ?>>
@@ -179,7 +181,7 @@ get_header();
                                         ?>
 
 
-                                        <a class="lgl-icon-btn lgl-car-compare-btn" href="#" data-id="<?php echo get_the_ID(); ?>">
+                                        <a class="lgl-icon-btn lgl-car-compare-btn" href="#" data-id="<?php echo $post_id; ?>">
                                             <svg width="25" height="25" viewBox="0 0 25 25" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M15.75 10.9375L17.3125 12.5L22.6875 7.10938L17.1875 1.5625L15.625 3.125L18.4375 5.9375H3.125V8.125H18.4688L15.75 10.9375ZM9.15625 14.0625L7.59375 12.5L2.21875 17.9688L7.67187 23.4375L9.23437 21.875L6.40625 19.0625H21.875V16.875H6.40625L9.15625 14.0625Z" />
                                             </svg>
