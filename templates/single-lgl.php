@@ -238,16 +238,16 @@ $post_id = get_the_ID();
                             <?php } ?>
 
                             <!-- ✅ Buttons OUTSIDE the card BUT STILL INSIDE lgl-sale-block -->
-                            <div class="lgl-sale-actions-outside">
-                                <a class="lgl-btn-calculator" href="#lgl-tab-overview">
+                            <div class="lgl-btn-group">
+                                <a class="lgl-btn lgl-btn-secondary" href="#lgl-tab-overview">
                                     <?php echo esc_html__('FINANCE CALCULATOR', 'lgl'); ?>
                                 </a>
 
-                                <a class="lgl-btn-primary" href="#lgl-tab-overview">
+                                <a class="lgl-btn lgl-btn-primary" href="#lgl-tab-overview">
                                     <?php echo esc_html__('ENQUIRE NOW', 'lgl'); ?>
                                 </a>
 
-                                <a class="lgl-btn-outline" href="#lgl-tab-overview">
+                                <a class="lgl-btn lgl-btn-outline" href="#lgl-tab-overview">
                                     <?php echo esc_html__('RESERVE NOW', 'lgl'); ?>
                                 </a>
                             </div>

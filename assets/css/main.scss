@@ -760,3 +760,16 @@
         background-color: var(--lgl-accent);
     }
 }
+.lgl-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+.lgl-btn {
+    padding: 20px;
+    font-family: var(--secondary-font);
+    font-weight: bold;
+    border-radius: 10px;
+    text-align: center;
+    width: 100%;
+}
