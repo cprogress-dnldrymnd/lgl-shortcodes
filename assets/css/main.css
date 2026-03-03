@@ -694,7 +694,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 0; }
+    padding: 15px 0;
+    font-size: 16px; }
+    .lgl-meta-list .lgl-meta-item .lgl-meta-icon-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600; }
     .lgl-meta-list .lgl-meta-item svg {
       width: 26px;
       height: 26px; }

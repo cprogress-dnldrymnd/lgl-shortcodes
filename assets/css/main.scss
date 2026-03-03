@@ -895,6 +895,13 @@
         align-items: center;
         justify-content: space-between;
         padding: 15px 0;
+        font-size: 16px;
+        .lgl-meta-icon-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
         svg {
             width: 26px;
             height: 26px;
