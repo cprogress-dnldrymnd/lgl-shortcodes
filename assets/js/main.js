@@ -116,7 +116,7 @@
                         $('.lgl-pagination-wrap').html(response.data.pagination);
 
                         // Update UI string dynamically
-                        let visibleCount = $('#lgl-results-grid .bt-post').length;
+                        let visibleCount = $('#lgl-results-grid .lgl-post').length;
                         $('#lgl-results-count').html('Showing ' + visibleCount + ' of ' + response.data.count + ' results');
                     } else {
                         alert('Error fetching results.');

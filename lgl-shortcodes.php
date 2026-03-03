@@ -426,7 +426,7 @@ if (! class_exists('LGL_Shortcodes')) {
 					include LGL_SHORTCODES_PATH . 'templates/partials/result-item.php';
 				}
 			} else {
-				echo '<div class="bt-no-results">No vehicles found matching your criteria.</div>';
+				echo '<div class="lgl-no-results">No vehicles found matching your criteria.</div>';
 			}
 
 			$html = ob_get_clean();
