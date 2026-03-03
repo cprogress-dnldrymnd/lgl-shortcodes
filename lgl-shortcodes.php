@@ -88,7 +88,7 @@ if (! class_exists('LGL_Shortcodes')) {
 		public function register_shortcodes()
 		{
 			// Registering the original shortcode and the new search shortcode
-			add_shortcode('lgl_data', array($this, 'render_shortcode'));
+			add_shortcode('lgl_search_results', array($this, 'render_shortcode'));
 			add_shortcode('lgl_search', array($this, 'render_shortcode'));
 		}
 
@@ -103,14 +103,12 @@ if (! class_exists('LGL_Shortcodes')) {
 		 */
 		public function render_shortcode($atts, $content = null, $shortcode_tag = '')
 		{
-			// Normalize the shortcode tag to match file naming conventions (e.g., 'lgl_search' becomes 'lgl-search')
-			$template_name = str_replace('_', '-', $shortcode_tag);
 
 			// Ensure attributes are treated as an array to prevent type errors during extraction
 			$attributes = (array) $atts;
 
 			// Hand over execution to the template loader
-			return $this->load_template($template_name, $attributes, $content);
+			return $this->load_template($shortcode_tag, $attributes, $content);
 		}
 
 		/**
