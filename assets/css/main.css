@@ -482,9 +482,10 @@
 .lgl-post--gallery .lgl-slider-nav {
   margin-left: -10px;
   margin-right: -10px; }
-.lgl-post--gallery .lgl-slider-item {
-  padding-left: 10px;
-  padding-right: 10px; }
+  .lgl-post--gallery .lgl-slider-nav .lgl-slider-item {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: block; }
 
 .lgl-contact-list {
   list-style: none;
