@@ -1,137 +1,105 @@
 <?php
-
 /**
- * Plugin Name: LGL Elementor Custom Widgets
- * Description: Core framework for registering and loading custom Elementor widgets, scripts, and styles.
- * Plugin URI:  https://digitallydisruptive.co.uk/
- * Version:     1.0.0
- * Author:      Digitally Disruptive - Donald Raymundo
- * Author URI:  https://digitallydisruptive.co.uk/
- * Text Domain: dd-widgets
+ * Plugin Name: LGL Shortcodes
+ * Plugin URI: https://digitallydisruptive.co.uk/
+ * Description: A robust, OOP-based plugin to output customized data via shortcodes using a dynamic template routing system.
+ * Version: 1.1.0
+ * Author: Digitally Disruptive - Donald Raymundo
+ * Author URI: https://digitallydisruptive.co.uk/
+ * Text Domain: lgl-shortcodes
  */
 
-if (! defined('ABSPATH')) {
-	exit; // Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Prevent direct access to the file.
 }
 
-/**
- * Main LGL_Elementor_Extension Class
- *
- * Responsible for initializing custom widgets, scripts, and styles for Elementor.
- */
-final class LGL_Elementor_Extension
-{
-	/**
-	 * Instance variable
-	 *
-	 * Holds the single instance of the class to enforce the Singleton pattern.
-	 *
-	 * @var self
-	 */
-	private static $_instance = null;
+// Define a constant for the plugin directory path to ensure reliable file inclusion.
+define( 'LGL_SHORTCODES_PATH', plugin_dir_path( __FILE__ ) );
 
-	/**
-	 * Instance access method
-	 *
-	 * Ensures only one instance of the class is loaded or can be loaded.
-	 *
-	 * @return LGL_Elementor_Extension An instance of the class.
-	 */
-	public static function instance()
-	{
-		if (is_null(self::$_instance)) {
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
+if ( ! class_exists( 'LGL_Shortcodes' ) ) {
 
-	/**
-	 * Constructor
-	 *
-	 * Initializes hooks for Elementor widget registration and script/style enqueueing.
-	 * Refactored to remove premature file loading, preventing inheritance fatal errors.
-	 */
-	public function __construct()
-	{
-		add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_styles']);
-		add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueue_scripts']);
-		add_action('plugins_loaded', [$this, 'load_plugin_framework']);
-	}
-	/**
-	 * Load internal plugin framework
-	 *
-	 * Executes the plugin-level framework load as required. 
-	 * Hooked to 'plugins_loaded' to ensure the WordPress environment is fully initialized.
-	 *
-	 * @return void
-	 */
-	public function load_plugin_framework()
-	{
-		// Resolves to: /wp-content/plugins/your-plugin-folder/framework/widget-load.php
-		$framework_path = plugin_dir_path(__FILE__) . 'framework/widget-load.php';
+    /**
+     * Main class for the LGL Shortcodes plugin.
+     * Manages the registration, parameter parsing, and template routing of all shortcodes.
+     */
+    class LGL_Shortcodes {
 
-		if (file_exists($framework_path)) {
-			require_once $framework_path;
-		}
-	}
+        /**
+         * Initializes the plugin by hooking into the WordPress lifecycle.
+         *
+         * @return void
+         */
+        public function __construct() {
+            add_action( 'init', array( $this, 'register_shortcodes' ) );
+        }
 
-	/**
-	 * Register Custom Widgets
-	 *
-	 * Requires the theme framework dependencies safely, then explicitly registers 
-	 * individual widget classes with Elementor's widgets manager.
-	 *
-	 * @param \Elementor\Widgets_Manager $widgets_manager Elementor widgets manager instance.
-	 * @return void
-	 */
-	public function register_widgets($widgets_manager)
-	{
-		// 1. Load the framework here. This ensures \Elementor\Widget_Base is available.
-		$this->load_plugin_framework();
+        /**
+         * Registers the defined shortcodes with the WordPress Shortcode API.
+         * Routes callbacks to a unified template rendering method.
+         *
+         * @return void
+         */
+        public function register_shortcodes() {
+            // Registering the original shortcode and the new search shortcode
+            add_shortcode( 'lgl_data', array( $this, 'render_shortcode' ) );
+            add_shortcode( 'lgl_search', array( $this, 'render_shortcode' ) );
+        }
 
-		// 2. Register the widget instances. 
-		// Replace 'LGL_My_Custom_Widget' with the actual class name defined in your theme files.
-		// if ( class_exists( 'LGL_My_Custom_Widget' ) ) {
-		//     $widgets_manager->register( new \LGL_My_Custom_Widget() );
-		// }
-	}
+        /**
+         * A unified callback function that processes shortcodes and routes them to external template files.
+         * Uses the shortcode tag to determine the required template name dynamically.
+         *
+         * @param array  $atts          The array of attributes passed by the user.
+         * @param string $content       The enclosed content between opening and closing shortcode tags, if any.
+         * @param string $shortcode_tag The name of the shortcode tag currently being executed.
+         * @return string The sanitized and formatted HTML string generated by the required template.
+         */
+        public function render_shortcode( $atts, $content = null, $shortcode_tag = '' ) {
+            // Normalize the shortcode tag to match file naming conventions (e.g., 'lgl_search' becomes 'lgl-search')
+            $template_name = str_replace( '_', '-', $shortcode_tag );
 
-	/**
-	 * Enqueue Plugin Styles
-	 *
-	 * Loads the main CSS file for the Elementor widgets on the frontend.
-	 *
-	 * @return void
-	 */
-	public function enqueue_styles()
-	{
-		wp_enqueue_style(
-			'dd-elementor-widgets-css',
-			plugin_dir_url(__FILE__) . 'assets/css/main.css',
-			[],
-			'1.0.0'
-		);
-	}
+            // Ensure attributes are treated as an array to prevent type errors during extraction
+            $attributes = (array) $atts;
 
-	/**
-	 * Enqueue Plugin Scripts
-	 *
-	 * Loads the main JavaScript file for the Elementor widgets on the frontend,
-	 * utilizing jQuery and Elementor's frontend scripts as dependencies.
-	 *
-	 * @return void
-	 */
-	public function enqueue_scripts()
-	{
-		wp_enqueue_script(
-			'dd-elementor-widgets-js',
-			plugin_dir_url(__FILE__) . 'assets/js/main.js',
-			['jquery', 'elementor-frontend'],
-			'1.0.0',
-			true // Load in footer
-		);
-	}
+            // Hand over execution to the template loader
+            return $this->load_template( $template_name, $attributes, $content );
+        }
+
+        /**
+         * Locates, isolates variables, and loads the requested template file.
+         * Prioritizes theme overrides before falling back to the default plugin template.
+         *
+         * @param string $template_name The base name of the template file (without extension).
+         * @param array  $attributes    The associative array of shortcode attributes.
+         * @param string $content       The enclosed shortcode content.
+         * @return string The buffered HTML content rendered by the template.
+         */
+        private function load_template( $template_name, $attributes, $content ) {
+            // 1. Define the default template path inside the plugin's /templates directory
+            $plugin_path = LGL_SHORTCODES_PATH . 'templates/' . $template_name . '.php';
+
+            // 2. Check if the active theme contains an override file (e.g., your-theme/lgl-shortcodes/lgl-search.php)
+            $theme_override = locate_template( 'lgl-shortcodes/' . $template_name . '.php' );
+
+            // 3. Select the correct file path prioritizing the theme override
+            $file_to_load = ( $theme_override ) ? $theme_override : $plugin_path;
+
+            // 4. Return an HTML comment for debugging if the template does not exist
+            if ( ! file_exists( $file_to_load ) ) {
+                return '';
+            }
+
+            // 5. Extract attributes into individual variables for cleaner usage within the template file
+            // EXTR_SKIP prevents existing variables in this method's scope from being accidentally overwritten
+            extract( $attributes, EXTR_SKIP );
+
+            // 6. Initialize output buffering to safely capture the included file's output
+            ob_start();
+            include $file_to_load;
+            return ob_get_clean();
+        }
+    }
+
+    // Instantiate the plugin architecture
+    new LGL_Shortcodes();
 }
-
-// Initialize the plugin.
-LGL_Elementor_Extension::instance();
