@@ -4,6 +4,8 @@
  */
 jQuery(document).ready(function($) {
     
+    console.log('xxx22');
+
     // Initialize Select2 on target classes
     $('.lgl-select2').select2({
         width: '100%'
