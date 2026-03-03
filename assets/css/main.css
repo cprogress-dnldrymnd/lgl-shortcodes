@@ -497,6 +497,12 @@
   padding: 25px;
   color: var(--lgl-white); }
 
+.lgl-sale-meta-bottom {
+  background: var(--lgl-white);
+  border: 1px solid var(--lgl-gray);
+  border-radius: 0px 0px 25px 25px;
+  overflow: hidden; }
+
 .lgl-sale-icon-btn {
   display: flex;
   gap: 12px;
