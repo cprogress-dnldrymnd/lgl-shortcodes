@@ -30,7 +30,18 @@ class ElementorWidgets
 		// FIX: Ensure these match the EXACT folder names in /framework/widgets/
 		$this->widgets = array(
 			'Widget_CarLoopItem',
-		
+			'Widget_CarLoopItemStyle1',
+			'Widget_CarLoopItemStyle2',
+			'Widget_CarLoopItemStyle3',
+			'Widget_CarLoopItemStyle4',
+			'Widget_CarsCompare',
+			'Widget_CarsGrid',
+			'Widget_CarsGridList',
+			'Widget_CarsQuickCompare',
+			'Widget_CarsSearch',
+			'Widget_CarsSearchStyle1',
+			'Widget_CarsSearchStyle2',
+			'Widget_CarsWishlist',
 		);
 
 		return $this->widgets;
@@ -88,6 +99,20 @@ class ElementorWidgets
 		}
 
 
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItemStyle1\Widget_CarLoopItemStyle1());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItemStyle2\Widget_CarLoopItemStyle2());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItemStyle3\Widget_CarLoopItemStyle3());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItemStyle4\Widget_CarLoopItemStyle4());
+
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsCompare\Widget_CarsCompare());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsGrid\Widget_CarsGrid());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsGridList\Widget_CarsGridList());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsQuickCompare\Widget_CarsQuickCompare());
+
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsSearch\Widget_CarsSearch());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsSearchStyle1\Widget_CarsSearchStyle1());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsSearchStyle2\Widget_CarsSearchStyle2());
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarsWishlist\Widget_CarsWishlist());
 	}
 
 	public function __construct()
