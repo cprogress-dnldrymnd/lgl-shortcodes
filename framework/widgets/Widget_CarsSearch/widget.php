@@ -18,7 +18,7 @@ class Widget_CarsSearch extends Widget_Base {
 	}
 
 	public function get_title() {
-		return __( 'Cars Search', 'autoart' );
+		return __( 'Cars Search', 'clwyd' );
 	}
 
 	public function get_icon() {
@@ -26,7 +26,7 @@ class Widget_CarsSearch extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'autoart' ];
+		return [ 'clwyd' ];
 	}
 
 	public function get_script_depends() {
@@ -36,23 +36,23 @@ class Widget_CarsSearch extends Widget_Base {
 	protected function register_content_section_controls() {
 		$this->start_controls_section(
 			'ss_cars_search_content',[
-				'label' => __( 'Content', 'autoart' ),
+				'label' => __( 'Content', 'clwyd' ),
 			]
 		);
 
 			$this->add_control(
 				'top_search_heading',[
-					'label' => __( 'Top Search', 'autoart' ),
+					'label' => __( 'Top Search', 'clwyd' ),
 					'type' => Controls_Manager::HEADING,
 				]
 			);
 
 			$this->add_control(
 				'top_search_title', [
-					'label'       => __( 'Title', 'autoart' ),
+					'label'       => __( 'Title', 'clwyd' ),
 					'type'        => Controls_Manager::TEXT,
 					'label_block' => true,
-					'default'     => __( 'Top Seach:', 'autoart' ),
+					'default'     => __( 'Top Seach:', 'clwyd' ),
 				]
 			);
 
@@ -60,16 +60,16 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$repeater->add_control(
 				'top_search_text', [
-					'label'       => esc_html__( 'Text', 'autoart' ),
+					'label'       => esc_html__( 'Text', 'clwyd' ),
 					'type'        => Controls_Manager::TEXT,
 					'label_block' => true,
-					'default'     => esc_html__( 'This is text', 'autoart' ),
+					'default'     => esc_html__( 'This is text', 'clwyd' ),
 				]
 			);
 
 			$repeater->add_control(
 				'top_search_link', [
-					'label' => esc_html__( 'Link', 'autoart' ),
+					'label' => esc_html__( 'Link', 'clwyd' ),
 					'type' => Controls_Manager::TEXT,
 					'label_block' => true,
 					'default' => '',
@@ -78,20 +78,20 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_control(
 				'cars_top_search',[
-					'label' => esc_html__( 'List Items', 'autoart' ),
+					'label' => esc_html__( 'List Items', 'clwyd' ),
 					'type' => Controls_Manager::REPEATER,
 					'fields' => $repeater->get_controls(),
 					'default' => [
 						[
-							'top_search_text'  => __( 'This is text 01', 'autoart' ),
+							'top_search_text'  => __( 'This is text 01', 'clwyd' ),
 							'top_search_link'  => '#'
 						],
 						[
-							'top_search_text'  => __( 'This is text 02', 'autoart' ),
+							'top_search_text'  => __( 'This is text 02', 'clwyd' ),
 							'top_search_link'  => '#'
 						],
 						[
-							'top_search_text'  => __( 'This is text 03', 'autoart' ),
+							'top_search_text'  => __( 'This is text 03', 'clwyd' ),
 							'top_search_link'  => '#'
 						],
 					],
@@ -105,14 +105,14 @@ class Widget_CarsSearch extends Widget_Base {
 	protected function register_style_content_section_controls() {
 		$this->start_controls_section(
 			'ss_cars_search_general',[
-				'label' => esc_html__( 'General', 'autoart' ),
+				'label' => esc_html__( 'General', 'clwyd' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
 
 			$this->add_control(
 				'ss_cars_search_general_bcl',[
-					'label' => esc_html__( 'Background Color', 'autoart' ),
+					'label' => esc_html__( 'Background Color', 'clwyd' ),
 					'type' => Controls_Manager::COLOR,
 					'default' => '',
 					'selectors' => [
@@ -123,7 +123,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_responsive_control(
 				'ss_cars_search_general_pd',[
-					'label' => esc_html__( 'Padding', 'autoart' ),
+					'label' => esc_html__( 'Padding', 'clwyd' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%' ],
 					'range' => [
@@ -140,7 +140,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_responsive_control(
 				'ss_cars_search_general_bri',[
-					'label' => esc_html__( 'Border Radius', 'autoart' ),
+					'label' => esc_html__( 'Border Radius', 'clwyd' ),
 					'type' => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%' ],
 					'range' => [
@@ -167,13 +167,13 @@ class Widget_CarsSearch extends Widget_Base {
 
 		$this->start_controls_section(
 			'ss_style_form_search',[
-				'label' => esc_html__( 'Form', 'autoart' ),
+				'label' => esc_html__( 'Form', 'clwyd' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
 			$this->add_responsive_control(
 				'ss_style_form_search_pd',[
-					'label' => esc_html__( 'Padding', 'autoart' ),
+					'label' => esc_html__( 'Padding', 'clwyd' ),
 					'type'  => Controls_Manager::DIMENSIONS,
 					'size_units' => [ 'px', '%' ],
 					'range' => [
@@ -192,7 +192,7 @@ class Widget_CarsSearch extends Widget_Base {
 				Group_Control_Typography::get_type(),
 				[
 					'name'     => 'ss_style_form_search_typography',
-					'label'    => esc_html__( 'Typography', 'autoart' ),
+					'label'    => esc_html__( 'Typography', 'clwyd' ),
 					'default'  => '',
 					'selector' => '{{WRAPPER}} .bt-elwg-cars-search-inner .bt-field-type-select .select2-container .select2-selection--single .select2-selection__rendered',
 				]
@@ -200,7 +200,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_control(
 				'cars_search_form_fields_color',[
-					'label'     => esc_html__( 'Color', 'autoart' ),
+					'label'     => esc_html__( 'Color', 'clwyd' ),
 					'type'      => Controls_Manager::COLOR,
 					'default'   => '',
 					'selectors' => [
@@ -212,13 +212,13 @@ class Widget_CarsSearch extends Widget_Base {
 
 		$this->start_controls_section(
 			'ss_style_top_search',[
-				'label' => esc_html__( 'Top Search', 'autoart' ),
+				'label' => esc_html__( 'Top Search', 'clwyd' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
 			$this->add_control(
 				'top_search_heading_title',[
-					'label' => esc_html__( 'Title', 'autoart' ),
+					'label' => esc_html__( 'Title', 'clwyd' ),
 					'type'  => Controls_Manager::HEADING,
 				]
 			);
@@ -226,7 +226,7 @@ class Widget_CarsSearch extends Widget_Base {
 			$this->add_group_control(
 				Group_Control_Typography::get_type(),[
 					'name'     => 'top_search_title_typography',
-					'label'    => esc_html__( 'Typography', 'autoart' ),
+					'label'    => esc_html__( 'Typography', 'clwyd' ),
 					'default'  => '',
 					'selector' => '{{WRAPPER}} .bt-elwg-cars-search--form-top-search p',
 				]
@@ -234,7 +234,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_control(
 				'top_search_title_color',[
-					'label'     => esc_html__( 'Color', 'autoart' ),
+					'label'     => esc_html__( 'Color', 'clwyd' ),
 					'type'      => Controls_Manager::COLOR,
 					'default'   => '',
 					'selectors' => [
@@ -245,7 +245,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_control(
 				'top_search_heading_content',[
-					'label' => esc_html__( 'Content', 'autoart' ),
+					'label' => esc_html__( 'Content', 'clwyd' ),
 					'type'  => Controls_Manager::HEADING,
 				]
 			);
@@ -253,7 +253,7 @@ class Widget_CarsSearch extends Widget_Base {
 			$this->add_group_control(
 				Group_Control_Typography::get_type(),[
 					'name'     => 'top_search_content_typography',
-					'label'    => esc_html__( 'Typography', 'autoart' ),
+					'label'    => esc_html__( 'Typography', 'clwyd' ),
 					'default'  => '',
 					'selector' => '{{WRAPPER}} .bt-elwg-cars-search--form-top-search a',
 				]
@@ -261,7 +261,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_control(
 				'top_search_content_color',[
-					'label'     => esc_html__( 'Color', 'autoart' ),
+					'label'     => esc_html__( 'Color', 'clwyd' ),
 					'type'      => Controls_Manager::COLOR,
 					'default'   => '#fff',
 					'selectors' => [
@@ -274,7 +274,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 		$this->start_controls_section(
 			'ss_style_form_bg',[
-				'label' => esc_html__( 'Background', 'autoart' ),
+				'label' => esc_html__( 'Background', 'clwyd' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -282,7 +282,7 @@ class Widget_CarsSearch extends Widget_Base {
 			$this->add_group_control(
 				Group_Control_Background::get_type(),[
 					'name'     => 'elwg_cars_search_bg',
-					'label'    => esc_html__( 'Color', 'autoart' ),
+					'label'    => esc_html__( 'Color', 'clwyd' ),
 					'types'    => [ 'classic', 'gradient' ],
 					'selector' => '{{WRAPPER}} .bt-elwg-cars-search--form',
 				]
@@ -292,7 +292,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 		$this->start_controls_section(
 			'ss_style_form_bg_overlay',[
-				'label' => esc_html__( 'Background Overlay', 'autoart' ),
+				'label' => esc_html__( 'Background Overlay', 'clwyd' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -300,7 +300,7 @@ class Widget_CarsSearch extends Widget_Base {
 			$this->add_group_control(
 				Group_Control_Background::get_type(),[
 					'name'     => 'elwg_cars_search_bg_overlay',
-					'label'    => esc_html__( 'Color', 'autoart' ),
+					'label'    => esc_html__( 'Color', 'clwyd' ),
 					'types'    => ['classic', 'gradient' ],
 					'selector' => '{{WRAPPER}} .bt-elwg-cars-search--form::before',
 				]
@@ -308,7 +308,7 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_responsive_control(
 				'elwg_cars_search_bg_overlay_opacity',[
-					'label' => esc_html__( 'Opacity', 'autoart' ),
+					'label' => esc_html__( 'Opacity', 'clwyd' ),
 					'type'  => Controls_Manager::SLIDER,
 					'default'  => [
 						'size' => .5,
@@ -330,22 +330,22 @@ class Widget_CarsSearch extends Widget_Base {
 
 			$this->add_control(
 				'elwg_cars_search_bg_overlay_blend_mode',[
-					'label'   => esc_html__( 'Blend Mode', 'autoart' ),
+					'label'   => esc_html__( 'Blend Mode', 'clwyd' ),
 					'type'    => Controls_Manager::SELECT,
 					'options' => [
-						''            => esc_html__( 'Normal', 'autoart' ),
-						'multiply'    => esc_html__( 'Multiply', 'autoart' ),
-						'screen'      => esc_html__( 'Screen', 'autoart' ),
-						'overlay'     => esc_html__( 'Overlay', 'autoart' ),
-						'darken'      => esc_html__( 'Darken', 'autoart' ),
-						'lighten'     => esc_html__( 'Lighten', 'autoart' ),
-						'color-dodge' => esc_html__( 'Color Dodge', 'autoart' ),
-						'saturation'  => esc_html__( 'Saturation', 'autoart' ),
-						'color'       => esc_html__( 'Color', 'autoart' ),
-						'luminosity'  => esc_html__( 'Luminosity', 'autoart' ),
-						'difference'  => esc_html__( 'Difference', 'autoart' ),
-						'exclusion'   => esc_html__( 'Exclusion', 'autoart' ),
-						'hue'         => esc_html__( 'Hue', 'autoart' ),
+						''            => esc_html__( 'Normal', 'clwyd' ),
+						'multiply'    => esc_html__( 'Multiply', 'clwyd' ),
+						'screen'      => esc_html__( 'Screen', 'clwyd' ),
+						'overlay'     => esc_html__( 'Overlay', 'clwyd' ),
+						'darken'      => esc_html__( 'Darken', 'clwyd' ),
+						'lighten'     => esc_html__( 'Lighten', 'clwyd' ),
+						'color-dodge' => esc_html__( 'Color Dodge', 'clwyd' ),
+						'saturation'  => esc_html__( 'Saturation', 'clwyd' ),
+						'color'       => esc_html__( 'Color', 'clwyd' ),
+						'luminosity'  => esc_html__( 'Luminosity', 'clwyd' ),
+						'difference'  => esc_html__( 'Difference', 'clwyd' ),
+						'exclusion'   => esc_html__( 'Exclusion', 'clwyd' ),
+						'hue'         => esc_html__( 'Hue', 'clwyd' ),
 					],
 					'selectors' => [
 						'{{WRAPPER}} .bt-elwg-cars-search--form::before' => 'mix-blend-mode: {{VALUE}}',

@@ -159,7 +159,7 @@
 		}
 	};
 	/* Car wishlist */
-	function AutoArtCarWishlist() {
+	function clwydCarWishlist() {
 		if ($('.bt-car-wishlist-btn').length > 0) {
 			$('.bt-car-wishlist-btn').on('click', function (e) {
 				e.preventDefault();
@@ -217,7 +217,7 @@
 			// Ajax wishlist
 			$('.bt-cars-wishlist-form').submit(function () {
 				var param_ajax = {
-					action: 'autoart_cars_wishlist',
+					action: 'clwyd_cars_wishlist',
 					carwishlistlocal: $('.bt-carwishlistlocal').val()
 				};
 
@@ -302,7 +302,7 @@
 			// Ajax wishlist
 			$('#bt-mini-wishlist-form').submit(function () {
 				var param_ajax = {
-					action: 'autoart_mini_wishlist',
+					action: 'clwyd_mini_wishlist',
 					carwishlistlocal: $('.bt-carwishlistlocal').val()
 				};
 
@@ -361,7 +361,7 @@
 		}
 	}
 	/* Car compare */
-	function AutoArtCarCompare() {
+	function clwydCarCompare() {
 		if ($('.bt-car-compare-btn').length > 0) {
 			$('.bt-car-compare-btn').on('click', function (e) {
 				e.preventDefault();
@@ -420,7 +420,7 @@
 			// Ajax compare
 			$('.bt-cars-compare-form').submit(function () {
 				var param_ajax = {
-					action: 'autoart_cars_compare',
+					action: 'clwyd_cars_compare',
 					carcomparelocal: $('.bt-carcomparelocal').val()
 				};
 
@@ -477,7 +477,7 @@
 			});
 		}
 	}
-	function AutoArtCarButtonStatus() {
+	function clwydCarButtonStatus() {
 		var productCompare = localStorage.getItem('carcomparelocal');
 		var productCompareArray = productCompare ? productCompare.split(',') : [];
 		var productWishlist = localStorage.getItem('carwishlistlocal');
@@ -550,7 +550,7 @@
 				param_in = $(this).serialize().split('&');
 
 			var param_ajax = {
-				action: 'autoart_cars_grid_list_filter',
+				action: 'clwyd_cars_grid_list_filter',
 			};
 
 			param_in.forEach(function (param) {
@@ -597,9 +597,9 @@
 							$carsgridlist.find('.bt-filter-results').removeClass('loading');
 
 							// Wishlist & Compare
-							AutoArtCarWishlist();
-							AutoArtCarCompare();
-							AutoArtCarButtonStatus();
+							clwydCarWishlist();
+							clwydCarCompare();
+							clwydCarButtonStatus();
 						}, 500);
 
 						// View type

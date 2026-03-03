@@ -17,7 +17,7 @@ class Widget_CarsGridList extends Widget_Base
 
 	public function get_title()
 	{
-		return __('Cars Grid List', 'autoart');
+		return __('Cars Grid List', 'clwyd');
 	}
 
 	public function get_icon()
@@ -27,7 +27,7 @@ class Widget_CarsGridList extends Widget_Base
 
 	public function get_categories()
 	{
-		return ['autoart'];
+		return ['clwyd'];
 	}
 	public function get_script_depends()
 	{
@@ -74,14 +74,14 @@ class Widget_CarsGridList extends Widget_Base
 		$this->start_controls_section(
 			'section_layout',
 			[
-				'label' => esc_html__('Layout', 'autoart'),
+				'label' => esc_html__('Layout', 'clwyd'),
 			]
 		);
 
 		$this->add_control(
 			'posts_per_page',
 			[
-				'label' => esc_html__('Posts Per Page', 'autoart'),
+				'label' => esc_html__('Posts Per Page', 'clwyd'),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 6,
 			]
@@ -90,7 +90,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_responsive_control(
 			'gap',
 			[
-				'label'   => esc_html__('Gap', 'autoart'),
+				'label'   => esc_html__('Gap', 'clwyd'),
 				'type'    => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 20,
@@ -112,7 +112,7 @@ class Widget_CarsGridList extends Widget_Base
 			Group_Control_Image_Size::get_type(),
 			[
 				'name'       => 'thumbnail',
-				'label'      => esc_html__('Image Size', 'autoart'),
+				'label'      => esc_html__('Image Size', 'clwyd'),
 				'show_label' => true,
 				'default'    => 'medium',
 				'exclude'    => ['custom'],
@@ -121,17 +121,17 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'show_pagination',
 			[
-				'label'     => esc_html__('Pagination', 'autoart'),
+				'label'     => esc_html__('Pagination', 'clwyd'),
 				'type'      => Controls_Manager::SWITCHER,
-				'label_on'  => __('Show', 'autoart'),
-				'label_off' => __('Hide', 'autoart'),
+				'label_on'  => __('Show', 'clwyd'),
+				'label_off' => __('Hide', 'clwyd'),
 				'default'   => '',
 			]
 		);
 		$this->add_control(
 			'columns',
 			[
-				'label' => __('Columns (Grid)', 'autoart'),
+				'label' => __('Columns (Grid)', 'clwyd'),
 				'type' => Controls_Manager::SELECT,
 				'default' => '2',
 				'options' => [
@@ -144,12 +144,12 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'layout',
 			[
-				'label'   => esc_html__('Layout', 'autoart'),
+				'label'   => esc_html__('Layout', 'clwyd'),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'grid',
 				'options' => [
-					'grid'  => __('Grid', 'autoart'),
-					'list' => __('List', 'autoart'),
+					'grid'  => __('Grid', 'clwyd'),
+					'list' => __('List', 'clwyd'),
 				],
 			]
 		);
@@ -161,7 +161,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->start_controls_section(
 			'section_query',
 			[
-				'label' => esc_html__('Query', 'autoart'),
+				'label' => esc_html__('Query', 'clwyd'),
 			]
 		);
 
@@ -170,14 +170,14 @@ class Widget_CarsGridList extends Widget_Base
 		$this->start_controls_tab(
 			'tab_query_include',
 			[
-				'label' => esc_html__('Include', 'autoart'),
+				'label' => esc_html__('Include', 'clwyd'),
 			]
 		);
 
 		$this->add_control(
 			'category',
 			[
-				'label'       => esc_html__('Category', 'autoart'),
+				'label'       => esc_html__('Category', 'clwyd'),
 				'type'        => Controls_Manager::SELECT2,
 				'options'     => $this->get_supported_taxonomies(),
 				'label_block' => true,
@@ -191,14 +191,14 @@ class Widget_CarsGridList extends Widget_Base
 		$this->start_controls_tab(
 			'tab_query_exnlude',
 			[
-				'label' => esc_html__('Exclude', 'autoart'),
+				'label' => esc_html__('Exclude', 'clwyd'),
 			]
 		);
 
 		$this->add_control(
 			'category_exclude',
 			[
-				'label'       => esc_html__('Category', 'autoart'),
+				'label'       => esc_html__('Category', 'clwyd'),
 				'type'        => Controls_Manager::SELECT2,
 				'options'     => $this->get_supported_taxonomies(),
 				'label_block' => true,
@@ -213,14 +213,14 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'orderby',
 			[
-				'label'   => esc_html__('Order By', 'autoart'),
+				'label'   => esc_html__('Order By', 'clwyd'),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'date',
 				'options' => [
-					'date'  => __('Date', 'autoart'),
-					'title' => __('Title', 'autoart'),
-					'menu_order' => __('Menu Order', 'autoart'),
-					'rand'       => __('Random', 'autoart'),
+					'date'  => __('Date', 'clwyd'),
+					'title' => __('Title', 'clwyd'),
+					'menu_order' => __('Menu Order', 'clwyd'),
+					'rand'       => __('Random', 'clwyd'),
 				],
 			]
 		);
@@ -228,12 +228,12 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'order',
 			[
-				'label'   => esc_html__('Order', 'autoart'),
+				'label'   => esc_html__('Order', 'clwyd'),
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'desc',
 				'options' => [
-					'asc'  => __('ASC', 'autoart'),
-					'desc' => __('DESC', 'autoart'),
+					'asc'  => __('ASC', 'clwyd'),
+					'desc' => __('DESC', 'clwyd'),
 				],
 			]
 		);
@@ -245,7 +245,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->start_controls_section(
 			'section_style_content',
 			[
-				'label' => esc_html__('Content', 'autoart'),
+				'label' => esc_html__('Content', 'clwyd'),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -253,7 +253,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'title_style',
 			[
-				'label' => __('Title', 'autoart'),
+				'label' => __('Title', 'clwyd'),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -261,7 +261,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'title_color',
 			[
-				'label' => __('Color', 'autoart'),
+				'label' => __('Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -273,7 +273,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'title_color_hover',
 			[
-				'label' => __('Color Hover', 'autoart'),
+				'label' => __('Color Hover', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -286,7 +286,7 @@ class Widget_CarsGridList extends Widget_Base
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'title_typography',
-				'label' => __('Typography', 'autoart'),
+				'label' => __('Typography', 'clwyd'),
 				'default' => '',
 				'selector' => '{{WRAPPER}}  .bt-car-grid-layout .bt-post .bt-post--title',
 			]
@@ -295,7 +295,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'price_style',
 			[
-				'label' => __('Price', 'autoart'),
+				'label' => __('Price', 'clwyd'),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -303,7 +303,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'price_color',
 			[
-				'label' => __('Color', 'autoart'),
+				'label' => __('Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -315,7 +315,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'price_bg_color',
 			[
-				'label' => __('Background Color', 'autoart'),
+				'label' => __('Background Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -328,7 +328,7 @@ class Widget_CarsGridList extends Widget_Base
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'price_typography',
-				'label' => __('Typography', 'autoart'),
+				'label' => __('Typography', 'clwyd'),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-car-grid-layout .bt-post .bt-post--price',
 			]
@@ -337,7 +337,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'body_style',
 			[
-				'label' => __('Body', 'autoart'),
+				'label' => __('Body', 'clwyd'),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -345,7 +345,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'body_color',
 			[
-				'label' => __('Color', 'autoart'),
+				'label' => __('Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -357,7 +357,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'body_bg_color',
 			[
-				'label' => __('Background Color', 'autoart'),
+				'label' => __('Background Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -370,7 +370,7 @@ class Widget_CarsGridList extends Widget_Base
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'body_typography',
-				'label' => __('Typography', 'autoart'),
+				'label' => __('Typography', 'clwyd'),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-car-grid-layout .bt-post .bt-post--body',
 			]
@@ -379,7 +379,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'meta_style',
 			[
-				'label' => __('Meta', 'autoart'),
+				'label' => __('Meta', 'clwyd'),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -387,7 +387,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'meta_icon_color',
 			[
-				'label' => __('Icon Color', 'autoart'),
+				'label' => __('Icon Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -399,7 +399,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'meta_label_color',
 			[
-				'label' => __('Label Color', 'autoart'),
+				'label' => __('Label Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -412,7 +412,7 @@ class Widget_CarsGridList extends Widget_Base
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'meta_label_typography',
-				'label' => __('Label Typography', 'autoart'),
+				'label' => __('Label Typography', 'clwyd'),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-car-grid-layout .bt-post .bt-post--meta-item .bt-label',
 			]
@@ -421,7 +421,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'meta_value_color',
 			[
-				'label' => __('Value Color', 'autoart'),
+				'label' => __('Value Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -434,7 +434,7 @@ class Widget_CarsGridList extends Widget_Base
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'meta_value_typography',
-				'label' => __('Value Typography', 'autoart'),
+				'label' => __('Value Typography', 'clwyd'),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-car-grid-layout .bt-post .bt-post--meta-item .bt-value',
 			]
@@ -442,7 +442,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'readmore_style',
 			[
-				'label' => __('Read More', 'autoart'),
+				'label' => __('Read More', 'clwyd'),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -451,7 +451,7 @@ class Widget_CarsGridList extends Widget_Base
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'readmore_typography',
-				'label' => __('Typography', 'autoart'),
+				'label' => __('Typography', 'clwyd'),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-car-grid-layout .bt-post .bt-post--readmore a',
 			]
@@ -462,14 +462,14 @@ class Widget_CarsGridList extends Widget_Base
 		$this->start_controls_tab(
 			'readmore_tab_normal',
 			[
-				'label' => __('Normal', 'autoart'),
+				'label' => __('Normal', 'clwyd'),
 			]
 		);
 
 		$this->add_control(
 			'readmore_color',
 			[
-				'label' => __('Color', 'autoart'),
+				'label' => __('Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -482,7 +482,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'readmore_bg_color',
 			[
-				'label' => __('Background Color', 'autoart'),
+				'label' => __('Background Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -496,14 +496,14 @@ class Widget_CarsGridList extends Widget_Base
 		$this->start_controls_tab(
 			'readmore_tab_hover',
 			[
-				'label' => __('Hover', 'autoart'),
+				'label' => __('Hover', 'clwyd'),
 			]
 		);
 
 		$this->add_control(
 			'readmore_color_hover',
 			[
-				'label' => __('Color', 'autoart'),
+				'label' => __('Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -516,7 +516,7 @@ class Widget_CarsGridList extends Widget_Base
 		$this->add_control(
 			'readmore_bg_color_hover',
 			[
-				'label' => __('Background Color', 'autoart'),
+				'label' => __('Background Color', 'clwyd'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -541,7 +541,7 @@ class Widget_CarsGridList extends Widget_Base
 	protected function render()
 	{
 		$settings = $this->get_settings_for_display();
-		$query_args = autoart_cars_grid_list_query_args($_GET, $settings['orderby'], $settings['order'], $settings['posts_per_page'], $settings['category'], $settings['category_exclude']);
+		$query_args = clwyd_cars_grid_list_query_args($_GET, $settings['orderby'], $settings['order'], $settings['posts_per_page'], $settings['category'], $settings['category_exclude']);
 		$wp_query = new \WP_Query($query_args);
 		$current_page = isset($_GET['current_page']) && $_GET['current_page'] != '' ? $_GET['current_page'] : 1;
 		$total_page = $wp_query->max_num_pages;
@@ -560,9 +560,9 @@ class Widget_CarsGridList extends Widget_Base
 						<div class="bt-car-results-block">
 							<?php
 							if ($of > 0) {
-								printf(esc_html__('Showing %s - %s of %s results', 'autoart'), $from, $to, $of);
+								printf(esc_html__('Showing %s - %s of %s results', 'clwyd'), $from, $to, $of);
 							} else {
-								echo esc_html__('No results', 'autoart');
+								echo esc_html__('No results', 'clwyd');
 							}
 							?>
 						</div>
@@ -580,17 +580,17 @@ class Widget_CarsGridList extends Widget_Base
 							<input type="hidden" class="bt-car-current-page" name="current_page" value="<?php if (isset($_GET['current_page'])) echo esc_attr($_GET['current_page']); ?>">
 							<div class="bt-car-sort-block">
 								<span class="bt-sort-title">
-									<?php echo esc_html__('Sort by:', 'autoart'); ?>
+									<?php echo esc_html__('Sort by:', 'clwyd'); ?>
 								</span>
 								<div class="bt-sort-field">
 									<?php
 									$sort_options = array(
-										'date_high' => esc_html__('Date: newest first', 'autoart'),
-										'date_low' => esc_html__('Date: oldest first', 'autoart'),
-										'mileage_high' => esc_html__('Mileage: highest first', 'autoart'),
-										'mileage_low' => esc_html__('Mileage: lowest first', 'autoart'),
-										'price_high' => esc_html__('Price: highest first', 'autoart'),
-										'price_low' => esc_html__('Price: lower first', 'autoart')
+										'date_high' => esc_html__('Date: newest first', 'clwyd'),
+										'date_low' => esc_html__('Date: oldest first', 'clwyd'),
+										'mileage_high' => esc_html__('Mileage: highest first', 'clwyd'),
+										'mileage_low' => esc_html__('Mileage: lowest first', 'clwyd'),
+										'price_high' => esc_html__('Price: highest first', 'clwyd'),
+										'price_low' => esc_html__('Price: lower first', 'clwyd')
 									);
 									?>
 									<select name="sort_order">
@@ -659,13 +659,13 @@ class Widget_CarsGridList extends Widget_Base
 						</div>
 						<?php if ($settings['show_pagination'] == 'yes') { ?>
 							<div class="bt-car-pagination-wrap">
-								<?php echo autoart_cars_pagination($current_page, $total_page);
+								<?php echo clwyd_cars_pagination($current_page, $total_page);
 								?>
 							</div>
 						<?php } ?>
 					<?php
 					} else {
-						echo '<h3 class="not-found-post">' . esc_html__('Sorry, No results', 'autoart') . '</h3>';
+						echo '<h3 class="not-found-post">' . esc_html__('Sorry, No results', 'clwyd') . '</h3>';
 					}
 
 					wp_reset_postdata();

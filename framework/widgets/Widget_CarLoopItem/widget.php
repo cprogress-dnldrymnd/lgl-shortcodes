@@ -16,7 +16,7 @@ class Widget_CarLoopItem extends Widget_Base {
 	}
 
 	public function get_title() {
-		return __( 'Car Loop Item', 'autoart' );
+		return __( 'Car Loop Item', 'clwyd' );
 	}
 
 	public function get_icon() {
@@ -24,14 +24,14 @@ class Widget_CarLoopItem extends Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'autoart' ];
+		return [ 'clwyd' ];
 	}
 
 	protected function register_layout_section_controls() {
 		$this->start_controls_section(
 			'section_content',
 			[
-				'label' => __( 'Content', 'autoart' ),
+				'label' => __( 'Content', 'clwyd' ),
 			]
 		);
 
@@ -39,7 +39,7 @@ class Widget_CarLoopItem extends Widget_Base {
 			Group_Control_Image_Size::get_type(),
 			[
 				'name' => 'thumbnail',
-				'label' => __( 'Image Size', 'autoart' ),
+				'label' => __( 'Image Size', 'clwyd' ),
 				'show_label' => true,
 				'default' => 'medium',
 				'exclude' => [ 'custom' ],
@@ -49,7 +49,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_responsive_control(
 			'image_ratio',
 			[
-				'label' => __( 'Image Ratio', 'autoart' ),
+				'label' => __( 'Image Ratio', 'clwyd' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 0.66,
@@ -74,7 +74,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_box',
 			[
-				'label' => esc_html__( 'Box', 'autoart' ),
+				'label' => esc_html__( 'Box', 'clwyd' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -82,7 +82,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'box_border_width',
 			[
-				'label' => __( 'Border Width', 'autoart' ),
+				'label' => __( 'Border Width', 'clwyd' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px' ],
 				'range' => [
@@ -100,7 +100,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'box_border_radius',
 			[
-				'label' => __( 'Border Radius', 'autoart' ),
+				'label' => __( 'Border Radius', 'clwyd' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%' ],
 				'selectors' => [
@@ -112,7 +112,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_responsive_control(
 			'box_padding',
 			[
-				'label' => __( 'Padding', 'autoart' ),
+				'label' => __( 'Padding', 'clwyd' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px' ],
 				'range' => [
@@ -138,7 +138,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'box_bg_color',
 			[
-				'label' => __( 'Background Color', 'autoart' ),
+				'label' => __( 'Background Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .bt-post--inner' => 'background-color: {{VALUE}}',
@@ -149,7 +149,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'box_border_color',
 			[
-				'label' => __( 'Border Color', 'autoart' ),
+				'label' => __( 'Border Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .bt-post--inner' => 'border-color: {{VALUE}}',
@@ -162,7 +162,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_image',
 			[
-				'label' => esc_html__( 'Image', 'autoart' ),
+				'label' => esc_html__( 'Image', 'clwyd' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -170,7 +170,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'img_border_radius',
 			[
-				'label' => __( 'Border Radius', 'autoart' ),
+				'label' => __( 'Border Radius', 'clwyd' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%' ],
 				'selectors' => [
@@ -183,7 +183,7 @@ class Widget_CarLoopItem extends Widget_Base {
 
 		$this->start_controls_tab( 'thumbnail_tab_normal',
 			[
-				'label' => __( 'Normal', 'autoart' ),
+				'label' => __( 'Normal', 'clwyd' ),
 			]
 		);
 
@@ -199,7 +199,7 @@ class Widget_CarLoopItem extends Widget_Base {
 
 		$this->start_controls_tab( 'thumbnail_tab_hover',
 			[
-				'label' => __( 'Hover', 'autoart' ),
+				'label' => __( 'Hover', 'clwyd' ),
 			]
 		);
 
@@ -220,7 +220,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->start_controls_section(
 			'section_style_content',
 			[
-				'label' => esc_html__( 'Content', 'autoart' ),
+				'label' => esc_html__( 'Content', 'clwyd' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -228,7 +228,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'title_style',
 			[
-				'label' => __( 'Title', 'autoart' ),
+				'label' => __( 'Title', 'clwyd' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -236,7 +236,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'title_color',
 			[
-				'label' => __( 'Color', 'autoart' ),
+				'label' => __( 'Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -248,7 +248,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'title_color_hover',
 			[
-				'label' => __( 'Color Hover', 'autoart' ),
+				'label' => __( 'Color Hover', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -261,7 +261,7 @@ class Widget_CarLoopItem extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'title_typography',
-				'label' => __( 'Typography', 'autoart' ),
+				'label' => __( 'Typography', 'clwyd' ),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-post--title',
 			]
@@ -270,7 +270,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'price_style',
 			[
-				'label' => __( 'Price', 'autoart' ),
+				'label' => __( 'Price', 'clwyd' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -278,7 +278,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'price_color',
 			[
-				'label' => __( 'Color', 'autoart' ),
+				'label' => __( 'Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -291,7 +291,7 @@ class Widget_CarLoopItem extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'price_typography',
-				'label' => __( 'Typography', 'autoart' ),
+				'label' => __( 'Typography', 'clwyd' ),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-post--price',
 			]
@@ -300,7 +300,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'body_style',
 			[
-				'label' => __( 'Body', 'autoart' ),
+				'label' => __( 'Body', 'clwyd' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -308,7 +308,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'body_color',
 			[
-				'label' => __( 'Color', 'autoart' ),
+				'label' => __( 'Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -320,7 +320,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'body_bg_color',
 			[
-				'label' => __( 'Background Color', 'autoart' ),
+				'label' => __( 'Background Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -333,7 +333,7 @@ class Widget_CarLoopItem extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'body_typography',
-				'label' => __( 'Typography', 'autoart' ),
+				'label' => __( 'Typography', 'clwyd' ),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-post--body',
 			]
@@ -342,7 +342,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'meta_style',
 			[
-				'label' => __( 'Meta', 'autoart' ),
+				'label' => __( 'Meta', 'clwyd' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -350,7 +350,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'meta_icon_color',
 			[
-				'label' => __( 'Icon Color', 'autoart' ),
+				'label' => __( 'Icon Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -362,7 +362,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'meta_label_color',
 			[
-				'label' => __( 'Label Color', 'autoart' ),
+				'label' => __( 'Label Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -375,7 +375,7 @@ class Widget_CarLoopItem extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'meta_label_typography',
-				'label' => __( 'Label Typography', 'autoart' ),
+				'label' => __( 'Label Typography', 'clwyd' ),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-post--meta-item .bt-label',
 			]
@@ -384,7 +384,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'meta_value_color',
 			[
-				'label' => __( 'Value Color', 'autoart' ),
+				'label' => __( 'Value Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -397,7 +397,7 @@ class Widget_CarLoopItem extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'meta_value_typography',
-				'label' => __( 'Value Typography', 'autoart' ),
+				'label' => __( 'Value Typography', 'clwyd' ),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-post--meta-item .bt-value',
 			]
@@ -406,7 +406,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'readmore_style',
 			[
-				'label' => __( 'Read More', 'autoart' ),
+				'label' => __( 'Read More', 'clwyd' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -415,7 +415,7 @@ class Widget_CarLoopItem extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'readmore_typography',
-				'label' => __( 'Typography', 'autoart' ),
+				'label' => __( 'Typography', 'clwyd' ),
 				'default' => '',
 				'selector' => '{{WRAPPER}} .bt-post--readmore a',
 			]
@@ -425,14 +425,14 @@ class Widget_CarLoopItem extends Widget_Base {
 
 		$this->start_controls_tab( 'readmore_tab_normal',
 			[
-				'label' => __( 'Normal', 'autoart' ),
+				'label' => __( 'Normal', 'clwyd' ),
 			]
 		);
 
 		$this->add_control(
 			'readmore_color',
 			[
-				'label' => __( 'Color', 'autoart' ),
+				'label' => __( 'Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -445,7 +445,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'readmore_bg_color',
 			[
-				'label' => __( 'Background Color', 'autoart' ),
+				'label' => __( 'Background Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -458,14 +458,14 @@ class Widget_CarLoopItem extends Widget_Base {
 
 		$this->start_controls_tab( 'readmore_tab_hover',
 			[
-				'label' => __( 'Hover', 'autoart' ),
+				'label' => __( 'Hover', 'clwyd' ),
 			]
 		);
 
 		$this->add_control(
 			'readmore_color_hover',
 			[
-				'label' => __( 'Color', 'autoart' ),
+				'label' => __( 'Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -478,7 +478,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'readmore_bg_color_hover',
 			[
-				'label' => __( 'Background Color', 'autoart' ),
+				'label' => __( 'Background Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -494,7 +494,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'icon_btn_style',
 			[
-				'label' => __( 'Icon Button', 'autoart' ),
+				'label' => __( 'Icon Button', 'clwyd' ),
 				'type' => Controls_Manager::HEADING,
 			]
 		);
@@ -503,14 +503,14 @@ class Widget_CarLoopItem extends Widget_Base {
 
 		$this->start_controls_tab( 'icon_btn_tab_normal',
 			[
-				'label' => __( 'Normal', 'autoart' ),
+				'label' => __( 'Normal', 'clwyd' ),
 			]
 		);
 
 		$this->add_control(
 			'icon_btn_color',
 			[
-				'label' => __( 'Color', 'autoart' ),
+				'label' => __( 'Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -522,7 +522,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'icon_btn_bg_color',
 			[
-				'label' => __( 'Background Color', 'autoart' ),
+				'label' => __( 'Background Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -535,14 +535,14 @@ class Widget_CarLoopItem extends Widget_Base {
 
 		$this->start_controls_tab( 'icon_btn_tab_added',
 			[
-				'label' => __( 'Added', 'autoart' ),
+				'label' => __( 'Added', 'clwyd' ),
 			]
 		);
 
 		$this->add_control(
 			'icon_btn_color_hover',
 			[
-				'label' => __( 'Color', 'autoart' ),
+				'label' => __( 'Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
@@ -554,7 +554,7 @@ class Widget_CarLoopItem extends Widget_Base {
 		$this->add_control(
 			'icon_btn_bg_color_hover',
 			[
-				'label' => __( 'Background Color', 'autoart' ),
+				'label' => __( 'Background Color', 'clwyd' ),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
