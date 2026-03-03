@@ -98,10 +98,8 @@ class ElementorWidgets
 		// FIX: Using fully qualified namespaces to guarantee the classes are found.
 		// Ensure that the namespace defined at the top of each widget.php matches these exactly.
 
-		if (class_exists('\LGLArtElementorWidgets\Widgets\CarLoopItem\Widget_CarLoopItem')) {
-			$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItem\Widget_CarLoopItem());
-		}
 
+		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItem\Widget_CarLoopItem());
 
 		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItemStyle1\Widget_CarLoopItemStyle1());
 		$widgets_manager->register(new \LGLArtElementorWidgets\Widgets\CarLoopItemStyle2\Widget_CarLoopItemStyle2());
