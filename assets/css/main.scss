@@ -107,6 +107,9 @@
         display: flex;
         align-items: center;
 
+        .select2-selection__placeholder {
+            color: var(--lgl-secondary);
+        }
         @media (max-width: 991px) {
             padding-left: 15px;
         }

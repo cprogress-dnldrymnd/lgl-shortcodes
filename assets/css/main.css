@@ -75,6 +75,8 @@
     min-height: 64px;
     display: flex;
     align-items: center; }
+    .lgl-search-container.lgl-search-container.lgl-search-container .select2-container .select2-selection__placeholder {
+      color: var(--lgl-secondary); }
     @media (max-width: 991px) {
       .lgl-search-container.lgl-search-container.lgl-search-container .select2-container {
         padding-left: 15px; } }
