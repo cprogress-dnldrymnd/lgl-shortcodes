@@ -778,19 +778,35 @@
         background-color: var(--lgl-secondary);
         color: var(--lgl-tertiary);
         border-color: var(--lgl-secondary);
+        &:hover {
+            background-color: var(--lgl-primary);
+            border-color: var(--lgl-primary);
+        }
     }
     &.lgl-btn-primary {
         background-color: var(--lgl-primary);
         color: var(--lgl-tertiary);
         border-color: var(--lgl-primary);
+        &:hover {
+            background-color: var(--lgl-secondary);
+            border-color: var(--lgl-secondary);
+        }
     }
     &.lgl-btn-accent {
         background-color: var(--lgl-accent);
         color: var(--lgl-secondary);
         border-color: var(--lgl-accent);
+        &:hover {
+            background-color: var(--lgl-secondary);
+            border-color: var(--lgl-secondary);
+        }
     }
     &.lgl-btn-outline {
         color: var(--lgl-secondary);
         border-color: var(--lgl-secondary);
+        &:hover {
+            background-color: var(--lgl-secondary);
+            color: var(--lgl-tertiary);
+        }
     }
 }
