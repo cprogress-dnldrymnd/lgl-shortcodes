@@ -423,7 +423,7 @@ if (! class_exists('LGL_Shortcodes')) {
 				while ($query->have_posts()) {
 					$query->the_post();
 					// Load isolated template component for the iteration to ensure maintainability
-					include LGL_SHORTCODES_PATH . 'templates/partials/result-item.php';
+					include LGL_SHORTCODES_PATH . 'templates/partials/lgl-grid.php';
 				}
 			} else {
 				echo '<div class="lgl-no-results">No vehicles found matching your criteria.</div>';
