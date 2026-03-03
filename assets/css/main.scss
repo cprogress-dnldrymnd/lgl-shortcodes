@@ -2,17 +2,19 @@
 // 1. CSS Variables Implementation (Design System)
 // ==========================================================================
 :root {
-    --lgl-light-blue-grey: #ececec;
+    --lgl-light-blue-gray: #ececec;
     --lgl-white: #ffffff;
     --lgl-electric-blue: #007bff;
-    --lgl-dark-grey-text: #3d3d3d;
-    --lgl-medium-light-grey: #e8ecee;
-    --lgl-soft-grey: #f5f5f5;
+    --lgl-soft-gray: #f5f5f5;
 
     --lgl-primary: #003793;
     --lgl-secondary: #001537;
     --lgl-accent: #f6d100;
     --lgl-light-gray: #e4ecff;
+    --lgl-dark-gray: #555;
+    --lgl-medium-gray: #e8ecee;
+
+
 }
 
 // ==========================================================================
@@ -39,7 +41,7 @@
             flex: 0 0 14.28%;
             label {
                 font-size: 13px;
-                color: var(--lgl-dark-grey-text);
+                color: var(--lgl-dark-gray);
                 margin-bottom: 8px;
                 font-weight: 500;
                 opacity: 0.8;
@@ -52,7 +54,7 @@
                 width: 100%;
                 padding: 14px 16px;
                 border-radius: 0;
-                color: var(--lgl-dark-grey-text);
+                color: var(--lgl-dark-gray);
                 font-size: 14px;
                 transition:
                     border-color 0.3s ease,
@@ -188,7 +190,7 @@
                 right: 12px;
 
                 b {
-                    border-color: var(--lgl-dark-grey-text) transparent transparent transparent;
+                    border-color: var(--lgl-dark-gray) transparent transparent transparent;
                     border-width: 5px 4px 0 4px;
                 }
             }
@@ -211,14 +213,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid var(--lgl-medium-light-grey);
+        border-bottom: 1px solid var(--lgl-medium-gray);
         padding-bottom: 16px;
         margin-bottom: 32px;
 
         .bt-car-results-block {
-            color: var(--lgl-dark-grey-text);
-            font-size: 14px;
-            opacity: 0.7;
+            color: var(--lgl-dark-gray);
+            font-size: 16px;
         }
 
         .bt-car-sort-block {
@@ -226,7 +227,7 @@
             align-items: center;
             gap: 12px;
             font-size: 14px;
-            color: var(--lgl-dark-grey-text);
+            color: var(--lgl-dark-gray);
 
             .bt-sort-title {
                 opacity: 0.7;
@@ -250,7 +251,7 @@
         // Individual Result Card
         .bt-post {
             background-color: var(--lgl-white);
-            border: 1px solid var(--lgl-medium-light-grey);
+            border: 1px solid var(--lgl-medium-gray);
             border-radius: 8px;
             overflow: hidden;
             display: flex;
@@ -289,7 +290,7 @@
 
                     a {
                         background: var(--lgl-white);
-                        color: var(--lgl-dark-grey-text);
+                        color: var(--lgl-dark-gray);
                         border-radius: 50%;
                         width: 36px;
                         height: 36px;
@@ -343,7 +344,7 @@
                     line-height: 1.4;
 
                     a {
-                        color: var(--lgl-dark-grey-text);
+                        color: var(--lgl-dark-gray);
                         text-decoration: none;
                         transition: color 0.3s ease;
 
@@ -355,8 +356,8 @@
 
                 // Meta Specs (Year, Mileage, Berth)
                 .bt-post--meta {
-                    border-top: 1px solid var(--lgl-medium-light-grey);
-                    border-bottom: 1px solid var(--lgl-medium-light-grey);
+                    border-top: 1px solid var(--lgl-medium-gray);
+                    border-bottom: 1px solid var(--lgl-medium-gray);
                     padding: 16px 0;
                     margin-bottom: 20px;
                     margin-top: auto; // Push to bottom of flex container
@@ -370,7 +371,7 @@
                             text-align: center;
 
                             &:not(:last-child) {
-                                border-right: 1px solid var(--lgl-medium-light-grey);
+                                border-right: 1px solid var(--lgl-medium-gray);
                             }
                         }
 
@@ -379,11 +380,11 @@
                             flex-direction: column;
                             align-items: center;
                             font-size: 12px;
-                            color: var(--lgl-dark-grey-text);
+                            color: var(--lgl-dark-gray);
 
                             svg {
                                 margin-bottom: 8px;
-                                fill: var(--lgl-dark-grey-text);
+                                fill: var(--lgl-dark-gray);
                                 opacity: 0.7;
                             }
 
