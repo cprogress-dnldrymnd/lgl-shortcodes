@@ -55,24 +55,24 @@ final class LGL_Elementor_Extension
 	{
 		add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_styles']);
 		add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueue_scripts']);
-		add_action('plugins_loaded', [$this, 'load_theme_framework']);
+		add_action('plugins_loaded', [$this, 'load_plugin_framework']);
 	}
 	/**
-	 * Load external theme framework
-	 *
-	 * Executes the theme-level framework load as required. 
-	 * Hooked to 'plugins_loaded' to ensure the WordPress environment is fully initialized.
-	 * Note: Using get_template_directory() creates a hard dependency between this plugin and the active theme.
-	 *
-	 * @return void
-	 */
-	public function load_theme_framework()
-	{
-		$framework_path = get_template_directory() . '/framework/widget-load.php';
-		if (file_exists($framework_path)) {
-			require_once $framework_path;
-		}
-	}
+     * Load internal plugin framework
+     *
+     * Executes the plugin-level framework load as required. 
+     * Hooked to 'plugins_loaded' to ensure the WordPress environment is fully initialized.
+     *
+     * @return void
+     */
+    public function load_plugin_framework()
+    {
+        // Resolves to: /wp-content/plugins/your-plugin-folder/framework/widget-load.php
+        $framework_path = plugin_dir_path( __FILE__ ) . 'framework/widget-load.php';
+        
+        if (file_exists($framework_path)) {
+            require_once $framework_path;
+        }
 
 	/**
 	 * Register Custom Widgets
@@ -86,7 +86,7 @@ final class LGL_Elementor_Extension
 	public function register_widgets($widgets_manager)
 	{
 		// 1. Load the framework here. This ensures \Elementor\Widget_Base is available.
-		$this->load_theme_framework();
+		$this->load_plugin_framework();
 
 		// 2. Register the widget instances. 
 		// Replace 'LGL_My_Custom_Widget' with the actual class name defined in your theme files.

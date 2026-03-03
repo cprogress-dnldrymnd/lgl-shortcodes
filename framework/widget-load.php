@@ -49,26 +49,30 @@ class ElementorWidgets
 
 	public function widget_styles()
 	{
-		wp_enqueue_style('slick-slider', get_template_directory_uri() . '/assets/libs/slick/slick.css', array(), false);
+		// Use plugins_url to get the URL relative to this specific file's directory
+		wp_enqueue_style('slick-slider', plugins_url('../assets/libs/slick/slick.css', __FILE__), array(), false);
 	}
 
 	public function widget_scripts()
 	{
-		wp_register_script('slick-slider', get_template_directory_uri() . '/assets/libs/slick/slick.min.js', array('jquery'), '', true);
-		wp_register_script('select2-min', get_template_directory_uri() . '/assets/libs/select2/select2.min.js', array('jquery'), '', true);
-		wp_register_script('elementor-widgets', get_template_directory_uri() . '/framework/widgets/frontend.js', ['jquery'], '', true);
+		wp_register_script('slick-slider', plugins_url('../assets/libs/slick/slick.min.js', __FILE__), array('jquery'), '', true);
+		wp_register_script('select2-min', plugins_url('../assets/libs/select2/select2.min.js', __FILE__), array('jquery'), '', true);
+		wp_register_script('elementor-widgets', plugins_url('widgets/frontend.js', __FILE__), ['jquery'], '', true);
 	}
 
 	private function include_widgets_files()
 	{
+		// plugin_dir_path(__FILE__) gets the path to the /framework/ folder where widget-load.php lives
+		$framework_dir = plugin_dir_path(__FILE__);
+
 		foreach ($this->widgets_list() as $widget) {
-			$widget_file = get_template_directory() . '/framework/widgets/' . $widget . '/widget.php';
+			$widget_file = $framework_dir . 'widgets/' . $widget . '/widget.php';
 
 			if (file_exists($widget_file)) {
 				require_once $widget_file;
 			}
 
-			$skins_pattern = get_template_directory() . '/framework/widgets/' . $widget . '/skins/*.php';
+			$skins_pattern = $framework_dir . 'widgets/' . $widget . '/skins/*.php';
 			foreach (glob($skins_pattern) as $filepath) {
 				if (file_exists($filepath)) {
 					include $filepath;
