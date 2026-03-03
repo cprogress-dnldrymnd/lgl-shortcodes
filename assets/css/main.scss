@@ -238,7 +238,7 @@
     }
 
     // Grid Architecture
-    .bt-car-grid-layout {
+    .bt-car-grid-layout.bt-car-grid-layout {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 32px;
