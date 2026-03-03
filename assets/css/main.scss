@@ -867,11 +867,24 @@
     display: flex;
     gap: 16px;
     &:before {
-        content: '';
+        content: "";
         width: 5px;
         display: block;
-        height: 100%;
         background: transparent linear-gradient(90deg, var(--lgl-color-primary) 0%, var(--lgl-color-tertiary) 100%) 0%
             0% no-repeat padding-box;
     }
+}
+
+.lgl-panel-item--inner {
+    padding: 50px 50px 60px 50px;
+    border-radius: 0 0 20px 20px;
+    border: 1px solid var(--lgl-color-gray);
+    border-top: none;
+}
+
+.lgl-meta-list {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    row-gap: 10px;
 }
