@@ -58,7 +58,7 @@ $title = get_the_title();
             </div>
 
             <?php
-            include LGL_SHORTCODES_PATH . 'templates/partials/lgl-meta.php';
+            include LGL_SHORTCODES_PATH . 'templates/partials/lgl-meta-short.php';
             ?>
 
             <div class="lgl-post--readmore">
