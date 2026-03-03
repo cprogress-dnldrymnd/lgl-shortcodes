@@ -5,10 +5,10 @@
   --lgl-dark-grey-text: #3d3d3d;
   --lgl-medium-light-grey: #e8ecee;
   --lgl-soft-grey: #f5f5f5;
-  --lgl-input-border: #e8ecee;
   --lgl-primary: #003793;
-  --lgl-deep-dark-blue: #001537;
-  --lgl-accent: #f6d100; }
+  --lgl-scondary: #001537;
+  --lgl-accent: #f6d100;
+  --lgl-input-border: #e4ecff; }
 
 .lgl-search-container {
   padding: 32px;
@@ -38,9 +38,7 @@
       .lgl-search-container .lgl-filter-form .lgl-filter-group input[type="text"] {
         width: 100%;
         padding: 14px 16px;
-        border: 1px solid var(--lgl-input-border);
         border-radius: 0;
-        background-color: var(--lgl-soft-grey);
         color: var(--lgl-dark-grey-text);
         font-size: 14px;
         transition: border-color 0.3s ease, box-shadow 0.3s ease; }
@@ -56,7 +54,7 @@
       padding: 11px; }
       .lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit {
         background-color: var(--lgl-accent);
-        color: var(--lgl-deep-dark-blue);
+        color: var(--lgl-scondary);
         border: none;
         padding: 16px 32px;
         font-weight: 800;
@@ -68,7 +66,7 @@
         transition: background-color 0.3s ease, transform 0.1s ease;
         width: 100%; }
         .lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit:hover {
-          background-color: var(--lgl-deep-dark-blue); }
+          background-color: var(--lgl-scondary); }
         .lgl-search-container .lgl-filter-form .lgl-submit-group .lgl-search-submit:active {
           transform: translateY(1px); }
   .lgl-search-container .select2-container {
@@ -222,7 +220,7 @@
         .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--price {
           font-size: 22px;
           font-weight: 700;
-          color: var(--lgl-deep-dark-blue);
+          color: var(--lgl-scondary);
           margin-bottom: 8px; }
         .lgl-results-wrapper .bt-car-grid-layout .bt-post .bt-post--infor .bt-post--title {
           font-size: 18px;
