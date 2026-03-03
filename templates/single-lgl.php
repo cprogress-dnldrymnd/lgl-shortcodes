@@ -195,14 +195,14 @@ get_header();
                                     if (!empty($price)) {
                                         echo '$' . number_format($price, 0);
                                     } else {
-                                        echo '<span class="lgl-call-price">' . esc_html__('Call for price', 'autoart') . '</span>';
+                                        echo '<span class="lgl-call-price">' . esc_html__('Call for price', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
 
                                 <?php if (!empty($price) && !empty($monthly) && $monthly > 0) { ?>
                                     <div class="lgl-sale-finance">
-                                        <div class="lgl-finance-label"><?php echo esc_html__('FINANCE FROM', 'autoart'); ?></div>
+                                        <div class="lgl-finance-label"><?php echo esc_html__('FINANCE FROM', 'lgl'); ?></div>
                                     </div>
                                 <?php } ?>
                             </div><!-- /.lgl-sale-card -->
@@ -218,7 +218,7 @@ get_header();
                                 ?>
                                 <div class="lgl-post--readmore-sidebar">
                                     <a href="#">
-                                        <?php echo esc_html__('Part-exchange available', 'autoart'); ?>
+                                        <?php echo esc_html__('Part-exchange available', 'lgl'); ?>
                                     </a>
                                 </div>
                             </div>
@@ -240,15 +240,15 @@ get_header();
                             <!-- ✅ Buttons OUTSIDE the card BUT STILL INSIDE lgl-sale-block -->
                             <div class="lgl-sale-actions-outside">
                                 <a class="lgl-btn-calculator" href="#lgl-tab-overview">
-                                    <?php echo esc_html__('FINANCE CALCULATOR', 'autoart'); ?>
+                                    <?php echo esc_html__('FINANCE CALCULATOR', 'lgl'); ?>
                                 </a>
 
                                 <a class="lgl-btn-primary" href="#lgl-tab-overview">
-                                    <?php echo esc_html__('ENQUIRE NOW', 'autoart'); ?>
+                                    <?php echo esc_html__('ENQUIRE NOW', 'lgl'); ?>
                                 </a>
 
                                 <a class="lgl-btn-outline" href="#lgl-tab-overview">
-                                    <?php echo esc_html__('RESERVE NOW', 'autoart'); ?>
+                                    <?php echo esc_html__('RESERVE NOW', 'lgl'); ?>
                                 </a>
                             </div>
 
@@ -329,31 +329,31 @@ get_header();
             <div class="lgl-post--tabs lgl-tabs lgl-tabs-js">
                 <div class="lgl-tabs--tbnav">
                     <a href="#bt_panel_overview" class="lgl-nav-item lgl-is-active">
-                        <span><?php echo esc_html__('Key Information', 'autoart'); ?></span>
+                        <span><?php echo esc_html__('Key Information', 'lgl'); ?></span>
                     </a>
                     <?php if (!empty(get_the_content())) { ?>
                         <a href="#bt_panel_desc" class="lgl-nav-item">
-                            <span><?php echo esc_html__('Description', 'autoart'); ?></span>
+                            <span><?php echo esc_html__('Description', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
                     <?php if (!empty($interior_features)) { ?>
                         <a href="#bt_panel_interior" class="lgl-nav-item">
-                            <span><?php echo esc_html__('Interior features', 'autoart'); ?></span>
+                            <span><?php echo esc_html__('Interior features', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
                     <?php if (!empty($exterior_features)) { ?>
                         <a href="#bt_panel_exterior" class="lgl-nav-item">
-                            <span><?php echo esc_html__('Exterior features', 'autoart'); ?></span>
+                            <span><?php echo esc_html__('Exterior features', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
                     <?php if (!empty($floor_plan)) { ?>
                         <a href="#bt_panel_floorplan" class="lgl-nav-item">
-                            <span><?php echo esc_html__('Floor plan', 'autoart'); ?></span>
+                            <span><?php echo esc_html__('Floor plan', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
                     <?php if (!empty($warranty)) { ?>
                         <a href="#bt_panel_warranty" class="lgl-nav-item">
-                            <span><?php echo esc_html__('Warranty', 'autoart'); ?></span>
+                            <span><?php echo esc_html__('Warranty', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
                 </div>
@@ -361,7 +361,7 @@ get_header();
                     <div id="bt_panel_overview" class="lgl-panel-item lgl-panel-overview lgl-is-active">
                         <div class="lgl-panel-item--inner">
                             <h3 class="lgl-title-ss">
-                                <?php echo '<span>' . esc_html__('Key Information', 'autoart') . '</span>'; ?>
+                                <?php echo '<span>' . esc_html__('Key Information', 'lgl') . '</span>'; ?>
                             </h3>
                             <div class="lgl-content-ss lgl-meta-list">
                                 <div class="lgl-meta-item lgl-body">
@@ -370,12 +370,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Body:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Body:', 'lgl') . '</span>';
 
                                     if (!empty($body)) {
                                         echo '<span class="lgl-value">' . $body->name . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -385,12 +385,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Condition:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Condition:', 'lgl') . '</span>';
 
                                     if (!empty($condition)) {
                                         echo '<span class="lgl-value">' . $condition->name . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -409,12 +409,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Mileage', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Mileage', 'lgl') . '</span>';
 
                                     if (!empty($mileage)) {
-                                        echo '<span class="lgl-value">' . number_format($mileage, 0) . esc_html__(' km', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . number_format($mileage, 0) . esc_html__(' km', 'lgl') . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -428,12 +428,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Engine Size:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Engine Size:', 'lgl') . '</span>';
 
                                     if (!empty($engine)) {
                                         echo '<span class="lgl-value">' . $engine->name . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -447,12 +447,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Fuel Type:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Fuel Type:', 'lgl') . '</span>';
 
                                     if (!empty($fuel_type)) {
                                         echo '<span class="lgl-value">' . $fuel_type->name . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -463,12 +463,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Door:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Door:', 'lgl') . '</span>';
 
                                     if (!empty($door)) {
                                         echo '<span class="lgl-value">' . $door->name . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -481,12 +481,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Year:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Year:', 'lgl') . '</span>';
 
                                     if (!empty($year)) {
                                         echo '<span class="lgl-value">' . $year . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -496,12 +496,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Cylinder:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Cylinder:', 'lgl') . '</span>';
 
                                     if (!empty($cylinder)) {
                                         echo '<span class="lgl-value">' . $cylinder->name . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -519,12 +519,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Transmission:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Transmission:', 'lgl') . '</span>';
 
                                     if (!empty($transmission)) {
                                         echo '<span class="lgl-value">' . $transmission->name . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -535,12 +535,12 @@ get_header();
                                     </svg>
 
                                     <?php
-                                    echo '<span class="lgl-label">' . esc_html__('Color:', 'autoart') . '</span>';
+                                    echo '<span class="lgl-label">' . esc_html__('Color:', 'lgl') . '</span>';
 
                                     if (!empty($color_arr)) {
                                         echo '<span class="lgl-value">' . implode(', ', $color_arr) . '</span>';
                                     } else {
-                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'autoart') . '</span>';
+                                        echo '<span class="lgl-value">' . esc_html__('N/A', 'lgl') . '</span>';
                                     }
                                     ?>
                                 </div>
@@ -551,7 +551,7 @@ get_header();
                         <div id="bt_panel_desc" class="lgl-panel-item lgl-panel-desc">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
-                                    <?php echo '<span>' . esc_html__('Description', 'autoart') . '</span>'; ?>
+                                    <?php echo '<span>' . esc_html__('Description', 'lgl') . '</span>'; ?>
                                 </h3>
                                 <div class="lgl-content-ss">
                                     <?php the_content(); ?>
@@ -564,7 +564,7 @@ get_header();
                         <div id="bt_panel_interior" class="lgl-panel-item lgl-panel-interior">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
-                                    <span><?php echo esc_html__('Interior features', 'autoart'); ?></span>
+                                    <span><?php echo esc_html__('Interior features', 'lgl'); ?></span>
                                 </h3>
                                 <div class="lgl-content-ss">
                                     <?php echo wp_kses_post($interior_features); ?>
@@ -577,7 +577,7 @@ get_header();
                         <div id="bt_panel_exterior" class="lgl-panel-item lgl-panel-exterior">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
-                                    <span><?php echo esc_html__('Exterior features', 'autoart'); ?></span>
+                                    <span><?php echo esc_html__('Exterior features', 'lgl'); ?></span>
                                 </h3>
                                 <div class="lgl-content-ss">
                                     <?php echo wp_kses_post($exterior_features); ?>
@@ -590,7 +590,7 @@ get_header();
                         <div id="bt_panel_floorplan" class="lgl-panel-item lgl-panel-floorplan">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
-                                    <span><?php echo esc_html__('Floor plan', 'autoart'); ?></span>
+                                    <span><?php echo esc_html__('Floor plan', 'lgl'); ?></span>
                                 </h3>
                                 <div class="lgl-content-ss">
                                     <?php echo wp_kses_post($floor_plan); ?>
@@ -603,7 +603,7 @@ get_header();
                         <div id="bt_panel_warranty" class="lgl-panel-item lgl-panel-warranty">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
-                                    <span><?php echo esc_html__('Warranty', 'autoart'); ?></span>
+                                    <span><?php echo esc_html__('Warranty', 'lgl'); ?></span>
                                 </h3>
                                 <div class="lgl-content-ss">
                                     <?php echo wp_kses_post($warranty); ?>
