@@ -53,9 +53,9 @@ final class LGL_Elementor_Extension
 	 */
 	public function __construct()
 	{
-		aLGL_action('elementor/widgets/register', [$this, 'register_widgets']);
-		aLGL_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_styles']);
-		aLGL_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueue_scripts']);
+		add_action('elementor/widgets/register', [$this, 'register_widgets']);
+		add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_styles']);
+		add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueue_scripts']);
 
 		$this->load_theme_framework();
 	}
