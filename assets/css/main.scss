@@ -607,8 +607,12 @@
         margin-left: auto;
         margin-right: auto;
 
-        .bt-post--wrap {
-            
+        .lgl-post--wrap {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px !important;
         }
     }
 }
