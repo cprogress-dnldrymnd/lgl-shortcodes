@@ -613,6 +613,12 @@
             flex-wrap: wrap;
             gap: 30px;
             margin-bottom: 40px !important;
+            .bt-post--main {
+                width: calc(66.66% - 15px);
+            }
+            .bt-post--sidebar {
+                width: calc(33.33% - 15px);
+            }
         }
     }
 }
