@@ -9,20 +9,20 @@ jQuery(document).ready(function ($) {
 
 function search_form() {
     // Initialize Select2 on target classes
-    $('.lgl-select2').select2({
+    jQuery('.lgl-select2').select2({
         width: '100%'
     });
 
     // Dependent Dropdown Logic (Make -> Model)
-    $('#lgl_make').on('change', function () {
-        let make_id = $(this).val();
-        let $model_select = $('#lgl_model');
+    jQuery('#lgl_make').on('change', function () {
+        let make_id = jQuery(this).val();
+        let $model_select = jQuery('#lgl_model');
 
         // Reset model dropdown
         $model_select.empty().append('<option value="">Select Model</option>').prop('disabled', true);
 
         if (make_id) {
-            $.ajax({
+            jQuery.ajax({
                 url: lgl_ajax_obj.ajax_url,
                 type: 'POST',
                 data: {
@@ -32,7 +32,7 @@ function search_form() {
                 },
                 success: function (response) {
                     if (response.success && response.data.length > 0) {
-                        $.each(response.data, function (index, item) {
+                        jQuery.each(response.data, function (index, item) {
                             $model_select.append(new Option(item.text, item.id, false, false));
                         });
                         $model_select.prop('disabled', false).trigger('change');
@@ -43,18 +43,18 @@ function search_form() {
     });
 
     // Handle Search Execution
-    $('#lgl-search-form, #lgl-sort-order').on('submit change', function (e) {
+    jQuery('#lgl-search-form, #lgl-sort-order').on('submit change', function (e) {
         if (e.type === 'submit') e.preventDefault();
 
         // Serialize primary form and combine with sorting value
-        let formData = $('#lgl-search-form').serialize() + '&sort_order=' + $('#lgl-sort-order').val();
-        let postType = $('#lgl_target_post_type').val();
+        let formData = jQuery('#lgl-search-form').serialize() + '&sort_order=' + jQuery('#lgl-sort-order').val();
+        let postType = jQuery('#lgl_target_post_type').val();
 
         // UI State management
-        $('#lgl-loader').show();
-        $('#lgl-results-grid').css('opacity', '0.5');
+        jQuery('#lgl-loader').show();
+        jQuery('#lgl-results-grid').css('opacity', '0.5');
 
-        $.ajax({
+        jQuery.ajax({
             url: lgl_ajax_obj.ajax_url,
             type: 'POST',
             data: {
@@ -65,8 +65,8 @@ function search_form() {
             },
             success: function (response) {
                 if (response.success) {
-                    $('#lgl-results-grid').html(response.data.html);
-                    $('#lgl-results-count').html('Showing ' + response.data.count + ' results');
+                    jQuery('#lgl-results-grid').html(response.data.html);
+                    jQuery('#lgl-results-count').html('Showing ' + response.data.count + ' results');
                 } else {
                     alert('Error fetching results.');
                 }
@@ -75,22 +75,22 @@ function search_form() {
                 alert('A server error occurred. Please try again.');
             },
             complete: function () {
-                $('#lgl-loader').hide();
-                $('#lgl-results-grid').css('opacity', '1');
+                jQuery('#lgl-loader').hide();
+                jQuery('#lgl-results-grid').css('opacity', '1');
             }
         });
     });
 
     // Trigger initial search to populate grid on load
-    if ($('#lgl-search-form').length) {
-        $('#lgl-search-form').trigger('submit');
+    if (jQuery('#lgl-search-form').length) {
+        jQuery('#lgl-search-form').trigger('submit');
     }
 
 }
 
 function add_to_wishlist() {
     // Add Notification Container to Body
-    $('body').append('<div id="lgl-notification-container"></div>');
+    jQuery('body').append('<div id="lgl-notification-container"></div>');
 
     /**
      * Display a toast notification.
@@ -98,8 +98,8 @@ function add_to_wishlist() {
      * @param {string} type - 'success' or 'error' for styling.
      */
     function showNotification(message, type = 'success') {
-        const $container = $('#lgl-notification-container');
-        const $notification = $('<div class="lgl-toast lgl-toast-' + type + '">' + message + '</div>');
+        const $container = jQuery('#lgl-notification-container');
+        const $notification = jQuery('<div class="lgl-toast lgl-toast-' + type + '">' + message + '</div>');
 
         $container.append($notification);
 
@@ -119,10 +119,10 @@ function add_to_wishlist() {
     }
 
     // Handle Wishlist Click (Delegated for dynamic AJAX elements)
-    $(document).on('click', '.lgl-wishlist-btn', function (e) {
+    jQuery(document).on('click', '.lgl-wishlist-btn', function (e) {
         e.preventDefault();
 
-        let $btn = $(this);
+        let $btn = jQuery(this);
         let postId = $btn.data('id');
 
         // Prevent multiple clicks
@@ -130,7 +130,7 @@ function add_to_wishlist() {
 
         $btn.addClass('processing');
 
-        $.ajax({
+        jQuery.ajax({
             url: lgl_ajax_obj.ajax_url,
             type: 'POST',
             data: {
