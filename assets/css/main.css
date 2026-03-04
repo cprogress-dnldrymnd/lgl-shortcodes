@@ -13,7 +13,8 @@
   --lgl-color-dark-gray: #555;
   --lgl-color-gray: #969696;
   --lgl-color-light-blue: #f7faff;
-  --lgl-color-light-blue-gray: #ececec; }
+  --lgl-color-light-blue-gray: #ececec;
+  --lgl-color-success: #28a745; }
 
 .lgl-holder {
   font-family: var(--lgl-font-primary); }
@@ -392,6 +393,7 @@
   transform: translateX(0); }
 
 .lgl-toast-success {
+  background-color: var(--lgl-color-success);
   border-left: 4px solid var(--lgl-color-tertiary); }
 
 .lgl-toast-error {
