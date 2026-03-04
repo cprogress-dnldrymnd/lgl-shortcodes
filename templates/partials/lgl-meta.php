@@ -51,32 +51,3 @@ foreach ($schema as $key => $data) {
 $output .= '</div>';
 
 echo $output;
-
-	/** Fields to display in Listing Details meta box (meta_key => label). */
-	private static function get_listing_detail_fields() {
-		$common = array(
-			'price'                 => __( 'Price', 'lgl-import' ),
-			'rrp'                   => __( 'RRP', 'lgl-import' ),
-			'year'                  => __( 'Year', 'lgl-import' ),
-			'condition'             => __( 'Condition', 'lgl-import' ),
-			'internal_stock_number' => __( 'Stock Number', 'lgl-import' ),
-			'registration_number'   => __( 'Registration', 'lgl-import' ),
-			'sub_title'             => __( 'Sub Title', 'lgl-import' ),
-			'berth'                 => __( 'Berth', 'lgl-import' ),
-			'internal_length'       => __( 'Internal Length', 'lgl-import' ),
-			'external_length'       => __( 'External Length', 'lgl-import' ),
-			'width'                 => __( 'Width', 'lgl-import' ),
-			'mtplm'                 => __( 'MTPLM', 'lgl-import' ),
-			'country'               => __( 'Country', 'lgl-import' ),
-			'county'                => __( 'County', 'lgl-import' ),
-			'warranty'              => __( 'Warranty', 'lgl-import' ),
-			'feature'               => __( 'Features', 'lgl-import' ),
-		);
-		$motorhome_campervan = array(
-			'mileage'    => __( 'Mileage', 'lgl-import' ),
-			'height'     => __( 'Height', 'lgl-import' ),
-			'payload'    => __( 'Payload', 'lgl-import' ),
-			'class'      => __( 'Class', 'lgl-import' ),
-			'extras'     => __( 'Extras', 'lgl-import' ),
-		);
-		return array( 'common' => $common, 'motorhome_campervan' => $motorhome_campervan );
