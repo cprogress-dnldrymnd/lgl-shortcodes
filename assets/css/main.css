@@ -1010,7 +1010,8 @@
   /* Enforces a strict minimum width to trigger horizontal scroll rather than squishing columns */
   border-collapse: collapse;
   font-family: var(--lgl-font-primary, sans-serif);
-  text-align: left; }
+  text-align: left;
+  font-size: 16px; }
 
 /* Base cell structural padding and borders */
 .lgl-compare-table th,
