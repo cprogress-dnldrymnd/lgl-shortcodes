@@ -472,7 +472,7 @@ if (! class_exists('LGL_Shortcodes')) {
                     <a href="#single-page" class="nav-tab <?php echo $active_tab == 'single-page' ? 'nav-tab-active' : ''; ?>" data-tab="single-page">Single Page</a>
                     <a href="#contact" class="nav-tab <?php echo $active_tab == 'contact' ? 'nav-tab-active' : ''; ?>" data-tab="contact">Contact Information</a>
                     <a href="#visibility" class="nav-tab <?php echo $active_tab == 'visibility' ? 'nav-tab-active' : ''; ?>" data-tab="visibility">Field Visibility</a>
-                    <a href="#comparison" class="nav-tab <?php echo $active_tab == 'comparison' ? 'nav-tab-active' : ''; ?>" data-tab="comparison">Comparison Table Settings</a>
+                    <a href="#lgl-pages" class="nav-tab <?php echo $active_tab == 'lgl-pages' ? 'nav-tab-active' : ''; ?>" data-tab="lgl-pages">LGL Pages</a>
                 </h2>
 
                 <form method="post" action="options.php">
@@ -498,7 +498,7 @@ if (! class_exists('LGL_Shortcodes')) {
                         <?php do_settings_sections('lgl-settings-visibility'); ?>
                     </div>
 
-                    <div id="tab-comparison" class="lgl-tab-content" <?php echo $active_tab == 'comparison' ? '' : 'style="display:none;"'; ?>>
+                    <div id="tab-comparison" class="lgl-tab-content" <?php echo $active_tab == 'lgl-pages' ? '' : 'style="display:none;"'; ?>>
                         <?php do_settings_sections('lgl-pages'); ?>
                     </div>
 
