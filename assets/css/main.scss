@@ -1240,15 +1240,17 @@
         margin-top: 50px;
     }
 }
+
 /* ==========================================================================
-   LGL Compare Table Styles (Sticky Architecture)
+   LGL Compare Table Styles
    ========================================================================== */
+
+/* Container for responsive horizontal scrolling to prevent layout breakage on mobile */
 
 .lgl-compare-table-wrapper {
     width: 100%;
-    max-width: 100vw;
     overflow-x: auto;
-    overflow-y: visible; /* Required for window-level Y-axis sticky offset */
+    -webkit-overflow-scrolling: touch;
     margin-bottom: 2rem;
     background: #fff;
     border: 1px solid var(--lgl-color-light-gray);
@@ -1256,18 +1258,20 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
+/* Core table layout architecture */
 .lgl-compare-table {
     width: 100%;
-    min-width: 800px;
-    border-collapse: separate; /* CRITICAL: Sticky cells lose borders if set to collapse */
-    border-spacing: 0;
+    min-width: 800px; /* Enforces a strict minimum width to trigger horizontal scroll rather than squishing columns */
+    border-collapse: collapse;
     font-family: var(--lgl-font-primary, sans-serif);
     text-align: left;
     font-size: 16px;
-    margin: 0;
+    margin-bottom: 0;
+    margin-top: 0;
     border: none;
 }
 
+/* Base cell structural padding and borders */
 .lgl-compare-table th,
 .lgl-compare-table td {
     padding: 15px;
@@ -1275,100 +1279,60 @@
     border-right: 1px solid var(--lgl-color-light-gray);
     vertical-align: middle;
     line-height: 1;
-    background: #fff; /* Opaque background prevents scrolling content from bleeding through */
 }
 
+/* Clean up the far-right border edge */
 .lgl-compare-table th:last-child,
 .lgl-compare-table td:last-child {
     border-right: none;
 }
 
-/* ----------------------------------------------------
-   Sticky Left Column (Meta Field Labels)
-   ---------------------------------------------------- */
+/* First column styling for the meta field labels */
 .lgl-compare-table tbody th {
-    position: sticky;
-    left: 0;
-    z-index: 5;
     background-color: var(--lgl-color-soft-gray);
     font-weight: 600;
     color: var(--lgl-color-secondary, #333);
     width: 20%;
-    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* ----------------------------------------------------
-   Sticky Top Row (Vehicle Cards)
-   ---------------------------------------------------- */
+/* Top header row containing the vehicle cards */
 .lgl-compare-item-head {
-    position: sticky;
-    top: var(--lgl-sticky-offset, 0px);
-    z-index: 10;
     text-align: center;
     vertical-align: top;
     width: 20%;
     background-color: #fff;
     padding: 15px;
-    box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* ----------------------------------------------------
-   Intersection: Top-Left Corner Cell
-   ---------------------------------------------------- */
-.lgl-compare-label-head {
-    position: sticky;
-    top: var(--lgl-sticky-offset, 0px);
-    left: 0;
-    z-index: 15;
-    background-color: var(--lgl-color-soft-gray);
-    border-right: 1px solid var(--lgl-color-light-gray);
-    border-bottom: 1px solid var(--lgl-color-light-gray);
-}
-
-/* ----------------------------------------------------
-   Thumbnails & Nested Button Architecture
-   ---------------------------------------------------- */
+/* Wrapper to isolate thumbnail spacing */
 .lgl-compare-thumbnail {
     position: relative;
     border-radius: 10px;
     overflow: hidden;
-    margin: 0 0 10px 0;
+    margin: 0;
     line-height: 1;
+    margin-bottom: 10px;
+    img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+    }
+    .lgl-compare-remove-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 }
 
+/* Strict image constraints for uniformity across unevenly sized uploaded media */
 .lgl-compare-thumbnail img {
-    width: 100%;
     max-width: 100%;
     height: auto;
-    display: block;
+    border-radius: 4px;
     object-fit: cover;
     aspect-ratio: 4/3;
 }
 
-.lgl-compare-thumbnail .lgl-compare-remove-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    /* Base styles to make the absolutely positioned button look clean */
-    background-color: rgba(239, 68, 68, 0.9);
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.75rem;
-    font-weight: 600;
-    transition: background-color 0.2s ease;
-    z-index: 2;
-}
-
-.lgl-compare-thumbnail .lgl-compare-remove-btn:hover {
-    background-color: #ef4444;
-}
-
-/* ----------------------------------------------------
-   Typography & Fallbacks
-   ---------------------------------------------------- */
+/* Vehicle title typography inheriting dynamic plugin settings */
 .lgl-compare-title {
     font-size: 1.125rem;
     margin: 0 0 1rem 0;
@@ -1385,6 +1349,9 @@
     color: var(--lgl-color-accent, var(--lgl-color-primary));
 }
 
+/* Interactive remove button styling with transition states */
+
+/* Feedback states for empty or error payloads injected by LocalStorage logic */
 .lgl-compare-empty,
 .lgl-compare-error {
     text-align: center;
