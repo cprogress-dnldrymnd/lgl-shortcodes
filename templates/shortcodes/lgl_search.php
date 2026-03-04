@@ -90,20 +90,39 @@ if ($active_make) {
             </select>
         </div>
 
-
-        <?php if ($post_type != false) { ?>
+        <?php if ($post_type == false) { ?>
             <?php
             //post type select option
             $options = get_option('lgl_settings', array());
 
-            $pages = [];
-
-            $caravan_page = $options['caravan_page'] ?? false;
+            $caravan_page   = $options['caravan_page']   ?? false;
             $motorhome_page = $options['motorhome_page'] ?? false;
             $campervan_page = $options['campervan_page'] ?? false;
-            ?>
-        <?php } ?>
 
+            // Build vehicle type options from configured pages
+            $vehicle_types = array();
+            if ($caravan_page)   $vehicle_types['caravan']   = 'Caravan';
+            if ($motorhome_page) $vehicle_types['motorhome'] = 'Motorhome';
+            if ($campervan_page) $vehicle_types['campervan'] = 'Campervan';
+            ?>
+
+            <!-- Leisure Vehicle Type -->
+            <?php if (!empty($vehicle_types)) : ?>
+                <div class="lgl-filter-group">
+                    <label for="lgl_vehicle_type">Leisure Vehicle Type</label>
+                    <select name="vehicle_type" id="lgl_vehicle_type" class="lgl-select2" data-placeholder="Any Type">
+                        <option value="">Any Type</option>
+                        <?php foreach ($vehicle_types as $type_key => $type_label) : ?>
+                            <option value="<?php echo esc_attr($type_key); ?>"
+                                <?php selected($active_post_type, $type_key); ?>>
+                                <?php echo esc_html($type_label); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <?php endif; ?>
+
+        <?php } ?>
 
         <?php if ($post_type != false) { ?>
             <!-- Condition -->
