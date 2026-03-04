@@ -470,6 +470,10 @@
     width: calc(66.66% - 15px); }
   .lgl-post--wrap .lgl-post--sidebar {
     width: calc(33.33% - 15px); }
+  @media (max-width: 1024px) {
+    .lgl-post--wrap .lgl-post--main,
+    .lgl-post--wrap .lgl-post--sidebar {
+      width: 100%; } }
 
 .lgl-post--gallery .lgl-cover-image {
   position: relative;
