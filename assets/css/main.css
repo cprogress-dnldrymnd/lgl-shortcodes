@@ -614,7 +614,7 @@
   flex-direction: column;
   gap: 13px; }
 
-.lgl-btn {
+.lgl-btn.lgl-btn {
   padding: 20px;
   font-family: var(--lgl-font-secondary);
   font-weight: bold;
@@ -622,46 +622,46 @@
   text-align: center;
   border: 1px solid;
   font-size: 16px; }
-  .lgl-btn.lgl-btn-secondary {
+  .lgl-btn.lgl-btn.lgl-btn-secondary {
     background-color: var(--lgl-color-secondary);
     color: var(--lgl-color-tertiary);
     border-color: var(--lgl-color-secondary); }
-    .lgl-btn.lgl-btn-secondary:hover {
+    .lgl-btn.lgl-btn.lgl-btn-secondary:hover {
       background-color: var(--lgl-color-primary);
       border-color: var(--lgl-color-primary); }
-  .lgl-btn.lgl-btn-primary {
+  .lgl-btn.lgl-btn.lgl-btn-primary {
     background-color: var(--lgl-color-primary);
     color: var(--lgl-color-tertiary);
     border-color: var(--lgl-color-primary); }
-    .lgl-btn.lgl-btn-primary:hover {
+    .lgl-btn.lgl-btn.lgl-btn-primary:hover {
       background-color: var(--lgl-color-secondary);
       border-color: var(--lgl-color-secondary); }
-  .lgl-btn.lgl-btn-accent {
+  .lgl-btn.lgl-btn.lgl-btn-accent {
     background-color: var(--lgl-color-accent);
     color: var(--lgl-color-secondary);
     border-color: var(--lgl-color-accent); }
-    .lgl-btn.lgl-btn-accent:hover {
+    .lgl-btn.lgl-btn.lgl-btn-accent:hover {
       background-color: var(--lgl-color-secondary);
       border-color: var(--lgl-color-secondary);
       color: var(--lgl-color-accent); }
-  .lgl-btn.lgl-btn-outline {
+  .lgl-btn.lgl-btn.lgl-btn-outline {
     color: var(--lgl-color-secondary);
     border-color: var(--lgl-color-secondary); }
-    .lgl-btn.lgl-btn-outline:hover {
+    .lgl-btn.lgl-btn.lgl-btn-outline:hover {
       background-color: var(--lgl-color-secondary);
       color: var(--lgl-color-tertiary); }
-  .lgl-btn.lgl-btn-error {
+  .lgl-btn.lgl-btn.lgl-btn-error {
     background-color: var(--lgl-color-error);
     color: var(--lgl-color-white);
     border-color: var(--lgl-color-error); }
-    .lgl-btn.lgl-btn-error:hover {
+    .lgl-btn.lgl-btn.lgl-btn-error:hover {
       background-color: var(--lgl-color-error-dark);
       border-color: var(--lgl-color-error-dark); }
-  .lgl-btn.lgl-btn-warning {
+  .lgl-btn.lgl-btn.lgl-btn-warning {
     background-color: var(--lgl-color-warning);
     color: var(--lgl-color-secondary);
     border-color: var(--lgl-color-warning); }
-    .lgl-btn.lgl-btn-warning:hover {
+    .lgl-btn.lgl-btn.lgl-btn-warning:hover {
       background-color: var(--lgl-color-warning-dark);
       border-color: var(--lgl-color-warning-dark); }
 

@@ -802,7 +802,7 @@
     flex-direction: column;
     gap: 13px;
 }
-.lgl-btn {
+.lgl-btn.lgl-btn {
     padding: 20px;
     font-family: var(--lgl-font-secondary);
     font-weight: bold;
@@ -810,6 +810,9 @@
     text-align: center;
     border: 1px solid;
     font-size: 16px;
+    &.lgl-btn-small {
+
+    }
     &.lgl-btn-secondary {
         background-color: var(--lgl-color-secondary);
         color: var(--lgl-color-tertiary);
