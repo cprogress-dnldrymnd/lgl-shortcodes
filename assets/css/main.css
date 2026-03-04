@@ -782,14 +782,14 @@
 
 .lgl-mini-wishlist-toggle svg {
   width: 24px;
-  height: 24px24px;
-  color: var(--lgl-color-primary); }
+  height: 24px;
+  color: var(--lgl-color-secondary); }
 
 .lgl-wishlist-count {
   position: absolute;
   top: -4px;
   right: -4px;
-  background-color: var(--lgl-color-primary);
+  background-color: var(--lgl-color-secondary);
   color: var(--lgl-color-white);
   font-size: 11px;
   font-weight: 700;
