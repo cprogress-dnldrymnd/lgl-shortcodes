@@ -2,7 +2,7 @@
 $listing_fields = LGL_Shortcodes::get_external_listing_fields();
 
 // Define an array of meta keys you want to exclude from the frontend display.
-$exclude_keys = array( 'internal_stock_number', 'rrp', 'feature', 'warranty'); 
+$exclude_keys = array( 'internal_stock_number', 'rrp', 'feature', 'warranty', 'sub_title', 'price'); 
 
 if (!empty($listing_fields)) {
     // Access the specific field groupings
