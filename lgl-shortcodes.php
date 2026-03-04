@@ -177,10 +177,6 @@ if (! class_exists('LGL_Shortcodes')) {
 
             $single_page_fields = array(
                 'single_vehicle_content' => array('label' => 'Single Vehicle Additional Content', 'type' => 'textarea', 'default' => ''),
-                'contact_phone'          => array('label' => 'Phone Number', 'type' => 'text', 'default' => ''),
-                'contact_whatsapp'       => array('label' => 'Whatsapp Number', 'type' => 'text', 'default' => ''),
-                'contact_email'          => array('label' => 'Email Address', 'type' => 'text', 'default' => ''),
-                'contact_address'        => array('label' => 'Address', 'type' => 'textarea', 'default' => ''),
                 'url_finance_calc'       => array('label' => 'Finance Calculator Button URL', 'type' => 'text', 'default' => ''),
                 'url_enquire_now'        => array('label' => 'Enquire Now Button URL', 'type' => 'text', 'default' => ''),
                 'url_reserve_now'        => array('label' => 'Reserve Now Button URL', 'type' => 'text', 'default' => ''),
@@ -193,6 +189,27 @@ if (! class_exists('LGL_Shortcodes')) {
                     array($this, 'render_field'),
                     'lgl-settings-single-page',
                     'lgl_single_page_section',
+                    array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
+                );
+            }
+
+            // --- TAB 4: Contact Information ---
+            add_settings_section('lgl_contact_section', 'Contact Information', null, 'lgl-settings-contact');
+
+            $contact_fields = array(
+                'contact_phone'    => array('label' => 'Phone Number', 'type' => 'text', 'default' => ''),
+                'contact_whatsapp' => array('label' => 'Whatsapp Number', 'type' => 'text', 'default' => ''),
+                'contact_email'    => array('label' => 'Email Address', 'type' => 'text', 'default' => ''),
+                'contact_address'  => array('label' => 'Address', 'type' => 'textarea', 'default' => ''),
+            );
+
+            foreach ($contact_fields as $id => $field) {
+                add_settings_field(
+                    $id,
+                    $field['label'],
+                    array($this, 'render_field'),
+                    'lgl-settings-contact',
+                    'lgl_contact_section',
                     array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
                 );
             }
@@ -248,7 +265,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
         /**
          * Renders the HTML architecture for the tabbed settings interface.
-         * Utilizes WordPress core CSS classes for native UI compliance.
+         * Utilizes client-side JS tab switching to ensure all fields remain in the DOM during save.
          *
          * @return void
          */
@@ -263,26 +280,65 @@ if (! class_exists('LGL_Shortcodes')) {
 ?>
             <div class="wrap">
                 <h1>LGL Shortcodes Settings</h1>
-                <h2 class="nav-tab-wrapper">
-                    <a href="?page=lgl-settings&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General Settings</a>
-                    <a href="?page=lgl-settings&tab=design" class="nav-tab <?php echo $active_tab == 'design' ? 'nav-tab-active' : ''; ?>">Design Settings</a>
-                    <a href="?page=lgl-settings&tab=single-page" class="nav-tab <?php echo $active_tab == 'single-page' ? 'nav-tab-active' : ''; ?>">Single Page</a>
+                <h2 class="nav-tab-wrapper" id="lgl-settings-tabs">
+                    <a href="#general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>" data-tab="general">General Settings</a>
+                    <a href="#design" class="nav-tab <?php echo $active_tab == 'design' ? 'nav-tab-active' : ''; ?>" data-tab="design">Design Settings</a>
+                    <a href="#single-page" class="nav-tab <?php echo $active_tab == 'single-page' ? 'nav-tab-active' : ''; ?>" data-tab="single-page">Single Page</a>
+                    <a href="#contact" class="nav-tab <?php echo $active_tab == 'contact' ? 'nav-tab-active' : ''; ?>" data-tab="contact">Contact Information</a>
                 </h2>
 
                 <form method="post" action="options.php">
-                    <?php
-                    settings_fields('lgl_settings_group');
-                    if ($active_tab == 'general') {
-                        do_settings_sections('lgl-settings-general');
-                    } elseif ($active_tab == 'design') {
-                        do_settings_sections('lgl-settings-design');
-                    } else {
-                        do_settings_sections('lgl-settings-single-page');
-                    }
-                    submit_button();
-                    ?>
+                    <?php settings_fields('lgl_settings_group'); ?>
+                    
+                    <div id="tab-general" class="lgl-tab-content" <?php echo $active_tab == 'general' ? '' : 'style="display:none;"'; ?>>
+                        <?php do_settings_sections('lgl-settings-general'); ?>
+                    </div>
+                    
+                    <div id="tab-design" class="lgl-tab-content" <?php echo $active_tab == 'design' ? '' : 'style="display:none;"'; ?>>
+                        <?php do_settings_sections('lgl-settings-design'); ?>
+                    </div>
+                    
+                    <div id="tab-single-page" class="lgl-tab-content" <?php echo $active_tab == 'single-page' ? '' : 'style="display:none;"'; ?>>
+                        <?php do_settings_sections('lgl-settings-single-page'); ?>
+                    </div>
+
+                    <div id="tab-contact" class="lgl-tab-content" <?php echo $active_tab == 'contact' ? '' : 'style="display:none;"'; ?>>
+                        <?php do_settings_sections('lgl-settings-contact'); ?>
+                    </div>
+
+                    <?php submit_button(); ?>
                 </form>
             </div>
+
+            <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    $('#lgl-settings-tabs a').on('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Wipe active state globally
+                        $('#lgl-settings-tabs a').removeClass('nav-tab-active');
+                        $('.lgl-tab-content').hide();
+                        
+                        // Instantiate active state
+                        $(this).addClass('nav-tab-active');
+                        var activeTab = $(this).data('tab');
+                        $('#tab-' + activeTab).show();
+
+                        // Force history update to retain tab position after form reload
+                        if (history.pushState) {
+                            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?page=lgl-settings&tab=' + activeTab;
+                            window.history.pushState({path:newurl}, '', newurl);
+                        }
+                        
+                        // Sync form action to ensure WordPress redirect honors the tab parameter
+                        var form = $(this).closest('.wrap').find('form');
+                        var action = form.attr('action');
+                        if(action.indexOf('options.php') !== -1) {
+                             form.find('input[name="_wp_http_referer"]').val(newurl);
+                        }
+                    });
+                });
+            </script>
 <?php
         }
 
