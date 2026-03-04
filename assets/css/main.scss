@@ -336,7 +336,8 @@
                         color: var(--lgl-color-quaternary);
                         transform: scale(1.05);
                     }
-                    &.added, &.is-active {
+                    &.added,
+                    &.is-active {
                         color: var(--lgl-color-tertiary);
                         background: var(--lgl-color-secondary);
                     }
@@ -698,7 +699,6 @@
             background: var(--lgl-color-accent) !important;
         }
     }
-  
 }
 .lgl-sale-meta-bottom {
     background: var(--lgl-color-white);
