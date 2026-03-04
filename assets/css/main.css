@@ -499,7 +499,7 @@
   margin: 0;
   display: grid;
   gap: 0px; }
-  .lgl-contact-list .bt-contact-item {
+  .lgl-contact-list .lgl-contact-item {
     font-family: var(--lgl-font-secondary);
     font-weight: 600;
     font-size: 16px;
