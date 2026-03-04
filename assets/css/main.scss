@@ -701,8 +701,8 @@
     }
     .lgl-compare-btn {
         &.is-active {
-            color: var(--lgl-color-tertiary);
-            background: var(--lgl-color-secondary);
+                color: var(--lgl-color-secondary) !important;
+            background: var(--lgl-color-accent) !important;
         }
     }
 }
