@@ -1,8 +1,8 @@
 <?php
 /**
  * Template: Compare Vehicles Shortcode
- * Renders the structural interface for the vehicle comparison table and manages localized 
- * state manipulation natively via LocalStorage to bypass CDN/Page Cache interference.
+ * Renders the structural interface and type-selector dropdown for the vehicle comparison table.
+ * Manages localized state natively via LocalStorage to bypass CDN/Page Cache interference.
  */
 
 if (!defined('ABSPATH')) {
@@ -10,103 +10,81 @@ if (!defined('ABSPATH')) {
 }
 ?>
 <div class="lgl-compare-container">
+    
+    <div class="lgl-compare-controls" style="margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: center; gap: 15px;">
+        <label for="lgl-compare-type-selector" style="font-weight: 600; color: var(--lgl-color-secondary, #333);">Select Category:</label>
+        <select id="lgl-compare-type-selector" style="padding: 10px 15px; border-radius: 6px; border: 1px solid #ccd0d4; font-family: var(--lgl-font-primary, sans-serif); min-width: 200px;">
+            <option value="caravan">Caravans</option>
+            <option value="motorhome">Motorhomes</option>
+            <option value="campervan">Campervans</option>
+        </select>
+    </div>
+
     <div id="lgl-compare-render-target">
-        <p class="lgl-compare-empty"><?php esc_html_e('No vehicles currently staged for comparison. Assign vehicles directly from the grid view.', 'lgl-shortcodes'); ?></p>
+        <p class="lgl-compare-empty"><?php esc_html_e('No vehicles currently staged for comparison in this category.', 'lgl-shortcodes'); ?></p>
     </div>
 </div>
 
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
-    const STATE_KEY_IDS = 'lgl_compare_post_ids';
-    const STATE_KEY_TYPE = 'lgl_compare_post_type';
+    const STATE_KEY_DATA = 'lgl_compare_data';
     const targetNode = document.getElementById('lgl-compare-render-target');
+    const typeSelector = document.getElementById('lgl-compare-type-selector');
 
     /**
-     * Extracts array of Post IDs from local storage and executes the AJAX 
-     * fetch request to construct the server-side generated HTML table.
+     * Extracts multidimensional array of Post IDs from local storage based on the 
+     * active dropdown selection and executes the AJAX fetch request.
      */
     function renderCompareTable() {
-        let postIds = JSON.parse(localStorage.getItem(STATE_KEY_IDS)) || [];
+        if (!targetNode || !typeSelector) return;
+
+        const activeType = typeSelector.value;
+        const allData = JSON.parse(localStorage.getItem(STATE_KEY_DATA)) || {};
+        const postIds = allData[activeType] || [];
         
         if (postIds.length === 0) {
-            if(targetNode) targetNode.innerHTML = '<p class="lgl-compare-empty">No vehicles currently staged for comparison.</p>';
-            localStorage.removeItem(STATE_KEY_TYPE); // Clean orphaned type states
+            targetNode.innerHTML = '<p class="lgl-compare-empty">No vehicles currently staged for comparison in this category.</p>';
             return;
         }
 
         const formData = new FormData();
         formData.append('action', 'lgl_get_compare_table');
         formData.append('nonce', lgl_ajax_obj.nonce);
+        formData.append('post_type', activeType);
         formData.append('post_ids', JSON.stringify(postIds));
+        formData.append('_cb', new Date().getTime()); // Cache buster
+
+        // Visual loading state
+        targetNode.style.opacity = '0.5';
 
         fetch(lgl_ajax_obj.ajax_url, {
             method: 'POST',
-            body: formData
+            body: formData,
+            cache: 'no-store'
         })
         .then(response => response.json())
         .then(payload => {
-            if (payload.success && targetNode) {
+            targetNode.style.opacity = '1';
+            if (payload.success) {
                 targetNode.innerHTML = payload.data.html;
-            } else if (!payload.success) {
-                console.warn('LGL Compare Warning:', payload.data);
-                if(targetNode) targetNode.innerHTML = '<p class="lgl-compare-error">' + payload.data + '</p>';
+            } else {
+                targetNode.innerHTML = '<p class="lgl-compare-error">' + payload.data + '</p>';
             }
         })
-        .catch(err => console.error('LGL Compare Network Error:', err));
+        .catch(err => {
+            targetNode.style.opacity = '1';
+            console.error('LGL Compare Network Error:', err);
+        });
+    }
+
+    // Bind change listener to the dropdown
+    if (typeSelector) {
+        typeSelector.addEventListener('change', renderCompareTable);
     }
 
     /**
-     * Intercept clicks globally on `.lgl-compare-btn` elements.
-     * Evaluates current active post type, enforces parity, limits max count, and caches selection.
-     */
-    document.body.addEventListener('click', function(e) {
-        const btn = e.target.closest('.lgl-compare-btn');
-        if (!btn) return;
-        
-        e.preventDefault();
-        
-        const targetId = btn.getAttribute('data-post-id');
-        const targetType = btn.getAttribute('data-post-type');
-        
-        if (!targetId || !targetType) return;
-
-        let activeType = localStorage.getItem(STATE_KEY_TYPE);
-        let activeIds = JSON.parse(localStorage.getItem(STATE_KEY_IDS)) || [];
-
-        // Validate Post Type Parity (Client Side Gate)
-        if (activeType && activeType !== targetType && activeIds.length > 0) {
-            alert('Comparison conflict: You are already comparing a different vehicle classification. Clear your list to start a new comparison block.');
-            return;
-        }
-
-        // Lock type state on first entry
-        localStorage.setItem(STATE_KEY_TYPE, targetType);
-
-        if (!activeIds.includes(targetId)) {
-            // Cap at 4 items to prevent table bleed on smaller viewports
-            if (activeIds.length >= 4) {
-                alert('Comparison capacity reached. Please remove an existing vehicle to add a new one.');
-                return;
-            }
-            activeIds.push(targetId);
-            localStorage.setItem(STATE_KEY_IDS, JSON.stringify(activeIds));
-            
-            // Visual feedback - swap button text/state if desired
-            btn.textContent = 'Added to Compare';
-            btn.classList.add('is-active');
-            
-        } else {
-            alert('This vehicle is already staged in your comparison list.');
-        }
-
-        // Force a re-render if the user is clicking while physically on the comparison page
-        if (targetNode) {
-            renderCompareTable();
-        }
-    });
-
-    /**
      * Handle item deletion explicitly from within the rendered comparison table.
+     * Extracts the specific vehicle type assigned to the remove button.
      */
     if (targetNode) {
         targetNode.addEventListener('click', function(e) {
@@ -114,12 +92,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!removeBtn) return;
 
             const idToRemove = removeBtn.getAttribute('data-post-id');
-            let activeIds = JSON.parse(localStorage.getItem(STATE_KEY_IDS)) || [];
+            const typeToRemove = removeBtn.getAttribute('data-post-type');
             
-            activeIds = activeIds.filter(id => id !== idToRemove);
-            localStorage.setItem(STATE_KEY_IDS, JSON.stringify(activeIds));
+            let allData = JSON.parse(localStorage.getItem(STATE_KEY_DATA)) || {};
             
+            if (allData[typeToRemove]) {
+                allData[typeToRemove] = allData[typeToRemove].filter(id => id !== idToRemove);
+                localStorage.setItem(STATE_KEY_DATA, JSON.stringify(allData));
+            }
+            
+            // Re-render and trigger global DOM event so grids update in real-time
             renderCompareTable();
+            document.dispatchEvent(new Event('lgl_compare_updated'));
         });
 
         // Trigger payload request on initial Document Ready

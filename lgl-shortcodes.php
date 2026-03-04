@@ -762,26 +762,31 @@ if (! class_exists('LGL_Shortcodes')) {
 
 		/**
 		 * AJAX handler to process and render the vehicle comparison table.
-		 * Validates array of post IDs, enforces strict type matching, and respects global visibility sorting.
+		 * Validates array of post IDs and enforces specific metadata extraction 
+		 * based on the dynamically selected post type (Caravan vs Motorhome/Campervan).
 		 * * @return void Outputs JSON response with the table HTML.
 		 */
 		public function ajax_get_compare_table()
 		{
-			check_ajax_referer('lgl_search_nonce', 'nonce');
-
-			$post_ids_raw = isset($_POST['post_ids']) ? json_decode(stripslashes($_POST['post_ids']), true) : array();
-
-			if (!is_array($post_ids_raw) || empty($post_ids_raw)) {
-				wp_send_json_error('No vehicles selected for comparison.');
+			// Verify security nonce
+			if (! isset($_POST['nonce']) || ! wp_verify_nonce(sanitize_key($_POST['nonce']), 'lgl_search_nonce')) {
+				wp_send_json_error('Security validation failed.');
 			}
 
-			// Clean array
+			$post_ids_raw = isset($_POST['post_ids']) ? json_decode(stripslashes($_POST['post_ids']), true) : array();
+			$requested_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : '';
+
+			if (empty($requested_type) || !is_array($post_ids_raw) || empty($post_ids_raw)) {
+				wp_send_json_error('No vehicles selected for comparison in this category.');
+			}
+
+			// Clean array to strictly integers
 			$post_ids = array_map('intval', $post_ids_raw);
 
-			// Fetch explicitly defined posts
+			// Fetch explicitly defined posts matching the requested type
 			$query = new WP_Query(array(
 				'post__in'       => $post_ids,
-				'post_type'      => 'any',
+				'post_type'      => $requested_type,
 				'post_status'    => 'publish',
 				'orderby'        => 'post__in',
 				'posts_per_page' => -1
@@ -793,40 +798,39 @@ if (! class_exists('LGL_Shortcodes')) {
 
 			$posts = $query->posts;
 
-			// Enforce Post Type Parity (Server Side check)
-			$baseline_post_type = $posts[0]->post_type;
-			foreach ($posts as $p) {
-				if ($p->post_type !== $baseline_post_type) {
-					wp_send_json_error('Comparisons are strictly limited to vehicles of the same classification.');
-				}
-			}
-
 			// Validate LGL Base Object for accurate Field Definitions
 			if (!class_exists('LGL_Import_Post_Types')) {
 				wp_send_json_error('LGL_Import_Post_Types dependency missing.');
 			}
 
+			// Retrieve the master field list
 			$listing_fields = LGL_Import_Post_Types::get_listing_detail_fields();
-			$all_fields = array_merge(
-				isset($listing_fields['common']) ? $listing_fields['common'] : array(),
-				isset($listing_fields['motorhome_campervan']) ? $listing_fields['motorhome_campervan'] : array(),
-				isset($listing_fields['caravan']) ? $listing_fields['caravan'] : array()
-			);
 
-			// Re-inject core taxonomies
-			$all_fields['listing-fuel-type'] = __('Fuel Type', 'lgl-shortcodes');
-			$all_fields['listing-chassis']   = __('Chassis', 'lgl-shortcodes');
-			$all_fields['listing-gearbox']   = __('Gearbox', 'lgl-shortcodes');
+			// Isolate common fields baseline
+			$type_fields = isset($listing_fields['common']) ? $listing_fields['common'] : array();
 
-			// Read UI states
+			// Inject classification-specific metadata based on the dropdown selection
+			if ($requested_type === 'caravan' && isset($listing_fields['caravan'])) {
+				$type_fields = array_merge($type_fields, $listing_fields['caravan']);
+			} elseif (in_array($requested_type, array('motorhome', 'campervan')) && isset($listing_fields['motorhome_campervan'])) {
+				$type_fields = array_merge($type_fields, $listing_fields['motorhome_campervan']);
+			}
+
+			// Re-inject core taxonomies to the combined array
+			$type_fields['listing-fuel-type'] = __('Fuel Type', 'lgl-shortcodes');
+			$type_fields['listing-chassis']   = __('Chassis', 'lgl-shortcodes');
+			$type_fields['listing-gearbox']   = __('Gearbox', 'lgl-shortcodes');
+
+			// Read UI states for visibility toggles
 			$options = get_option('lgl_settings', array());
-			$saved_order = isset($options['field_order']) ? $options['field_order'] : array_keys($all_fields);
 
-			// Filter for explicit visibility & sort
+			// We must intersect the global saved order with the specific type_fields array
+			$saved_order = isset($options['field_order']) ? $options['field_order'] : array_keys($type_fields);
 			$visible_fields = array();
+
 			foreach ($saved_order as $key) {
-				if (isset($all_fields[$key]) && empty($options['hide_field_' . $key])) {
-					$visible_fields[$key] = $all_fields[$key];
+				if (isset($type_fields[$key]) && empty($options['hide_field_' . $key])) {
+					$visible_fields[$key] = $type_fields[$key];
 				}
 			}
 
@@ -843,7 +847,7 @@ if (! class_exists('LGL_Shortcodes')) {
 										<?php echo get_the_post_thumbnail($p->ID, 'medium'); ?>
 									</div>
 									<h4 class="lgl-compare-title"><a href="<?php echo get_permalink($p->ID); ?>"><?php echo esc_html($p->post_title); ?></a></h4>
-									<button class="lgl-compare-remove-btn" data-post-id="<?php echo esc_attr($p->ID); ?>">Remove</button>
+									<button class="lgl-compare-remove-btn" data-post-id="<?php echo esc_attr($p->ID); ?>" data-post-type="<?php echo esc_attr($requested_type); ?>">Remove</button>
 								</th>
 							<?php endforeach; ?>
 						</tr>

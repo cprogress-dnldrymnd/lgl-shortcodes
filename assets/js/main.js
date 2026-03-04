@@ -4,7 +4,7 @@
  */
 (function ($) {
     'use strict';
-    
+
     $(document).ready(function () {
         search_form();
         add_to_wishlist();
@@ -410,28 +410,39 @@
 
 /**
  * LGL Compare Grid Handler
- * Manages the global state of vehicle comparison buttons, syncing LocalStorage 
- * payloads and handling UI toggles across AJAX DOM mutations.
+ * Manages the global state of vehicle comparison buttons via a multidimensional JSON 
+ * payload, allowing concurrent staging of Caravans, Motorhomes, and Campervans.
  */
-(function($) {
+(function ($) {
     'use strict';
 
-    const STATE_KEY_IDS = 'lgl_compare_post_ids';
-    const STATE_KEY_TYPE = 'lgl_compare_post_type';
+    // Master key for multidimensional comparison storage
+    const STATE_KEY_DATA = 'lgl_compare_data';
+
+    /**
+     * Retrieves the master comparison object, guaranteeing base structural integrity.
+     * * @return {Object} The parsed storage object.
+     */
+    function getCompareData() {
+        let data = localStorage.getItem(STATE_KEY_DATA);
+        return data ? JSON.parse(data) : { caravan: [], motorhome: [], campervan: [] };
+    }
 
     /**
      * Scans the DOM for all compare buttons and syncs their visual state 
-     * (active vs. inactive) based on the current LocalStorage payload.
+     * based on the current active lists in the JSON payload.
      * * @return {void}
      */
     function syncCompareButtonStates() {
-        let activeIds = JSON.parse(localStorage.getItem(STATE_KEY_IDS)) || [];
-        
-        $('.lgl-compare-btn').each(function() {
+        let data = getCompareData();
+
+        $('.lgl-compare-btn').each(function () {
             const btn = $(this);
             const postId = btn.attr('data-post-id');
-            
-            if (activeIds.includes(postId)) {
+            const postType = btn.attr('data-post-type');
+
+            // Verify if this specific ID exists within its designated vehicle type array
+            if (data[postType] && data[postType].includes(postId)) {
                 btn.addClass('is-active');
                 btn.find('.lgl-compare-text').text('Added to Compare');
             } else {
@@ -443,11 +454,11 @@
 
     /**
      * Intercepts clicks on compare buttons globally using event delegation.
-     * Evaluates active post types, enforces parity constraints, and updates the cache.
+     * Organizes payloads into respective type buckets.
      * * @param {Event} e The jQuery click event object.
      * @return {void}
      */
-    $(document).on('click', '.lgl-compare-btn', function(e) {
+    $(document).on('click', '.lgl-compare-btn', function (e) {
         e.preventDefault();
 
         const btn = $(this);
@@ -456,53 +467,47 @@
 
         if (!targetId || !targetType) return;
 
-        let activeType = localStorage.getItem(STATE_KEY_TYPE);
-        let activeIds = JSON.parse(localStorage.getItem(STATE_KEY_IDS)) || [];
+        let data = getCompareData();
 
-        // Validate Post Type Parity: Prevent mixing caravans with motorhomes, etc.
-        if (activeType && activeType !== targetType && activeIds.length > 0) {
-            alert('Comparison conflict: You are already comparing a different vehicle classification. Please clear your existing comparison list first.');
-            return;
+        // Ensure array exists for type fallback
+        if (!data[targetType]) {
+            data[targetType] = [];
         }
 
-        // Lock the data type on the first interaction
-        if (activeIds.length === 0) {
-            localStorage.setItem(STATE_KEY_TYPE, targetType);
-        }
-
-        if (!activeIds.includes(targetId)) {
-            // Enforce capacity limits to prevent table rendering issues
-            if (activeIds.length >= 4) {
-                alert('Comparison capacity reached. Please remove an existing vehicle to add a new one.');
+        if (!data[targetType].includes(targetId)) {
+            // Enforce capacity limits per category
+            if (data[targetType].length >= 4) {
+                alert('Comparison capacity reached for ' + targetType + 's. Please remove an existing vehicle to add a new one.');
                 return;
             }
-            activeIds.push(targetId);
-            localStorage.setItem(STATE_KEY_IDS, JSON.stringify(activeIds));
+            data[targetType].push(targetId);
         } else {
-            // Toggle removal if the user clicks an already active button
-            activeIds = activeIds.filter(id => id !== targetId);
-            localStorage.setItem(STATE_KEY_IDS, JSON.stringify(activeIds));
-            
-            // Wipe type constraint if list is emptied
-            if (activeIds.length === 0) {
-                localStorage.removeItem(STATE_KEY_TYPE);
-            }
+            // Toggle removal
+            data[targetType] = data[targetType].filter(id => id !== targetId);
         }
 
-        // Immediately sync the UI to reflect the new LocalStorage state
+        // Commit structure back to stringified storage
+        localStorage.setItem(STATE_KEY_DATA, JSON.stringify(data));
+
+        // Immediately sync the UI to reflect the new state
         syncCompareButtonStates();
     });
 
     // Run synchronization on initial page load
-    $(document).ready(function() {
+    $(document).ready(function () {
         syncCompareButtonStates();
     });
 
-    // Hook into global AJAX completion to re-sync buttons when the grid is filtered/paginated
-    $(document).ajaxComplete(function(event, xhr, settings) {
+    // Re-sync buttons when the grid is filtered/paginated
+    $(document).ajaxComplete(function (event, xhr, settings) {
         if (settings.data && settings.data.indexOf('action=lgl_fetch_results') !== -1) {
             syncCompareButtonStates();
         }
+    });
+
+    // Listen for custom event fired from the lgl-compare.php template when an item is removed via the table
+    document.addEventListener('lgl_compare_updated', function () {
+        syncCompareButtonStates();
     });
 
 })(jQuery);
