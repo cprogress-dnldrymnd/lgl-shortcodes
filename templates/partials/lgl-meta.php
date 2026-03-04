@@ -52,11 +52,7 @@ if (class_exists('LGL_Import_Post_Types')) {
         echo "<div class='lgl-meta-item lgl-{$key}'>";
         echo "<span class='lgl-meta-icon-label'>";
 
-        // Construct the absolute path to the SVG file.
-        $svg_file_path = LGL_SHORTCODES_PATH . 'assets/svg/' . sanitize_file_name($key) . '.svg';
-        if (file_exists($svg_file_path)) {
-            echo file_get_contents($svg_file_path);
-        }
+        echo LGL_Shortcodes::render_inline_svg(sanitize_file_name($key) );
 
         echo "<span class='lgl-label'>" . esc_html($label) . "</span>";
         echo "</span>";
