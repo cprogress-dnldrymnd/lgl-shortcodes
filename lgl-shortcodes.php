@@ -155,15 +155,15 @@ if (! class_exists('LGL_Shortcodes')) {
 				);
 			}
 
-			// --- TAB 2: Additional Settings ---
-			add_settings_section('lgl_additional_section', 'Single Vehicle Additions', null, 'lgl-settings-additional');
+			// --- TAB 2: Single Page ---
+			add_settings_section('lgl_single_page_section', 'Single Vehicle Additions', null, 'lgl-settings-single-page');
 
 			add_settings_field(
 				'single_vehicle_content',
 				'Single Vehicle Additional Content',
 				array($this, 'render_field'),
-				'lgl-settings-additional',
-				'lgl_additional_section',
+				'lgl-settings-single-page',
+				'lgl_single_page_section',
 				array('id' => 'single_vehicle_content', 'type' => 'textarea', 'default' => '')
 			);
 		}
@@ -225,7 +225,7 @@ if (! class_exists('LGL_Shortcodes')) {
 				<h1>LGL Shortcodes Settings</h1>
 				<h2 class="nav-tab-wrapper">
 					<a href="?page=lgl-settings&tab=design" class="nav-tab <?php echo $active_tab == 'design' ? 'nav-tab-active' : ''; ?>">Design Settings</a>
-					<a href="?page=lgl-settings&tab=additional" class="nav-tab <?php echo $active_tab == 'additional' ? 'nav-tab-active' : ''; ?>">Additional Settings</a>
+					<a href="?page=lgl-settings&tab=single-page" class="nav-tab <?php echo $active_tab == 'single-page' ? 'nav-tab-active' : ''; ?>">Single Page</a>
 				</h2>
 
 				<form method="post" action="options.php">
@@ -234,7 +234,7 @@ if (! class_exists('LGL_Shortcodes')) {
 					if ($active_tab == 'design') {
 						do_settings_sections('lgl-settings-design');
 					} else {
-						do_settings_sections('lgl-settings-additional');
+						do_settings_sections('lgl-settings-single-page');
 					}
 					submit_button();
 					?>
