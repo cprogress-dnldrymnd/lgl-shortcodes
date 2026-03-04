@@ -742,4 +742,7 @@
     background: #f6d100;
     border-radius: 999px; }
 
+.lgl-related-posts .lgl-grid-layout.lgl-grid-layout {
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); }
+
 /*# sourceMappingURL=main.css.map */
