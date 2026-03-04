@@ -963,4 +963,108 @@
     .lgl-no-results {
       margin-top: 50px; } }
 
+/* ==========================================================================
+   LGL Compare Table Styles
+   ========================================================================== */
+/* Container for responsive horizontal scrolling to prevent layout breakage on mobile */
+.lgl-compare-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 2rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+/* Core table layout architecture */
+.lgl-compare-table {
+  width: 100%;
+  min-width: 800px;
+  /* Enforces a strict minimum width to trigger horizontal scroll rather than squishing columns */
+  border-collapse: collapse;
+  font-family: var(--lgl-font-primary, sans-serif);
+  text-align: left; }
+
+/* Base cell structural padding and borders */
+.lgl-compare-table th,
+.lgl-compare-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  vertical-align: middle; }
+
+/* Clean up the far-right border edge */
+.lgl-compare-table th:last-child,
+.lgl-compare-table td:last-child {
+  border-right: none; }
+
+/* First column styling for the meta field labels */
+.lgl-compare-table tbody th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: var(--lgl-color-secondary, #333);
+  width: 20%; }
+
+/* Top header row containing the vehicle cards */
+.lgl-compare-item-head {
+  text-align: center;
+  vertical-align: top;
+  width: 20%;
+  background-color: #fff;
+  padding: 1.5rem 1rem; }
+
+/* Wrapper to isolate thumbnail spacing */
+.lgl-compare-thumbnail {
+  margin-bottom: 1rem; }
+
+/* Strict image constraints for uniformity across unevenly sized uploaded media */
+.lgl-compare-thumbnail img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+  aspect-ratio: 4/3; }
+
+/* Vehicle title typography inheriting dynamic plugin settings */
+.lgl-compare-title {
+  font-size: 1.125rem;
+  margin: 0 0 1rem 0;
+  font-family: var(--lgl-font-secondary, sans-serif); }
+
+.lgl-compare-title a {
+  color: var(--lgl-color-primary, #003793);
+  text-decoration: none;
+  transition: color 0.2s ease; }
+
+.lgl-compare-title a:hover {
+  color: var(--lgl-color-accent, #f6d100); }
+
+/* Interactive remove button styling with transition states */
+.lgl-compare-remove-btn {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease; }
+
+.lgl-compare-remove-btn:hover {
+  background-color: #ef4444;
+  color: #fff; }
+
+/* Feedback states for empty or error payloads injected by LocalStorage logic */
+.lgl-compare-empty,
+.lgl-compare-error {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #64748b;
+  font-family: var(--lgl-font-primary, sans-serif); }
+
 /*# sourceMappingURL=main.css.map */

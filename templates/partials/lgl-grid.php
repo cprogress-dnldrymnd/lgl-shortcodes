@@ -6,6 +6,7 @@
  */
 
 $post_id = get_the_ID();
+$post_type = get_post_type();
 $condition = get_post_meta($post_id, 'condition', true);
 $price = get_post_meta($post_id, 'price', true);
 $berth = get_post_meta($post_id, 'berth', true);
