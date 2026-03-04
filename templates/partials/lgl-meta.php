@@ -67,9 +67,7 @@ if (class_exists('LGL_Import_Post_Types')) {
          * Appends each taxonomy as a meta item matching the established DOM structure.
          */
 
-        echo '<pre>';
-        var_dump($taxonomies);
-        echo '</pre>';
+    
         if (!empty($taxonomies)) {
             foreach ($taxonomies as $taxonomy_slug) {
                 // Retrieve all terms assigned to the current post for this specific taxonomy.
