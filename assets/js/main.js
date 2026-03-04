@@ -68,7 +68,7 @@
         });
 
         // Handle Search Execution (Reset to Page 1 on strict filter changes)
-        $('#lgl-search-form, #lgl-sort-order').on('submit change', function (e) {
+        $('#lgl-search-form.lgl-filter-form-ajax, #lgl-sort-order').on('submit change', function (e) {
             if (e.type === 'submit') e.preventDefault();
             currentPage = 1;
             execute_search();
