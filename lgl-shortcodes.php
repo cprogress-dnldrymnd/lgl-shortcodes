@@ -795,34 +795,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
             wp_send_json_success($response_data);
         }
-		/**
-		 * Retrieves listing detail fields from the external LGL_Import_Post_Types class.
-		 * * Uses the Reflection API to bypass the 'private' visibility of the 
-		 * get_listing_detail_fields method without altering the external plugin's core files.
-		 *
-		 * @return array Associative array of listing fields, or an empty array on failure.
-		 */
-		public static function get_external_listing_fields(): array
-		{
-			if (! class_exists('LGL_Import_Post_Types')) {
-				return [];
-			}
-
-			try {
-				// Initialize reflection on the target class and method
-				$reflectionMethod = new ReflectionMethod('LGL_Import_Post_Types', 'get_listing_detail_fields');
-
-				// Override the private visibility restriction
-				$reflectionMethod->setAccessible(true);
-
-				// Invoke the method. Passing null since it is a static method.
-				return $reflectionMethod->invoke(null);
-			} catch (ReflectionException $e) {
-				// Handle case where method does not exist or reflection fails
-				error_log('LGL Shortcodes: Failed to reflect get_listing_detail_fields - ' . $e->getMessage());
-				return [];
-			}
-		}
+		
 
 		/**
 		 * Purges all cached search result transients from the database.

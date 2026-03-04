@@ -1,5 +1,5 @@
 <?php
-$listing_fields = LGL_Shortcodes::get_external_listing_fields();
+$listing_fields = LGL_Import_Post_Types::get_listing_detail_fields();
 
 // Define an array of meta keys you want to exclude from the frontend display.
 $exclude_keys = array('internal_stock_number', 'rrp', 'feature', 'warranty', 'sub_title', 'price');
