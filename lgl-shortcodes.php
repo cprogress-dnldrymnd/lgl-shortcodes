@@ -237,7 +237,7 @@ if (! class_exists('LGL_Shortcodes')) {
             );
 
             // --- TAB 6: Comparison Table Settings ---
-            add_settings_section('lgl_comparison_section', 'Comparison Table Configuration', null, 'lgl-settings-comparison');
+            add_settings_section('lgl_pages', 'LGL Pages', null, 'lgl-pages');
 
             $comparison_fields = array(
                 'vehicle_comparison_page_id' => array('label' => 'Vehicle Comparison Page', 'type' => 'select_page', 'default' => ''),
@@ -248,8 +248,8 @@ if (! class_exists('LGL_Shortcodes')) {
                     $id,
                     $field['label'],
                     array($this, 'render_field'),
-                    'lgl-settings-comparison',
-                    'lgl_comparison_section',
+                    'lgl-pages',
+                    'lgl_pages',
                     array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
                 );
             }
@@ -499,7 +499,7 @@ if (! class_exists('LGL_Shortcodes')) {
                     </div>
 
                     <div id="tab-comparison" class="lgl-tab-content" <?php echo $active_tab == 'comparison' ? '' : 'style="display:none;"'; ?>>
-                        <?php do_settings_sections('lgl-settings-comparison'); ?>
+                        <?php do_settings_sections('lgl-pages'); ?>
                     </div>
 
                     <?php submit_button(); ?>
