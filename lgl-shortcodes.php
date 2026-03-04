@@ -199,12 +199,15 @@ if (! class_exists('LGL_Shortcodes')) {
 
             if ($query->have_posts()) {
                 // Implementing a structural wrapper for front-end DOM manipulation (flexbox/CSS grids)
+                echo '<div class="lgl-related-posts">';
+				echo '<h2 class="lgl-related-heading">Related Vehicles</h2>';
                 echo '<div class="lgl-grid-layout lgl-cols--3">';
                 while ($query->have_posts()) {
                     $query->the_post();
                     // Invoke existing isolated template logic to adhere to the DRY principle
                     include LGL_SHORTCODES_PATH . 'templates/partials/lgl-grid.php';
                 }
+                echo '</div>';
                 echo '</div>';
             } else {
                 echo '<div class="lgl-no-results">No related vehicles available at this time.</div>';
