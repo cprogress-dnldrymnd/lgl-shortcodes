@@ -76,7 +76,7 @@
 
 
         //search redirect
-        $('#lgl_vehicle_type').on('change', function () {
+        $('#lgl_post_type').on('change', function () {
             let url = $(this).val();
 
             $('#lgl-search-form').attr('action', url);
