@@ -6,12 +6,13 @@ if (class_exists('LGL_Import_Post_Types')) {
     // Define an array of meta keys you want to exclude from the frontend display.
     $exclude_keys = array('internal_stock_number', 'rrp', 'feature', 'warranty', 'sub_title', 'price');
 
+    $taxonomies = [];
+
     if (!empty($listing_fields)) {
         // Access the specific field groupings
         $common_fields = $listing_fields['common'];
         $motorhome_campervan_fields = $listing_fields['motorhome_campervan'];
-        $taxonomies = [];
-        if ($post_type != 'campervan') {
+        if ($post_type != 'caravan') {
             $common_fields = array_merge($common_fields, $motorhome_campervan_fields);
         } else {
             $taxonomies[] = 'listing-fuel-type';
