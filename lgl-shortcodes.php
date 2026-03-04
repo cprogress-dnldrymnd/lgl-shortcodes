@@ -241,6 +241,9 @@ if (! class_exists('LGL_Shortcodes')) {
 
             $comparison_fields = array(
                 'vehicle_comparison_page_id' => array('label' => 'Vehicle Comparison Page', 'type' => 'select_page', 'default' => ''),
+                'caravan_page' => array('label' => 'Caravan Page', 'type' => 'select_page', 'default' => ''),
+                'motorhome_page' => array('label' => 'Motorhome Page', 'type' => 'select_page', 'default' => ''),
+				'campervan_page' => array('label' => 'Campervan Page', 'type' => 'select_page', 'default' => ''),
             );
 
             foreach ($comparison_fields as $id => $field) {
