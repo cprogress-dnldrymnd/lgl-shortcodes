@@ -900,7 +900,8 @@
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+  background-color: transparent !important; }
 
 .lgl-remove-btn:hover svg {
   stroke: #d9534f; }
