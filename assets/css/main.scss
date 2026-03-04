@@ -14,10 +14,10 @@
     --lgl-color-white: #ffffff;
     --lgl-color-light-gray: #e4ecff;
     --lgl-color-medium-gray: #d9d9d9;
-    --lgl-color-soft-gray: #f5f5f5;
+    --lgl-color-soft-gray: #f0f0f0;
     --lgl-color-dark-gray: #555;
     --lgl-color-gray: #969696;
-    --lgl-color-light-blue: #f7faff;
+    --lgl-color-light-blue: #1b1b1b;
     --lgl-color-light-blue-gray: #ececec;
 }
 
@@ -982,9 +982,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    background-color: #e5edf5; /* Approximate match to screenshot toggle base */
+    width: 56px;
+    height: 56px;
+    background-color: var(--lgl-color-soft-gray);
     border-radius: 50%;
     cursor: pointer;
     position: relative;
@@ -992,7 +992,7 @@
 }
 
 .lgl-mini-wishlist-toggle:hover {
-    background-color: #d1dfed;
+    background-color: var(--lgl-color-medium-gray);
 }
 
 .lgl-mini-wishlist-toggle svg {
