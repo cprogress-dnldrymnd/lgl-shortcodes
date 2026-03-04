@@ -59,5 +59,54 @@ if (!empty($listing_fields)) {
             echo "</div>";
         }
     }
+
+    /**
+     * Iterate over the defined taxonomies array and retrieve associated terms.
+     * Appends each taxonomy as a meta item matching the established DOM structure.
+     */
+    if (!empty($taxonomies)) {
+        foreach ($taxonomies as $taxonomy_slug) {
+            // Retrieve all terms assigned to the current post for this specific taxonomy.
+            $terms = get_the_terms($post_id, $taxonomy_slug);
+
+            // Proceed only if terms exist and no WP_Error was returned.
+            if ($terms && !is_wp_error($terms)) {
+                // Fetch the taxonomy object to dynamically retrieve its registered singular label.
+                $tax_obj = get_taxonomy($taxonomy_slug);
+                $taxonomy_label = $tax_obj ? $tax_obj->labels->singular_name : $taxonomy_slug;
+
+                // Efficiently extract term names and join them into a comma-separated string for multi-select taxonomies.
+                $term_names = wp_list_pluck($terms, 'name');
+                $taxonomy_value = join(', ', $term_names);
+
+                echo "<div class='lgl-meta-item lgl-{$taxonomy_slug}'>";
+                echo "<span class='lgl-meta-icon-label'>";
+
+                /**
+                 * Construct the absolute path to the SVG file based on the taxonomy slug.
+                 * Utilizes the plugin's root path constant.
+                 */
+                $svg_file_path = LGL_SHORTCODES_PATH . 'assets/svg/' . $taxonomy_slug . '.svg';
+
+                // Ensure the file exists on the server before attempting to read it.
+                if (file_exists($svg_file_path)) {
+                    // Output the raw SVG markup inline directly into the DOM.
+                    echo file_get_contents($svg_file_path);
+                }
+
+                echo "<span class='lgl-label'>";
+                echo esc_html($taxonomy_label);
+                echo "</span>";
+                echo "</span>";
+
+                echo "<span class='lgl-value'>";
+                echo esc_html($taxonomy_value);
+                echo "</span>";
+
+                echo "</div>";
+            }
+        }
+    }
+
     echo "</div>";
 }
