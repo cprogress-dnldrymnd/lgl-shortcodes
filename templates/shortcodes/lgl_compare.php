@@ -5,6 +5,9 @@
  * state manipulation natively via LocalStorage to bypass CDN/Page Cache interference.
  */
 
+if (!defined('ABSPATH')) {
+    exit;
+}
 ?>
 <div class="lgl-compare-container">
     <div id="lgl-compare-render-target">
