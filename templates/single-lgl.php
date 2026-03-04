@@ -37,6 +37,20 @@ $contact_email    = !empty($lgl_options['contact_email']) ? sanitize_email($lgl_
 
 $contact_address  = !empty($lgl_options['contact_address']) ? sanitize_textarea_field($lgl_options['contact_address']) : 'Clwyd Caravans';
 $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($contact_address);
+
+
+//Meta Fields
+$gallery = LGL_Shortcodes::convertStringToIntArray(get_post_meta($post_id, '_listing_gallery_ids', true));
+$price = get_post_meta($post_id, 'price', true);
+$berth = get_post_meta($post_id, 'berth', true);
+$mileage = get_post_meta($post_id, 'mileage', true);
+$axles = get_post_meta($post_id, 'axles', true);
+$year = get_post_meta($post_id, 'year', true);
+$condition = get_post_meta($post_id, 'condition', true);
+$warranty = get_post_meta($post_id, 'warranty', true);
+$feature = get_post_meta($post_id, 'feature', true);
+$sub_title = get_post_meta($post_id, 'sub_title', true);
+
 ?>
 
 <pre style="display: none">
@@ -45,19 +59,6 @@ $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlenco
 
 <main id="lgl-primary" class="lgl-site-main single-lgl">
     <div class="lgl-holder">
-        <?php
-
-        $gallery = LGL_Shortcodes::convertStringToIntArray(get_post_meta($post_id, '_listing_gallery_ids', true));
-        $price = get_post_meta($post_id, 'price', true);
-        $berth = get_post_meta($post_id, 'berth', true);
-        $mileage = get_post_meta($post_id, 'mileage', true);
-        $axles = get_post_meta($post_id, 'axles', true);
-        $year = get_post_meta($post_id, 'year', true);
-        $condition = get_post_meta($post_id, 'condition', true);
-        $feature = get_post_meta($post_id, 'feature', true);
-        $sub_title = get_post_meta($post_id, 'sub_title', true);
-
-        ?>
         <article <?php post_class('lgl-post'); ?>>
             <div class="lgl-post--wrap">
                 <div class="lgl-post--main">
@@ -250,33 +251,27 @@ $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlenco
             </div>
             <div class="lgl-post--tabs lgl-tabs lgl-tabs-js">
                 <div class="lgl-tabs--tbnav">
-                    <a href="#bt_panel_overview" class="lgl-nav-item lgl-is-active">
+                    <a href="#lgl_panel_overview" class="lgl-nav-item lgl-is-active">
                         <span><?php echo esc_html__('Key Information', 'lgl'); ?></span>
                     </a>
                     <?php if (!empty(get_the_content())) { ?>
-                        <a href="#bt_panel_desc" class="lgl-nav-item">
+                        <a href="#lgl_panel_desc" class="lgl-nav-item">
                             <span><?php echo esc_html__('Description', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
                     <?php if (!empty($feature)) { ?>
-                        <a href="#bt_panel_interior" class="lgl-nav-item">
+                        <a href="#lgl_panel_interior" class="lgl-nav-item">
                             <span><?php echo esc_html__('Features', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
-
-                    <?php if (!empty($floor_plan)) { ?>
-                        <a href="#bt_panel_floorplan" class="lgl-nav-item">
-                            <span><?php echo esc_html__('Floor plan', 'lgl'); ?></span>
-                        </a>
-                    <?php } ?>
                     <?php if (!empty($warranty)) { ?>
-                        <a href="#bt_panel_warranty" class="lgl-nav-item">
+                        <a href="#lgl_panel_warranty" class="lgl-nav-item">
                             <span><?php echo esc_html__('Warranty', 'lgl'); ?></span>
                         </a>
                     <?php } ?>
                 </div>
                 <div class="lgl-tabs--tbpanel">
-                    <div id="bt_panel_overview" class="lgl-panel-item lgl-panel-overview lgl-is-active">
+                    <div id="lgl_panel_overview" class="lgl-panel-item lgl-panel-overview lgl-is-active">
                         <div class="lgl-panel-item--inner">
                             <h3 class="lgl-title-ss">
                                 <?php echo '<span>' . esc_html__('Key Information', 'lgl') . '</span>'; ?>
@@ -287,7 +282,7 @@ $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlenco
                         </div>
                     </div>
                     <?php if (!empty(get_the_content())) { ?>
-                        <div id="bt_panel_desc" class="lgl-panel-item lgl-panel-desc">
+                        <div id="lgl_panel_desc" class="lgl-panel-item lgl-panel-desc">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
                                     <?php echo '<span>' . esc_html__('Description', 'lgl') . '</span>'; ?>
@@ -300,7 +295,7 @@ $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlenco
                     <?php } ?>
 
                     <?php if (!empty($feature)) { ?>
-                        <div id="bt_panel_interior" class="lgl-panel-item lgl-panel-interior">
+                        <div id="lgl_panel_interior" class="lgl-panel-item lgl-panel-interior">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
                                     <span><?php echo esc_html__('Features', 'lgl'); ?></span>
@@ -313,7 +308,7 @@ $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlenco
                     <?php } ?>
 
                     <?php if (!empty($exterior_features)) { ?>
-                        <div id="bt_panel_exterior" class="lgl-panel-item lgl-panel-exterior">
+                        <div id="lgl_panel_exterior" class="lgl-panel-item lgl-panel-exterior">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
                                     <span><?php echo esc_html__('Exterior features', 'lgl'); ?></span>
@@ -326,7 +321,7 @@ $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlenco
                     <?php } ?>
 
                     <?php if (!empty($floor_plan)) { ?>
-                        <div id="bt_panel_floorplan" class="lgl-panel-item lgl-panel-floorplan">
+                        <div id="lgl_panel_floorplan" class="lgl-panel-item lgl-panel-floorplan">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
                                     <span><?php echo esc_html__('Floor plan', 'lgl'); ?></span>
@@ -339,7 +334,7 @@ $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlenco
                     <?php } ?>
 
                     <?php if (!empty($warranty)) { ?>
-                        <div id="bt_panel_warranty" class="lgl-panel-item lgl-panel-warranty">
+                        <div id="lgl_panel_warranty" class="lgl-panel-item lgl-panel-warranty">
                             <div class="lgl-panel-item--inner">
                                 <h3 class="lgl-title-ss">
                                     <span><?php echo esc_html__('Warranty', 'lgl'); ?></span>
