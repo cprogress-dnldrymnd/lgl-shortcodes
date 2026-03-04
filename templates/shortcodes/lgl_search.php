@@ -76,7 +76,7 @@ if ($active_make) {
             <?php if (!empty($vehicle_types)) : ?>
                 <div class="lgl-filter-group">
                     <label for="lgl_vehicle_type">Leisure Vehicle Type</label>
-                    <select name="vehicle_type" id="lgl_vehicle_type" class="lgl-select2" data-placeholder="Leisure Vehicle Type">
+                    <select name="vehicle_type" id="lgl_vehicle_type" class="lgl-select2" data-placeholder="Leisure Vehicle Type" required>
                         <option value="">Leisure Vehicle Type</option>
                         <?php foreach ($vehicle_types as $type_key => $type_label) : ?>
                             <option value="<?php echo esc_attr($type_key); ?>"
