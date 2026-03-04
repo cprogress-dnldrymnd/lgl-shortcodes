@@ -1,4 +1,7 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
 global $post;
 
 // Inherit context from the current global post; fallback to 'caravan' if outside the loop

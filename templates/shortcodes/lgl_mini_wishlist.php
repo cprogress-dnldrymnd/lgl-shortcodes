@@ -1,4 +1,7 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
 $count = 0;
 if (is_user_logged_in()) {
     $wishlist = get_user_meta(get_current_user_id(), 'lgl_wishlists', true);

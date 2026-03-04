@@ -1,5 +1,7 @@
 <?php
-
+if (!defined('ABSPATH')) {
+    exit;
+}
 /**
  * Standardized partial for a single vehicle result card.
  * Context: Runs within the standard WordPress loop.

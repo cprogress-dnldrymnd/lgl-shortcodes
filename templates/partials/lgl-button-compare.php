@@ -1,3 +1,9 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
+
 <a class="lgl-icon-btn lgl-compare-btn" href="#"
     data-post-id="<?php echo esc_attr($post_id); ?>"
     data-post-type="<?php echo esc_attr($post_type); ?>" data-title="<?php echo get_the_title(esc_attr($post_id)); ?>"

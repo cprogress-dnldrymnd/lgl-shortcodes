@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
 <?php if (is_user_logged_in() &&  !$disable_wishlist) { ?>
     <?php
     $user_id = get_current_user_id();

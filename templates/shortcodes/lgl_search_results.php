@@ -1,4 +1,7 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
 /**
  * Template for rendering the search results grid wrapper.
  * The loop content relies on AJAX injection mapping to partials/result-item.php.

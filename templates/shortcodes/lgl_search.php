@@ -1,5 +1,7 @@
 <?php
-
+if (!defined('ABSPATH')) {
+    exit;
+}
 /**
  * Template for rendering the search filter form.
  * * Available variables:

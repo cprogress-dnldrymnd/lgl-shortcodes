@@ -1,4 +1,7 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
 if (class_exists('LGL_Import_Post_Types')) {
 
     $listing_fields = LGL_Import_Post_Types::get_listing_detail_fields();

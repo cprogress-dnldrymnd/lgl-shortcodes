@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
 <div class="lgl-post--meta">
     <div class="lgl-post--meta-row">
         <div class="lgl-post--meta-col">
