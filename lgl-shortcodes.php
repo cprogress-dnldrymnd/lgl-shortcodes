@@ -199,7 +199,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
             if ($query->have_posts()) {
                 // Implementing a structural wrapper for front-end DOM manipulation (flexbox/CSS grids)
-                echo '<div class="lgl-related-vehicles-container">';
+                echo '<div class="lgl-grid-layout lgl-cols--3">';
                 while ($query->have_posts()) {
                     $query->the_post();
                     // Invoke existing isolated template logic to adhere to the DRY principle
