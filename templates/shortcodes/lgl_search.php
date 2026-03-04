@@ -53,7 +53,7 @@ if ($active_make) {
 ?>
 
 <div class="lgl-search-container lgl-holder">
-    <form id="lgl-search-form" class="lgl-filter-form">
+    <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' :  'lgl-filter-form-ajax' ?>">
         <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
 
         <?php if ($post_type == false) { ?>
