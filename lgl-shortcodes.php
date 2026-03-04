@@ -498,7 +498,7 @@ if (! class_exists('LGL_Shortcodes')) {
                         <?php do_settings_sections('lgl-settings-visibility'); ?>
                     </div>
 
-                    <div id="tab-comparison" class="lgl-tab-content" <?php echo $active_tab == 'lgl-pages' ? '' : 'style="display:none;"'; ?>>
+                    <div id="tab-lgl-pages" class="lgl-tab-content" <?php echo $active_tab == 'lgl-pages' ? '' : 'style="display:none;"'; ?>>
                         <?php do_settings_sections('lgl-pages'); ?>
                     </div>
 
