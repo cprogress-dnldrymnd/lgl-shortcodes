@@ -8,8 +8,8 @@
        * @param {string} type - 'success' or 'error' for styling.
        */
 function showNotification(message, type = 'success') {
-    const $container = $('#lgl-notification-container');
-    const $notification = $('<div class="lgl-toast lgl-toast-' + type + '">' + message + '</div>');
+    const $container = jQuery('#lgl-notification-container');
+    const $notification = jQuery('<div class="lgl-toast lgl-toast-' + type + '">' + message + '</div>');
 
     $container.append($notification);
 
