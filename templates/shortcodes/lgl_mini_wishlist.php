@@ -15,7 +15,12 @@ ob_start();
         <span class="lgl-wishlist-count"><?php echo esc_html($count); ?></span>
     </div>
     <div class="lgl-mini-wishlist-dropdown">
-        <h3 class="lgl-mini-wishlist-header">My Wishlist</h3>
+        <div class="lgl-mini-wishlist-header">
+            <h3 class="lgl-mini-wishlist-header">My Wishlist</h3>
+            <button class="lgl-mini-close-wishlist">
+                X
+            </button>
+        </div>
         <div class="lgl-mini-wishlist-content">
             <?php echo $this->get_mini_wishlist_html(); ?>
         </div>
