@@ -10,6 +10,7 @@
         gallery_slider();
         tabs();
         initLGLMiniWishlist();
+        sharevehicle();
     });
 
 
@@ -235,6 +236,64 @@
                 }
             });
         }
+    }
+
+    function sharevehicle() {
+        $('.lgl-vehicle-share-btn').on('click', function (e) {
+            e.preventDefault();
+
+            const $btn = $(this);
+            const urlToCopy = $btn.data('url');
+            const vehicleTitle = $btn.data('title') || 'Vehicle';
+            const successMessage = `Link for ${vehicleTitle} copied to clipboard!`;
+
+            if (!urlToCopy) {
+                console.error('Share Button Error: Missing data-url attribute.');
+                return;
+            }
+
+            /**
+             * Executes the clipboard copy operation using the most appropriate API available.
+             * * @param {string} text - The string (URL) to be copied to the clipboard.
+             * @param {string} successMsg - The notification message to display upon a successful copy.
+             */
+            const executeCopy = (text, successMsg) => {
+                // Modern Async Clipboard API (Requires secure context / HTTPS)
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text)
+                        .then(() => {
+                            showNotification(successMsg, 'success');
+                        })
+                        .catch((err) => {
+                            console.error('Clipboard API Write Error: ', err);
+                            showNotification('Failed to copy link. Please try again.', 'error');
+                        });
+                } else {
+                    // Fallback implementation for older browsers or local/non-secure environments
+                    const $tempInput = $('<input>');
+                    $('body').append($tempInput);
+                    $tempInput.val(text).select();
+
+                    try {
+                        const successful = document.execCommand('copy');
+                        if (successful) {
+                            showNotification(successMsg, 'success');
+                        } else {
+                            throw new Error('execCommand returned false');
+                        }
+                    } catch (err) {
+                        console.error('Fallback Clipboard Copy Error: ', err);
+                        showNotification('Failed to copy link. Please try again.', 'error');
+                    } finally {
+                        // Always clean up the temporary DOM element
+                        $tempInput.remove();
+                    }
+                }
+            };
+
+            // Trigger the copy logic
+            executeCopy(urlToCopy, successMessage);
+        });
     }
 
     /**
