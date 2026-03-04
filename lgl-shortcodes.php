@@ -635,7 +635,7 @@ if (! class_exists('LGL_Shortcodes')) {
             ), $atts, $shortcode_tag);
 
             // Hand over execution to the template loader
-            return $this->load_template(str_replace('_', '-', $shortcode_tag), $attributes, $content);
+            return $this->load_template($shortcode_tag, $attributes, $content);
         }
 
         /**
