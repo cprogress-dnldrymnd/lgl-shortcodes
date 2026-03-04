@@ -92,7 +92,7 @@ if ($active_make) {
 
         <!-- Condition -->
 
-        <?php if ($post_type === false) { ?>
+        <?php if ($post_type != false) { ?>
             <div class="lgl-filter-group">
                 <label for="lgl_condition">Condition</label>
                 <select name="condition" id="lgl_condition" class="lgl-select2" data-placeholder="Any Condition">
