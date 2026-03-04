@@ -115,21 +115,21 @@ $post_type = get_post_type();
                             $disable_wishlist = !empty($lgl_options['disable_wishlist']);
                             $disable_compare  = !empty($lgl_options['disable_compare']);
 
-                            // Button URLs (fallback to original hash links if empty)
+                            // Button URLs (fallback to hash links if empty)
                             $url_finance = !empty($lgl_options['url_finance_calc']) ? esc_url($lgl_options['url_finance_calc']) : '#lgl-tab-overview';
                             $url_enquire = !empty($lgl_options['url_enquire_now']) ? esc_url($lgl_options['url_enquire_now']) : '#lgl-tab-overview';
                             $url_reserve = !empty($lgl_options['url_reserve_now']) ? esc_url($lgl_options['url_reserve_now']) : '#lgl-tab-overview';
 
-                            // Contact Payload
-                            $contact_phone    = !empty($lgl_options['contact_phone']) ? sanitize_text_field($lgl_options['contact_phone']) : '';
+                            // Contact Payload (With graceful fallbacks to prevent empty UI)
+                            $contact_phone    = !empty($lgl_options['contact_phone']) ? sanitize_text_field($lgl_options['contact_phone']) : '01978 810091';
                             $phone_link       = preg_replace('/\D+/', '', $contact_phone);
 
-                            $contact_whatsapp = !empty($lgl_options['contact_whatsapp']) ? sanitize_text_field($lgl_options['contact_whatsapp']) : '';
+                            $contact_whatsapp = !empty($lgl_options['contact_whatsapp']) ? sanitize_text_field($lgl_options['contact_whatsapp']) : '01978 810091';
                             $whatsapp_link    = preg_replace('/\D+/', '', $contact_whatsapp);
 
-                            $contact_email    = !empty($lgl_options['contact_email']) ? sanitize_email($lgl_options['contact_email']) : '';
+                            $contact_email    = !empty($lgl_options['contact_email']) ? sanitize_email($lgl_options['contact_email']) : 'sales@clwydcaravans.com';
 
-                            $contact_address  = !empty($lgl_options['contact_address']) ? sanitize_textarea_field($lgl_options['contact_address']) : '';
+                            $contact_address  = !empty($lgl_options['contact_address']) ? sanitize_textarea_field($lgl_options['contact_address']) : 'Clwyd Caravans';
                             $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($contact_address);
                             ?>
 
@@ -138,7 +138,6 @@ $post_type = get_post_type();
                                     <div class="lgl-condition-tag">
                                         <?php echo esc_html($condition); ?>
                                     </div>
-
                                     <div class="lgl-sale-icon-btn">
                                         <a class="lgl-icon-btn lgl-vehicle-share-btn" href="#">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
