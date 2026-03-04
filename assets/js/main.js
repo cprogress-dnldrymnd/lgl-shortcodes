@@ -450,6 +450,7 @@
             } else {
                 btn.removeClass('is-active');
                 btn.find('.lgl-compare-text').text('Compare');
+                showNotification(postTitle + ' removed from compare list!');
             }
         });
     }
