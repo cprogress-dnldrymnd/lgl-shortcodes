@@ -621,7 +621,12 @@
   border-radius: 10px;
   text-align: center;
   border: 1px solid;
-  font-size: 16px; }
+  font-size: 16px;
+  line-height: 1.2; }
+  .lgl-btn.lgl-btn.lgl-btn-small {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px; }
   .lgl-btn.lgl-btn.lgl-btn-secondary {
     background-color: var(--lgl-color-secondary);
     color: var(--lgl-color-tertiary);
@@ -1037,7 +1042,13 @@
 
 /* Wrapper to isolate thumbnail spacing */
 .lgl-compare-thumbnail {
-  margin-bottom: 1rem; }
+  margin-bottom: 1rem;
+  position: relative; }
+  .lgl-compare-thumbnail .lgl-compare-remove-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%); }
 
 /* Strict image constraints for uniformity across unevenly sized uploaded media */
 .lgl-compare-thumbnail img {
