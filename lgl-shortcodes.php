@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '2.3.9'); // Update this version number with each release for cache busting.
+define('LGL_SHORTCODES_VERSION', '2.3.8'); // Update this version number with each release for cache busting.
 
 if (! class_exists('LGL_Shortcodes')) {
 
@@ -46,8 +46,6 @@ if (! class_exists('LGL_Shortcodes')) {
 			add_action('init', array($this, 'register_shortcodes'));
 			add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
 			add_action('wp_head', array($this, 'inject_dynamic_css'));
-			// NEW: Forcibly inject JS variables into the <head> to bypass deferred execution
-			add_action('wp_head', array($this, 'inject_global_js_variables'), 5);
 
 			// AJAX endpoints for dependent dropdowns and search results
 			add_action('wp_ajax_lgl_get_models', array($this, 'ajax_get_models'));
@@ -87,7 +85,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
 		/**
 		 * Enqueues administrative scripts and styles strictly on the plugin's settings page.
-		 * Loads wp-color-picker, jQuery UI Sortable, and Select2 for dynamic layout building and page selection.
+		 * Loads wp-color-picker and jQuery UI Sortable for dynamic layout building.
 		 *
 		 * @param string $hook The current admin page hook.
 		 * @return void
@@ -104,15 +102,10 @@ if (! class_exists('LGL_Shortcodes')) {
 			// Enqueue native WP drag-and-drop sortable library
 			wp_enqueue_script('jquery-ui-sortable');
 
-			// Enqueue Select2 for the page selector dropdown
-			wp_enqueue_style('select2', LGL_SHORTCODES_URL . 'assets/libs/select2/select2.min.css');
-			wp_enqueue_script('select2', LGL_SHORTCODES_URL . 'assets/libs/select2/select2.min.js', array('jquery'), '4.1.0', true);
-
-			// Inline script to initialize the UI instances
-			wp_add_inline_script('select2', '
+			// Inline script to initialize the color picker instances
+			wp_add_inline_script('wp-color-picker', '
                 jQuery(document).ready(function($){
                     $(".lgl-color-picker").wpColorPicker();
-                    $(".lgl-select2-pages").select2({ width: "resolve" });
                 });
             ');
 		}
@@ -137,7 +130,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
 		/**
 		 * Registers settings, sections, and fields via the WordPress Settings API.
-		 * Appends the new 'Compare Vehicle' tab and maps the offset selector and page ID fields.
+		 * Includes the new Sortable Field Manager block.
 		 *
 		 * @return void
 		 */
@@ -148,16 +141,26 @@ if (! class_exists('LGL_Shortcodes')) {
 
 			// --- TAB 1: General Settings ---
 			add_settings_section('lgl_general_section', 'General Configuration', null, 'lgl-settings-general');
+
 			$general_fields = array(
 				'disable_wishlist' => array('label' => 'Disable Wishlist', 'type' => 'checkbox', 'default' => '0'),
 				'disable_compare'  => array('label' => 'Disable Compare', 'type' => 'checkbox', 'default' => '0'),
 			);
+
 			foreach ($general_fields as $id => $field) {
-				add_settings_field($id, $field['label'], array($this, 'render_field'), 'lgl-settings-general', 'lgl_general_section', array('id' => $id, 'type' => $field['type'], 'default' => $field['default']));
+				add_settings_field(
+					$id,
+					$field['label'],
+					array($this, 'render_field'),
+					'lgl-settings-general',
+					'lgl_general_section',
+					array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
+				);
 			}
 
 			// --- TAB 2: Design Settings ---
 			add_settings_section('lgl_design_section', 'Typography and Color Variables', null, 'lgl-settings-design');
+
 			$design_fields = array(
 				'font_primary'     => array('label' => 'Primary Font', 'type' => 'text', 'default' => '"DM Sans", sans-serif'),
 				'font_secondary'   => array('label' => 'Secondary Font', 'type' => 'text', 'default' => '"Poppins", sans-serif'),
@@ -167,47 +170,71 @@ if (! class_exists('LGL_Shortcodes')) {
 				'color_tertiary'   => array('label' => 'Tertiary Color', 'type' => 'color', 'default' => '#00e6f6'),
 				'color_quaternary' => array('label' => 'Quaternary Color', 'type' => 'color', 'default' => '#007bff'),
 			);
+
 			foreach ($design_fields as $id => $field) {
-				add_settings_field($id, $field['label'], array($this, 'render_field'), 'lgl-settings-design', 'lgl_design_section', array('id' => $id, 'type' => $field['type'], 'default' => $field['default']));
+				add_settings_field(
+					$id,
+					$field['label'],
+					array($this, 'render_field'),
+					'lgl-settings-design',
+					'lgl_design_section',
+					array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
+				);
 			}
 
 			// --- TAB 3: Single Page ---
 			add_settings_section('lgl_single_page_section', 'Single Page Settings', null, 'lgl-settings-single-page');
+
 			$single_page_fields = array(
 				'single_vehicle_content' => array('label' => 'Single Vehicle Additional Content', 'type' => 'textarea', 'default' => ''),
 				'url_finance_calc'       => array('label' => 'Finance Calculator Button URL', 'type' => 'text', 'default' => ''),
 				'url_enquire_now'        => array('label' => 'Enquire Now Button URL', 'type' => 'text', 'default' => ''),
 				'url_reserve_now'        => array('label' => 'Reserve Now Button URL', 'type' => 'text', 'default' => ''),
 			);
+
 			foreach ($single_page_fields as $id => $field) {
-				add_settings_field($id, $field['label'], array($this, 'render_field'), 'lgl-settings-single-page', 'lgl_single_page_section', array('id' => $id, 'type' => $field['type'], 'default' => $field['default']));
+				add_settings_field(
+					$id,
+					$field['label'],
+					array($this, 'render_field'),
+					'lgl-settings-single-page',
+					'lgl_single_page_section',
+					array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
+				);
 			}
 
 			// --- TAB 4: Contact Information ---
 			add_settings_section('lgl_contact_section', 'Contact Information', null, 'lgl-settings-contact');
+
 			$contact_fields = array(
 				'contact_phone'    => array('label' => 'Phone Number', 'type' => 'text', 'default' => ''),
 				'contact_whatsapp' => array('label' => 'Whatsapp Number', 'type' => 'text', 'default' => ''),
 				'contact_email'    => array('label' => 'Email Address', 'type' => 'text', 'default' => ''),
 				'contact_address'  => array('label' => 'Address', 'type' => 'textarea', 'default' => ''),
 			);
+
 			foreach ($contact_fields as $id => $field) {
-				add_settings_field($id, $field['label'], array($this, 'render_field'), 'lgl-settings-contact', 'lgl_contact_section', array('id' => $id, 'type' => $field['type'], 'default' => $field['default']));
+				add_settings_field(
+					$id,
+					$field['label'],
+					array($this, 'render_field'),
+					'lgl-settings-contact',
+					'lgl_contact_section',
+					array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
+				);
 			}
 
 			// --- TAB 5: Field Visibility & Ordering ---
 			add_settings_section('lgl_visibility_section', 'Frontend Field Visibility & Order (Drag to reorder, check to hide)', null, 'lgl-settings-visibility');
-			add_settings_field('lgl_field_manager', 'Manage Fields', array($this, 'render_field_manager'), 'lgl-settings-visibility', 'lgl_visibility_section');
 
-			// --- TAB 6: Compare Vehicle ---
-			add_settings_section('lgl_compare_section', 'Compare Table Configurations', null, 'lgl-settings-compare');
-			$compare_fields = array(
-				'compare_page_id'       => array('label' => 'Target Compare Page', 'type' => 'page_select', 'default' => ''),
-				'compare_sticky_offset' => array('label' => 'Top Offset Selector (e.g., .site-header)', 'type' => 'text', 'default' => ''),
+			// Render a single custom block rather than looping add_settings_field so we can wrap it in Sortable HTML.
+			add_settings_field(
+				'lgl_field_manager',
+				'Manage Fields',
+				array($this, 'render_field_manager'),
+				'lgl-settings-visibility',
+				'lgl_visibility_section'
 			);
-			foreach ($compare_fields as $id => $field) {
-				add_settings_field($id, $field['label'], array($this, 'render_field'), 'lgl-settings-compare', 'lgl_compare_section', array('id' => $id, 'type' => $field['type'], 'default' => $field['default']));
-			}
 		}
 
 		/**
@@ -349,6 +376,7 @@ if (! class_exists('LGL_Shortcodes')) {
 		/**
 		 * Universal renderer for settings fields, handling multiple input types dynamically.
 		 * Extracts current values from the serialized 'lgl_settings' array.
+		 * Includes native handling for boolean checkbox toggles.
 		 *
 		 * @param array $args Field configuration arguments (id, type, default).
 		 * @return void
@@ -362,27 +390,33 @@ if (! class_exists('LGL_Shortcodes')) {
 			switch ($args['type']) {
 				case 'checkbox':
 					$is_checked = !empty($value) ? checked(1, $value, false) : '';
-					echo sprintf('<input type="checkbox" id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" value="1" %2$s />', esc_attr($id), $is_checked);
+					echo sprintf(
+						'<input type="checkbox" id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" value="1" %2$s />',
+						esc_attr($id),
+						$is_checked
+					);
 					break;
 				case 'color':
-					echo sprintf('<input type="text" id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" value="%2$s" class="lgl-color-picker" />', esc_attr($id), esc_attr($value));
+					echo sprintf(
+						'<input type="text" id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" value="%2$s" class="lgl-color-picker" />',
+						esc_attr($id),
+						esc_attr($value)
+					);
 					break;
 				case 'textarea':
-					echo sprintf('<textarea id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" rows="5" cols="50" class="large-text">%2$s</textarea>', esc_attr($id), esc_textarea($value));
-					break;
-				case 'page_select':
-					// Uses native WP dropdown enriched with Select2 for live searchable page selection
-					wp_dropdown_pages(array(
-						'name'             => 'lgl_settings[' . $id . ']',
-						'id'               => 'lgl_settings[' . $id . ']',
-						'selected'         => $value,
-						'show_option_none' => '&mdash; Select Compare Page &mdash;',
-						'class'            => 'regular-text lgl-select2-pages',
-					));
+					echo sprintf(
+						'<textarea id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" rows="5" cols="50" class="large-text">%2$s</textarea>',
+						esc_attr($id),
+						esc_textarea($value)
+					);
 					break;
 				case 'text':
 				default:
-					echo sprintf('<input type="text" id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" value="%2$s" class="regular-text" />', esc_attr($id), esc_attr($value));
+					echo sprintf(
+						'<input type="text" id="lgl_settings[%1$s]" name="lgl_settings[%1$s]" value="%2$s" class="regular-text" />',
+						esc_attr($id),
+						esc_attr($value)
+					);
 					break;
 			}
 		}
@@ -501,31 +535,6 @@ if (! class_exists('LGL_Shortcodes')) {
 		}
 
 		/**
-		 * Explicitly injects global JavaScript variables into the document head.
-		 * This prevents ReferenceErrors caused by caching plugins or deferred footer scripts
-		 * attempting to execute inline template logic out of sequence.
-		 *
-		 * @return void
-		 */
-		public function inject_global_js_variables()
-		{
-			$options = get_option('lgl_settings', array());
-			$sticky_offset_selector = isset($options['compare_sticky_offset']) ? $options['compare_sticky_offset'] : '';
-
-			$payload = array(
-				'ajax_url'        => admin_url('admin-ajax.php'),
-				'nonce'           => wp_create_nonce('lgl_search_nonce'),
-				'sticky_selector' => $sticky_offset_selector
-			);
-
-			echo "<script type='text/javascript'>\n";
-			echo "/* <![CDATA[ */\n";
-			echo "var lgl_ajax_obj = " . wp_json_encode($payload) . ";\n";
-			echo "/* ]]> */\n";
-			echo "</script>\n";
-		}
-
-		/**
 		 * Forcibly intercepts the single template routing for specific custom post types.
 		 * Bypasses database meta checks and directly serves the plugin's single-lgl.php template.
 		 *
@@ -559,22 +568,41 @@ if (! class_exists('LGL_Shortcodes')) {
 
 		/**
 		 * Enqueues plugin-specific stylesheets and scripts.
-		 * Broadcasts backend configurations (like sticky offsets) to the frontend JS payload.
+		 * Utilizes the wp_enqueue_scripts hook for front-end asset loading.
 		 *
 		 * @return void
 		 */
 		public function enqueue_assets()
 		{
+			// Enqueue Select2 dependencies
 			wp_enqueue_style('select2', LGL_SHORTCODES_URL . 'assets/libs/select2/select2.min.css');
 			wp_enqueue_style('slick', LGL_SHORTCODES_URL . 'assets/libs/slick/slick.css');
 
 			wp_enqueue_script('slick', LGL_SHORTCODES_URL . 'assets/libs/slick/slick.min.js', array('jquery'), '4.1.0', true);
 			wp_enqueue_script('select2', LGL_SHORTCODES_URL . 'assets/libs/select2/select2.min.js', array('jquery'), '4.1.0', true);
-			wp_enqueue_style('lgl-main-css', LGL_SHORTCODES_URL . 'assets/css/main.css', array('select2', 'slick'), LGL_SHORTCODES_VERSION);
-			wp_enqueue_script('lgl-main-js', LGL_SHORTCODES_URL . 'assets/js/main.js', array('jquery', 'select2', 'slick'), LGL_SHORTCODES_VERSION, true);
 
-			$options = get_option('lgl_settings', array());
-			$sticky_offset_selector = isset($options['compare_sticky_offset']) ? $options['compare_sticky_offset'] : '';
+			// Enqueue main stylesheet
+			wp_enqueue_style(
+				'lgl-main-css',
+				LGL_SHORTCODES_URL . 'assets/css/main.css',
+				array('select2', 'slick'),
+				LGL_SHORTCODES_VERSION
+			);
+
+			// Enqueue main JavaScript file (footer loaded)
+			wp_enqueue_script(
+				'lgl-main-js',
+				LGL_SHORTCODES_URL . 'assets/js/main.js',
+				array('jquery', 'select2', 'slick'),
+				LGL_SHORTCODES_VERSION,
+				true
+			);
+
+			// Localize AJAX URL for frontend operations
+			wp_localize_script('lgl-main-js', 'lgl_ajax_obj', array(
+				'ajax_url' => admin_url('admin-ajax.php'),
+				'nonce'    => wp_create_nonce('lgl_search_nonce')
+			));
 		}
 
 		/**
