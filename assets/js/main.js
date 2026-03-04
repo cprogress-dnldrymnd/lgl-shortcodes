@@ -14,7 +14,6 @@
         sharevehicle();
     });
 
-
     function tabs() {
         if ($('.lgl-tabs-js').length > 0) {
             $('.lgl-tabs-js .lgl-nav-item').on('click', function (e) {
@@ -24,12 +23,13 @@
             });
         }
     }
+
     /**
-         * Initializes the search form features.
-         * Binds Select2, handles dependent make/model dropdowns, and manages the AJAX submission and pagination UI.
-         *
-         * @return void
-         */
+     * Initializes the search form features.
+     * Binds Select2, handles dependent make/model dropdowns, and manages the AJAX submission and pagination UI.
+     *
+     * @return void
+     */
     function search_form() {
         let currentPage = 1;
 
@@ -155,7 +155,7 @@
 
     /**
      * Initializes the mini wishlist UI components and binds necessary event listeners.
-     * * @return {void}
+     * @return {void}
      */
     function initLGLMiniWishlist() {
         const $wrapper = jQuery('.lgl-mini-wishlist-wrapper');
@@ -220,7 +220,7 @@
         /**
          * Triggers a subsequent AJAX call to refresh the HTML payload of the dropdown 
          * list to maintain synchronization with the backend state.
-         * * @return {void}
+         * @return {void}
          */
         function refreshMiniWishlistHtml() {
             jQuery.ajax({
@@ -255,7 +255,7 @@
 
             /**
              * Executes the clipboard copy operation using the most appropriate API available.
-             * * @param {string} text - The string (URL) to be copied to the clipboard.
+             * @param {string} text - The string (URL) to be copied to the clipboard.
              * @param {string} successMsg - The notification message to display upon a successful copy.
              */
             const executeCopy = (text, successMsg) => {
@@ -263,11 +263,11 @@
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(text)
                         .then(() => {
-                            showNotification(successMsg, 'success');
+                            window.showNotification(successMsg, 'success');
                         })
                         .catch((err) => {
                             console.error('Clipboard API Write Error: ', err);
-                            showNotification('Failed to copy link. Please try again.', 'error');
+                            window.showNotification('Failed to copy link. Please try again.', 'error');
                         });
                 } else {
                     // Fallback implementation for older browsers or local/non-secure environments
@@ -278,13 +278,13 @@
                     try {
                         const successful = document.execCommand('copy');
                         if (successful) {
-                            showNotification(successMsg, 'success');
+                            window.showNotification(successMsg, 'success');
                         } else {
                             throw new Error('execCommand returned false');
                         }
                     } catch (err) {
                         console.error('Fallback Clipboard Copy Error: ', err);
-                        showNotification('Failed to copy link. Please try again.', 'error');
+                        window.showNotification('Failed to copy link. Please try again.', 'error');
                     } finally {
                         // Always clean up the temporary DOM element
                         $tempInput.remove();
@@ -298,11 +298,13 @@
     }
 
     /**
-        * Display a toast notification.
-        * @param {string} message - The message to display.
-        * @param {string} type - 'success' or 'error' for styling.
-        */
-    function showNotification(message, type = 'success') {
+     * Display a toast notification globally.
+     * Attached to the window object to prevent ReferenceErrors across different IIFE scopes.
+     * * @param {string} message - The message to display.
+     * @param {string} type - 'success' or 'error' for styling.
+     * @return {void}
+     */
+    window.showNotification = function (message, type = 'success') {
         const $container = $('#lgl-notification-container');
         const $notification = $('<div class="lgl-toast lgl-toast-' + type + '">' + message + '</div>');
 
@@ -321,13 +323,13 @@
                 $notification.remove();
             }, 300); // Matches CSS transition duration
         }, 3000);
-    }
+    };
 
     /**
-         * Binds click events for the wishlist functionality.
-         * Handles AJAX requests to add or remove items from the user's wishlist and triggers toast notifications.
-         * * @return {void}
-         */
+     * Binds click events for the wishlist functionality.
+     * Handles AJAX requests to add or remove items from the user's wishlist and triggers toast notifications.
+     * @return {void}
+     */
     function add_to_wishlist() {
         // Add Notification Container to Body
         $('body').append('<div id="lgl-notification-container"></div>');
@@ -357,17 +359,17 @@
                     if (response.success) {
                         if (response.data.status === 'added') {
                             $btn.addClass('added');
-                            showNotification(postTitle + ' added to wishlist!');
+                            window.showNotification(postTitle + ' added to wishlist!');
                         } else if (response.data.status === 'removed') {
                             $btn.removeClass('added');
-                            showNotification(postTitle + ' removed from wishlist.', 'error'); // Using error type for styling removal
+                            window.showNotification(postTitle + ' removed from wishlist.', 'error'); // Using error type for styling removal
                         }
                     } else {
-                        showNotification('Error: ' + (response.data || 'Unknown error.'), 'error');
+                        window.showNotification('Error: ' + (response.data || 'Unknown error.'), 'error');
                     }
                 },
                 error: function () {
-                    showNotification('A server error occurred.', 'error');
+                    window.showNotification('A server error occurred.', 'error');
                 },
                 complete: function () {
                     $btn.removeClass('processing');
@@ -421,7 +423,7 @@
 
     /**
      * Retrieves the master comparison object, guaranteeing base structural integrity.
-     * * @return {Object} The parsed storage object.
+     * @return {Object} The parsed storage object.
      */
     function getCompareData() {
         let data = localStorage.getItem(STATE_KEY_DATA);
@@ -431,7 +433,7 @@
     /**
      * Scans the DOM for all compare buttons and syncs their visual state 
      * based on the current active lists in the JSON payload.
-     * * @return {void}
+     * @return {void}
      */
     function syncCompareButtonStates() {
         let data = getCompareData();
@@ -446,11 +448,11 @@
             if (data[postType] && data[postType].includes(postId)) {
                 btn.addClass('is-active');
                 btn.find('.lgl-compare-text').text('Added to Compare');
-                showNotification(postTitle + ' added to compare list!');
+                window.showNotification(postTitle + ' added to compare list!');
             } else {
                 btn.removeClass('is-active');
                 btn.find('.lgl-compare-text').text('Compare');
-                showNotification(postTitle + ' removed from compare list!');
+                window.showNotification(postTitle + ' removed from compare list!');
             }
         });
     }
@@ -458,7 +460,7 @@
     /**
      * Intercepts clicks on compare buttons globally using event delegation.
      * Organizes payloads into respective type buckets.
-     * * @param {Event} e The jQuery click event object.
+     * @param {Event} e The jQuery click event object.
      * @return {void}
      */
     $(document).on('click', '.lgl-compare-btn', function (e) {
