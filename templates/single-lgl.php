@@ -16,6 +16,27 @@ get_header();
 
 $post_id = get_the_ID();
 $post_type = get_post_type();
+// Retrieve global LGL settings payload
+$lgl_options = get_option('lgl_settings', array());
+// Feature Toggles
+$disable_wishlist = !empty($lgl_options['disable_wishlist']);
+$disable_compare  = !empty($lgl_options['disable_compare']);
+// Button URLs (fallback to hash links if empty)
+$url_finance = !empty($lgl_options['url_finance_calc']) ? esc_url($lgl_options['url_finance_calc']) : '#lgl-tab-overview';
+$url_enquire = !empty($lgl_options['url_enquire_now']) ? esc_url($lgl_options['url_enquire_now']) : '#lgl-tab-overview';
+$url_reserve = !empty($lgl_options['url_reserve_now']) ? esc_url($lgl_options['url_reserve_now']) : '#lgl-tab-overview';
+
+// Contact Payload (With graceful fallbacks to prevent empty UI)
+$contact_phone    = !empty($lgl_options['contact_phone']) ? sanitize_text_field($lgl_options['contact_phone']) : '01978 810091';
+$phone_link       = preg_replace('/\D+/', '', $contact_phone);
+
+$contact_whatsapp = !empty($lgl_options['contact_whatsapp']) ? sanitize_text_field($lgl_options['contact_whatsapp']) : '01978 810091';
+$whatsapp_link    = preg_replace('/\D+/', '', $contact_whatsapp);
+
+$contact_email    = !empty($lgl_options['contact_email']) ? sanitize_email($lgl_options['contact_email']) : 'sales@clwydcaravans.com';
+
+$contact_address  = !empty($lgl_options['contact_address']) ? sanitize_textarea_field($lgl_options['contact_address']) : 'Clwyd Caravans';
+$location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($contact_address);
 ?>
 
 <pre style="display: none">
@@ -106,33 +127,6 @@ $post_type = get_post_type();
                 <div class="lgl-post--sidebar">
                     <div class="lgl-sidebar-wrap">
                         <div class="lgl-sidebar-block lgl-sale-block">
-
-                            <?php
-                            // Retrieve global LGL settings payload
-                            $lgl_options = get_option('lgl_settings', array());
-
-                            // Feature Toggles
-                            $disable_wishlist = !empty($lgl_options['disable_wishlist']);
-                            $disable_compare  = !empty($lgl_options['disable_compare']);
-
-                            // Button URLs (fallback to hash links if empty)
-                            $url_finance = !empty($lgl_options['url_finance_calc']) ? esc_url($lgl_options['url_finance_calc']) : '#lgl-tab-overview';
-                            $url_enquire = !empty($lgl_options['url_enquire_now']) ? esc_url($lgl_options['url_enquire_now']) : '#lgl-tab-overview';
-                            $url_reserve = !empty($lgl_options['url_reserve_now']) ? esc_url($lgl_options['url_reserve_now']) : '#lgl-tab-overview';
-
-                            // Contact Payload (With graceful fallbacks to prevent empty UI)
-                            $contact_phone    = !empty($lgl_options['contact_phone']) ? sanitize_text_field($lgl_options['contact_phone']) : '01978 810091';
-                            $phone_link       = preg_replace('/\D+/', '', $contact_phone);
-
-                            $contact_whatsapp = !empty($lgl_options['contact_whatsapp']) ? sanitize_text_field($lgl_options['contact_whatsapp']) : '01978 810091';
-                            $whatsapp_link    = preg_replace('/\D+/', '', $contact_whatsapp);
-
-                            $contact_email    = !empty($lgl_options['contact_email']) ? sanitize_email($lgl_options['contact_email']) : 'sales@clwydcaravans.com';
-
-                            $contact_address  = !empty($lgl_options['contact_address']) ? sanitize_textarea_field($lgl_options['contact_address']) : 'Clwyd Caravans';
-                            $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($contact_address);
-                            ?>
-
                             <div class="lgl-sale-card">
                                 <div class="lgl-sale-top">
                                     <div class="lgl-condition-tag">

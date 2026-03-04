@@ -1,4 +1,4 @@
-<?php if (is_user_logged_in()) { ?>
+<?php if (is_user_logged_in() &&  !$disable_compare) { ?>
     <?php
     $user_id = get_current_user_id();
     $wishlist = is_user_logged_in() ? get_user_meta($user_id, 'lgl_wishlists', true) : array();
