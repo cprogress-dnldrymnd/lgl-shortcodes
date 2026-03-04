@@ -44,7 +44,11 @@
       .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form.lgl-filter-form-no-ajax .lgl-filter-group {
         --width: calc(calc(100% / 3) - 50px); }
       .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form.lgl-filter-form-no-ajax .lgl-submit-group {
-        --width: 50px; } }
+        --width: 50px; }
+        .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form.lgl-filter-form-no-ajax .lgl-submit-group .lgl-search-submit {
+          padding-left: 0;
+          text-align: center;
+          padding-right: 0; } }
     .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-filter-group {
       display: flex;
       flex-direction: column;
