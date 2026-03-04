@@ -706,5 +706,8 @@
       width: 26px;
       height: 26px;
       color: var(--lgl-color-secondary); }
+  @media (max-width: 767px) {
+    .lgl-meta-list {
+      grid-template-columns: 1fr; } }
 
 /*# sourceMappingURL=main.css.map */
