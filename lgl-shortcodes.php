@@ -1111,8 +1111,7 @@ if (! class_exists('LGL_Shortcodes')) {
 			// Construct the absolute path to the SVG file.
 			$svg_file_path = LGL_SHORTCODES_PATH . 'assets/svg/' . $safe_filename . '.svg';
 
-			// Ensure the file exists on the server before attempting to read the buffer.
-			echo $safe_filename;
+		
 			if (file_exists($svg_file_path)) {
 				// Output the raw SVG markup inline directly into the DOM.
 				echo file_get_contents($svg_file_path);
