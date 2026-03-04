@@ -399,7 +399,7 @@ $post_type = get_post_type();
         <?= do_shortcode('[lgl_related_vehicles post_type="' . $post_type . '"]') ?>
 
         <?php
-        $options = get_option('single_vehicle_content', array());
+        $options = get_option('lgl_settings', array());
 
         if (isset($options['single_vehicle_content']) && !empty($options['single_vehicle_content'])) {
             echo do_shortcode($options['single_vehicle_content']);
