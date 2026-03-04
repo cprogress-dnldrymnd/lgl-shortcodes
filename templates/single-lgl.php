@@ -33,6 +33,8 @@ $post_type = get_post_type();
         $year = get_post_meta($post_id, 'year', true);
         $condition = get_post_meta($post_id, 'condition', true);
         $feature = get_post_meta($post_id, 'feature', true);
+        $sub_title = get_post_meta($post_id, 'sub_title', true);
+
         ?>
         <article <?php post_class('lgl-post'); ?>>
             <div class="lgl-post--wrap">
@@ -101,25 +103,7 @@ $post_type = get_post_type();
                 </div>
 
                 <div class="lgl-post--sidebar">
-                    <?php
-                    // --- Finance (simple example) ---
-                    $price_num = !empty($price) ? (float) $price : 0;
 
-                    // You can tweak these defaults or pull them from ACF Options later
-                    $finance_rate_annual = 0.099; // 9.9% APR
-                    $finance_years = 5;           // 5 years
-                    $finance_down = 0;            // down payment
-
-                    $loan = max(0, $price_num - $finance_down);
-                    $months = max(1, (int) $finance_years * 12);
-                    $r = $finance_rate_annual / 12;
-
-                    $monthly = 0;
-                    if ($loan > 0) {
-                        // amortization formula
-                        $monthly = ($r == 0) ? ($loan / $months) : ($loan * $r) / (1 - pow(1 + $r, -$months));
-                    }
-                    ?>
 
                     <div class="lgl-sidebar-wrap">
                         <div class="lgl-sidebar-block lgl-sale-block">
@@ -165,9 +149,9 @@ $post_type = get_post_type();
                                     ?>
                                 </div>
 
-                                <?php if (!empty($price) && !empty($monthly) && $monthly > 0) { ?>
+                                <?php if (!empty($sub_title)) { ?>
                                     <div class="lgl-sale-finance">
-                                        <div class="lgl-finance-label"><?php echo esc_html__('FINANCE FROM', 'lgl'); ?></div>
+                                        <div class="lgl-finance-label"><?php echo esc_html__($sub_title, 'lgl'); ?></div>
                                     </div>
                                 <?php } ?>
                             </div><!-- /.lgl-sale-card -->
