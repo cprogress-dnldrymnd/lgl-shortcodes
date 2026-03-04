@@ -11,15 +11,18 @@ if (class_exists('LGL_Import_Post_Types')) {
     if (!empty($listing_fields)) {
         // Access the specific field groupings
         $common_fields = $listing_fields['common'];
-        $motorhome_campervan_fields = $listing_fields['motorhome_campervan'];
         if ($post_type != 'caravan') {
+            $motorhome_campervan_fields = $listing_fields['motorhome_campervan'];
             $common_fields = array_merge($common_fields, $motorhome_campervan_fields);
             $taxonomies[] = 'listing-fuel-type';
             if ($post_type == 'motorhome') {
                 $taxonomies[] = 'listing-chassis';
             }
             $taxonomies[] = 'listing-gearbox';
-        } 
+        } else {
+            $caravan_fields = $listing_fields['caravan'];
+            $common_fields = array_merge($common_fields, $caravan_fields);
+        }
 
         echo "<div class='lgl-meta-list'>";
 
@@ -67,7 +70,7 @@ if (class_exists('LGL_Import_Post_Types')) {
          * Appends each taxonomy as a meta item matching the established DOM structure.
          */
 
-    
+
         if (!empty($taxonomies)) {
             foreach ($taxonomies as $taxonomy_slug) {
                 // Retrieve all terms assigned to the current post for this specific taxonomy.
@@ -117,5 +120,5 @@ if (class_exists('LGL_Import_Post_Types')) {
 }
 
 echo '<pre>';
-var_dump(get_post_meta($post_id));      
+var_dump(get_post_meta($post_id));
 echo '</pre>';
