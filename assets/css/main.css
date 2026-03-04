@@ -526,6 +526,9 @@
   .lgl-sale-card .lgl-wishlist-btn.added {
     color: var(--lgl-color-secondary) !important;
     background: var(--lgl-color-accent) !important; }
+  .lgl-sale-card .lgl-compare-btn.is-active {
+    color: var(--lgl-color-tertiary);
+    background: var(--lgl-color-secondary); }
 
 .lgl-sale-meta-bottom {
   background: var(--lgl-color-white);
