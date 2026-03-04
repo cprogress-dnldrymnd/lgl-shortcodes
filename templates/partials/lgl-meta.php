@@ -115,3 +115,7 @@ if (class_exists('LGL_Import_Post_Types')) {
         echo "</div>";
     }
 }
+
+echo '<pre>';
+var_dump(get_post_meta($post_id));      
+echo '</pre>';
