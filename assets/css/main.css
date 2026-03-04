@@ -30,6 +30,8 @@
   margin-bottom: 0;
   background-color: var(--lgl-color-primary);
   padding: 30px; }
+  .lgl-search-container.lgl-search-container.lgl-search-container.lgl-search-container-bg-secondary {
+    background-color: var(--lgl-color-secondary); }
   .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form {
     display: flex;
     gap: 0;

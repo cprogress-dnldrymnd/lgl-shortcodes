@@ -41,6 +41,10 @@
     margin-bottom: 0;
     background-color: var(--lgl-color-primary);
     padding: 30px;
+    &.lgl-search-container-bg-secondary {
+    background-color: var(--lgl-color-secondary);
+
+    }
     .lgl-filter-form {
        
         display: flex;
