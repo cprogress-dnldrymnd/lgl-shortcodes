@@ -4,7 +4,7 @@ if (class_exists('LGL_Import_Post_Types')) {
     $listing_fields = LGL_Import_Post_Types::get_listing_detail_fields();
 
     // Define an array of meta keys you want to exclude from the frontend display.
-    $exclude_keys = array('rrp', 'feature', 'warranty', 'sub_title', 'price');
+    $exclude_keys = array('rrp', 'feature', 'warranty', 'sub_title', 'price', 'country_of_origin', 'county', 'country');
 
     $taxonomies = [];
 
