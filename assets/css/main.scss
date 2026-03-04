@@ -17,7 +17,7 @@
     --lgl-color-soft-gray: #f0f0f0;
     --lgl-color-dark-gray: #555;
     --lgl-color-gray: #969696;
-    --lgl-color-light-blue: #F7FAFF;
+    --lgl-color-light-blue: #f7faff;
     --lgl-color-light-blue-gray: #ececec;
 }
 
@@ -1131,7 +1131,6 @@
     align-items: center;
     justify-content: center;
     background-color: transparent !important;
-
 }
 
 .lgl-remove-btn:hover svg {
@@ -1158,4 +1157,11 @@
     padding: 20px 0;
     font-size: 14px;
     color: #666;
+}
+
+.lgl-no-results {
+    margin-top: 100px;
+    @media (max-width: 1024px) {
+        margin-top: 50px;
+    }
 }
