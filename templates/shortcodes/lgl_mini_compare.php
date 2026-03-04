@@ -3,7 +3,6 @@ $options = get_option('lgl_settings', array());
 $page_id = isset($options['vehicle_comparison_page_id']) ? intval($options['vehicle_comparison_page_id']) : 0;
 $link_url = ($page_id > 0) ? get_permalink($page_id) : '#';
 
-ob_start();
 ?>
 <div class="lgl-mini-compare-wrapper">
     <a href="<?php echo esc_url($link_url); ?>" class="lgl-mini-compare-link" style="text-decoration: none; color: inherit;">
@@ -15,4 +14,3 @@ ob_start();
     </a>
 </div>
 <?php
-return ob_get_clean();
