@@ -833,7 +833,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  justify-content: center; }
+  justify-content: space-between; }
   .lgl-mini-wishlist-header h3 {
     font-size: 18px;
     font-weight: 800;
