@@ -1,4 +1,20 @@
 <?php
+
+$listing_fields = LGL_Shortcodes::get_external_listing_fields();
+
+if (!empty($listing_fields)) {
+    // Access the specific field groupings
+    $common_fields = $listing_fields['common'];
+    $motorhome_campervan_fields = $listing_fields['motorhome_campervan'];
+
+    // Example iteration over common fields
+    foreach ($common_fields as $meta_key => $label) {
+        $meta_value = get_post_meta($post_id, $meta_key, true);
+        if (!empty($meta_value)) {
+            echo esc_html($label) . ': ' . esc_html($meta_value) . '<br>';
+        }
+    }
+}
 $schema =  [
     'condition' => [
         'class'    => 'lgl-condition',
