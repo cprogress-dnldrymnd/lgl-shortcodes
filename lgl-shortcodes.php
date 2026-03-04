@@ -1095,7 +1095,7 @@ if (! class_exists('LGL_Shortcodes')) {
 		public static function render_inline_svg(string $meta_key): void
 		{
 			// Normalize the meta key to strict lowercase and sanitize.
-			$safe_filename = strtolower(sanitize_file_name($meta_key));
+			$safe_filename = strtolower($meta_key);
 
 			// Asset Mapping Dictionary: 
 			// Map problematic database keys to safe physical file names.
