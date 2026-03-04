@@ -46,6 +46,8 @@ if (! class_exists('LGL_Shortcodes')) {
 			add_action('init', array($this, 'register_shortcodes'));
 			add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
 			add_action('wp_head', array($this, 'inject_dynamic_css'));
+			// NEW: Forcibly inject JS variables into the <head> to bypass deferred execution
+			add_action('wp_head', array($this, 'inject_global_js_variables'), 5);
 
 			// AJAX endpoints for dependent dropdowns and search results
 			add_action('wp_ajax_lgl_get_models', array($this, 'ajax_get_models'));
@@ -499,6 +501,31 @@ if (! class_exists('LGL_Shortcodes')) {
 		}
 
 		/**
+		 * Explicitly injects global JavaScript variables into the document head.
+		 * This prevents ReferenceErrors caused by caching plugins or deferred footer scripts
+		 * attempting to execute inline template logic out of sequence.
+		 *
+		 * @return void
+		 */
+		public function inject_global_js_variables()
+		{
+			$options = get_option('lgl_settings', array());
+			$sticky_offset_selector = isset($options['compare_sticky_offset']) ? $options['compare_sticky_offset'] : '';
+
+			$payload = array(
+				'ajax_url'        => admin_url('admin-ajax.php'),
+				'nonce'           => wp_create_nonce('lgl_search_nonce'),
+				'sticky_selector' => $sticky_offset_selector
+			);
+
+			echo "<script type='text/javascript'>\n";
+			echo "/* <![CDATA[ */\n";
+			echo "var lgl_ajax_obj = " . wp_json_encode($payload) . ";\n";
+			echo "/* ]]> */\n";
+			echo "</script>\n";
+		}
+
+		/**
 		 * Forcibly intercepts the single template routing for specific custom post types.
 		 * Bypasses database meta checks and directly serves the plugin's single-lgl.php template.
 		 *
@@ -548,13 +575,6 @@ if (! class_exists('LGL_Shortcodes')) {
 
 			$options = get_option('lgl_settings', array());
 			$sticky_offset_selector = isset($options['compare_sticky_offset']) ? $options['compare_sticky_offset'] : '';
-
-			// Localize AJAX URL and Offset Selector for frontend operations
-			wp_localize_script('lgl-main-js', 'lgl_ajax_obj', array(
-				'ajax_url'        => admin_url('admin-ajax.php'),
-				'nonce'           => wp_create_nonce('lgl_search_nonce'),
-				'sticky_selector' => $sticky_offset_selector
-			));
 		}
 
 		/**
