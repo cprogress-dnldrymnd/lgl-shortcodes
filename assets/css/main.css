@@ -1287,15 +1287,7 @@
     justify-content: center;
     position: relative;
     z-index: 1;
-    padding: 0 4px;
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background-color: var(--lgl-color-light-gray);
-    transform: translateX(-50%); }
+    padding: 0 4px; }
     .lgl-compare-duo__vs span {
       display: flex;
       align-items: center;
@@ -1312,7 +1304,14 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
       flex-shrink: 0; }
     .lgl-compare-duo__vs:before {
-      content: ""; }
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background-color: var(--lgl-color-light-gray);
+      transform: translateX(-50%); }
   .lgl-compare-duo__cta {
     display: flex;
     align-items: center;

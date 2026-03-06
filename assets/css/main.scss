@@ -1647,14 +1647,7 @@ $border-radius: 16px;
         position: relative;
         z-index: 1;
         padding: 0 4px;
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 1px;
-        background-color: var(--lgl-color-light-gray);
-        transform: translateX(-50%);
+
         span {
             display: flex;
             align-items: center;
@@ -1673,6 +1666,13 @@ $border-radius: 16px;
         }
         &:before {
             content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: var(--lgl-color-light-gray);
+            transform: translateX(-50%);
         }
     }
 
