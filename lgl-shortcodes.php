@@ -1400,7 +1400,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 );
             }
 
-            if ($is_featured ) {
+            if ($is_featured) {
                 $args['meta_query'][] = array(
                     'key'     => 'is_featured',
                     'value'   => 'true',
@@ -1455,7 +1455,13 @@ if (! class_exists('LGL_Shortcodes')) {
             if ($query->have_posts()) {
                 while ($query->have_posts()) {
                     $query->the_post();
+                    if ($is_carousel) {
+                        echo '<div class="swiper-slide">';
+                    }
                     include LGL_SHORTCODES_PATH . 'templates/partials/lgl-grid.php';
+                    if ($is_carousel) {
+                        echo '</div>';
+                    }
                 }
             } else {
                 echo '<div class="lgl-no-results">No vehicles found matching your criteria.</div>';
