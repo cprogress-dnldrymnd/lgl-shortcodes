@@ -6,6 +6,7 @@
   --lgl-color-secondary: #001537;
   --lgl-color-tertiary: #00e6f6;
   --lgl-color-quaternary: #007bff;
+  --lgl-color-black: #000000;
   --lgl-color-white: #ffffff;
   --lgl-color-light-gray: #e4ecff;
   --lgl-color-medium-gray: #d9d9d9;
@@ -330,17 +331,38 @@
       .lgl-post.lgl-post.lgl-post .lgl-post--infor .lgl-post--readmore a svg {
         width: 20px;
         height: 20px; }
-  .lgl-post.lgl-post.lgl-post.style-2 .lgl-cover-image {
-    position: relative;
-    padding-bottom: 100%; }
-    .lgl-post.lgl-post.lgl-post.style-2 .lgl-cover-image img {
+  .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner {
+    position: relative; }
+    .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--thumbnail {
+      position: relative;
+      padding-bottom: 100%; }
+      .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--thumbnail img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1; }
+      .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--thumbnail:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--lgl-color-black);
+        opacity: 1; }
+    .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor {
       position: absolute;
-      top: 0;
-      bottom: 0;
+      bottom: 20px;
       left: 0;
       right: 0; }
-  .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--infor {
-    position: absolute; }
+      .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor .lgl-post--price,
+      .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor .lgl-post--title {
+        color: var(--lgl-color-white); }
+  .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--meta.lgl-post--meta.lgl-post--meta {
+    background-color: var(--lgl-color-white);
+    border-radius: 0 10px 10px 0; }
 
 .lgl-post--meta.lgl-post--meta {
   border-top: 1px solid var(--lgl-color-medium-gray);

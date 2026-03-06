@@ -10,6 +10,7 @@
     --lgl-color-tertiary: #00e6f6;
     --lgl-color-quaternary: #007bff;
 
+    --lgl-color-black: #000000;
     --lgl-color-white: #ffffff;
     --lgl-color-light-gray: #e4ecff;
     --lgl-color-medium-gray: #d9d9d9;
@@ -463,19 +464,45 @@
         }
     }
     &.style-2 {
-        .lgl-cover-image {
+        .lgl-post--inner {
             position: relative;
-            padding-bottom: 100%;
-            img {
+            .lgl-post--thumbnail {
+                position: relative;
+                padding-bottom: 100%;
+
+                img {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    z-index: 1;
+                }
+                &:before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background-color: var(--lgl-color-black);
+                    opacity: 1;
+                }
+            }
+            .lgl-post--infor {
                 position: absolute;
-                top: 0;
-                bottom: 0;
+                bottom: 20px;
                 left: 0;
                 right: 0;
+                .lgl-post--price,
+                .lgl-post--title {
+                    color: var(--lgl-color-white);
+                }
             }
         }
-        .lgl-post--infor {
-            position: absolute;
+        .lgl-post--meta.lgl-post--meta.lgl-post--meta {
+            background-color: var(--lgl-color-white);
+            border-radius: 0 10px 10px 0;
         }
     }
 }
