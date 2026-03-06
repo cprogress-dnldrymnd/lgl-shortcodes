@@ -185,7 +185,7 @@ if (!current_user_can('manage_options')) {
                             <line x1="12" y1="8" x2="12" y2="12" />
                             <line x1="12" y1="16" x2="12.01" y2="16" />
                         </svg>
-                        <?php echo wp_kses($sc['notes'], array('code' => array(), 'strong' => array())); ?>
+                        <?php echo wp_kses($sc['notes'], array('code' => array(), 'strong' => array(), 'span' => array())); ?>
                     </div>
                 <?php endif; ?>
 
