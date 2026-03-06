@@ -393,8 +393,8 @@
     function vehicle_slider() {
         //vehicle slider
         $('.vehicle-slider-js').slick({
-            slidesToShow: 4,
-            slidesToScroll: 4,
+            slidesToShow: 3,
+            slidesToScroll: 3,
             fade: false, // Disabled to allow standard inline block layout for multiple slides
             arrows: true,
             responsive: [
