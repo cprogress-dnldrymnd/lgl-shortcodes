@@ -1265,11 +1265,10 @@
   .lgl-compare-duo__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px 20px;
+    gap: clamp(20px, 4vw, 40px);
     margin-top: 8px; }
   .lgl-compare-duo__meta-item {
     display: flex;
-    align-items: center;
     gap: 5px;
     color: var(--lgl-color-gray);
     font-size: 0.85rem;
