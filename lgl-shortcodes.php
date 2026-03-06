@@ -200,11 +200,6 @@ if (! class_exists('LGL_Shortcodes')) {
             ');
         }
 
-        /**
-         * Registers the main administrative menu page for the plugin.
-         *
-         * @return void
-         */
         public function register_admin_menu()
         {
             add_menu_page(
@@ -216,7 +211,18 @@ if (! class_exists('LGL_Shortcodes')) {
                 'dashicons-admin-generic',
                 80
             );
+
+            // Documentation submenu  <-- ADD THIS
+            add_submenu_page(
+                'lgl-settings',                     // Parent slug
+                'LGL Documentation',                // Page title
+                'Documentation',                    // Menu label
+                'manage_options',                   // Capability
+                'lgl-documentation',                // Menu slug
+                array($this, 'render_documentation_page') // Callback
+            );
         }
+
 
         /**
          * Registers settings, sections, and fields via the WordPress Settings API.
@@ -1870,6 +1876,22 @@ if (! class_exists('LGL_Shortcodes')) {
             $options[$setting_key] = array_values($options[$setting_key]);
 
             update_option('lgl_settings', $options);
+        }
+        /**
+         * Renders the Documentation submenu page.
+         * Loads the static template from /templates/admin/lgl-documentation.php.
+         *
+         * @return void
+         */
+        public function render_documentation_page()
+        {
+            $template = LGL_SHORTCODES_PATH . 'templates/admin/lgl-documentation.php';
+
+            if (file_exists($template)) {
+                include $template;
+            } else {
+                echo '<div class="wrap"><p>' . esc_html__('Documentation template not found.', 'lgl-shortcodes') . '</p></div>';
+            }
         }
     }
 
