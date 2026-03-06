@@ -1404,6 +1404,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 $args['meta_query'][] = array(
                     'key'     => 'is_featured',
                     'value'   => 'true',
+                    'compare' => '=',
                 );
             }
 
