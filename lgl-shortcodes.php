@@ -1481,7 +1481,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 'html'       => $html,
                 'pagination' => $pagination_html,
                 'count'      => $query->found_posts,
-                'post_type' => $post_type,
+                'args' => $args,
             );
         }
 
