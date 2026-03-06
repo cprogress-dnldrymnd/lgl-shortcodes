@@ -23,7 +23,7 @@ if ($post_type) {
 ?>
 <?php if ($is_carousel) { ?>
 <script>
-    $('.vehicle-slider-js').slick({
+    jQuery('.vehicle-slider-js').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
         fade: true,
