@@ -14,6 +14,7 @@ $price = get_post_meta($post_id, 'price', true);
 $berth = get_post_meta($post_id, 'berth', true);
 $mileage = get_post_meta($post_id, 'mileage', true);
 $year = get_post_meta($post_id, 'year', true);
+$axles = get_post_meta($post_id, 'axles', true);
 $link = get_the_permalink();
 $title = get_the_title();
 
