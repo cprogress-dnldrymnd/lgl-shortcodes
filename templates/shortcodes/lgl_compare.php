@@ -12,6 +12,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+$options = get_option('lgl_settings', array());
+if (!empty($options['disable_compare'])) {
+    return;
+}
+
 // ==========================================================================
 // URL Parameter Pre-load: Resolve ?compare=ID1,ID2
 // ==========================================================================

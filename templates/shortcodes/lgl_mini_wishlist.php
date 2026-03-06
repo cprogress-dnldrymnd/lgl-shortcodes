@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 $options = get_option('lgl_settings', array());
-if (!empty($options['disable_compare'])) {
+if (!empty($options['disable_wishlist'])) {
     return;
 }
 $count = 0;

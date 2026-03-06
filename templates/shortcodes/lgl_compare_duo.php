@@ -14,8 +14,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+
+
 // Resolve comparison page URL from plugin settings
-$options     = get_option('lgl_settings', array());
+$options = get_option('lgl_settings', array());
+if (!empty($options['disable_compare'])) {
+    return;
+}
 $page_id     = isset($options['vehicle_comparison_page_id']) ? intval($options['vehicle_comparison_page_id']) : 0;
 $compare_url = ($page_id > 0) ? get_permalink($page_id) : '#';
 
