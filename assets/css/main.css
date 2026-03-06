@@ -1176,12 +1176,22 @@
   height: 56px;
   padding: 0;
   border-radius: 50%;
-  background-color: #ffffff4d; }
+  background-color: #ffffff4d;
+  z-index: 3;
+  transition: 400ms;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .vehicle-slider-holder .slick-arrow svg {
+    transition: 400ms;
+    width: 30px;
+    height: 30px; }
   .vehicle-slider-holder .slick-arrow.slick-prev {
     left: 20px; }
-  .vehicle-slider-holder .slick-arrow.slick-right {
+  .vehicle-slider-holder .slick-arrow.slick-next {
     right: 20px; }
   .vehicle-slider-holder .slick-arrow:hover {
-    background-color: var(--lgl-color-white); }
+    background-color: var(--lgl-color-white);
+    color: var(--lgl-color-primary); }
 
 /*# sourceMappingURL=main.css.map */

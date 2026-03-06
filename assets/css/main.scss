@@ -1470,15 +1470,25 @@
         padding: 0;
         border-radius: 50%;
         background-color: #ffffff4d;
-
+        z-index: 3;
+        transition: 400ms;
+            display: flex;
+    align-items: center;
+    justify-content: center;
+        svg {
+            transition: 400ms;
+            width: 30px;
+            height: 30px;
+        }
         &.slick-prev {
             left: 20px;
         }
-        &.slick-right {
+        &.slick-next {
             right: 20px;
         }
         &:hover {
             background-color: var(--lgl-color-white);
+            color: var(--lgl-color-primary);
         }
     }
 }
