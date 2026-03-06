@@ -396,7 +396,7 @@
             slidesToShow: 4,
             slidesToScroll: 4,
             fade: true,
-            arrows: false,
+            arrows: true,
             prevArrow: '<button type=\"button\" class=\"slick-prev\">Prev</button>',
             nextArrow: '<button type=\"button\" class=\"slick-next\">Next</button>'
         });
