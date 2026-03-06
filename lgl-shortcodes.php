@@ -4,7 +4,7 @@
  * Plugin Name: LGL Shortcodes
  * Plugin URI: https://digitallydisruptive.co.uk/
  * Description: A robust, OOP-based plugin to output customized data via shortcodes using a dynamic template routing system.
- * Version: 2.5.8
+ * Version: 2.8.3
  * Author: Digitally Disruptive - Donald Raymundo
  * Author URI: https://digitallydisruptive.co.uk/
  * Text Domain: lgl-shortcodes
@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '2.8.2'); // Update this version number with each release for cache busting.
+define('LGL_SHORTCODES_VERSION', '2.8.3'); // Update this version number with each release for cache busting.
 
 if (! class_exists('LGL_Shortcodes')) {
 
