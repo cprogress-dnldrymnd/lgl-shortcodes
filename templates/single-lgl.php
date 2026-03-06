@@ -22,9 +22,9 @@ $lgl_options = get_option('lgl_settings', array());
 $disable_wishlist = !empty($lgl_options['disable_wishlist']);
 $disable_compare  = !empty($lgl_options['disable_compare']);
 // Button URLs (fallback to hash links if empty)
-$url_finance = !empty($lgl_options['url_finance_calc']) ? esc_url($lgl_options['url_finance_calc']) : '#lgl-tab-overview';
-$url_enquire = !empty($lgl_options['url_enquire_now']) ? esc_url($lgl_options['url_enquire_now']) : '#lgl-tab-overview';
-$url_reserve = !empty($lgl_options['url_reserve_now']) ? esc_url($lgl_options['url_reserve_now']) : '#lgl-tab-overview';
+$url_finance = !empty($lgl_options['url_finance_calc']) ? esc_url($lgl_options['url_finance_calc']) : false;
+$url_enquire = !empty($lgl_options['url_enquire_now']) ? esc_url($lgl_options['url_enquire_now']) : false;
+$url_reserve = !empty($lgl_options['url_reserve_now']) ? esc_url($lgl_options['url_reserve_now']) : false;
 
 // Contact Payload (With graceful fallbacks to prevent empty UI)
 $contact_phone    = !empty($lgl_options['contact_phone']) ? sanitize_text_field($lgl_options['contact_phone']) : '01978 810091';
@@ -173,17 +173,22 @@ $sub_title = get_post_meta($post_id, 'sub_title', true);
 
 
                             <div class="lgl-btn-group">
-                                <a class="lgl-btn lgl-btn-secondary" href="<?php echo $url_finance; ?>">
-                                    <?php echo esc_html__('FINANCE CALCULATOR', 'lgl'); ?>
-                                </a>
+                                <?php if ($url_finance) { ?>
+                                    <a class="lgl-btn lgl-btn-secondary" href="<?php echo $url_finance; ?>">
+                                        <?php echo esc_html__('FINANCE CALCULATOR', 'lgl'); ?>
+                                    </a>
+                                <?php } ?>
+                                <?php if ($url_enquire) { ?>
+                                    <a class="lgl-btn lgl-btn-accent" href="<?php echo $url_enquire; ?>">
+                                        <?php echo esc_html__('ENQUIRE NOW', 'lgl'); ?>
+                                    </a>
+                                <?php } ?>
+                                <?php if ($url_reserve) { ?>
+                                    <a class="lgl-btn lgl-btn-outline" href="<?php echo $url_reserve; ?>">
+                                        <?php echo esc_html__('RESERVE NOW', 'lgl'); ?>
+                                    </a>
+                                <?php } ?>
 
-                                <a class="lgl-btn lgl-btn-accent" href="<?php echo $url_enquire; ?>">
-                                    <?php echo esc_html__('ENQUIRE NOW', 'lgl'); ?>
-                                </a>
-
-                                <a class="lgl-btn lgl-btn-outline" href="<?php echo $url_reserve; ?>">
-                                    <?php echo esc_html__('RESERVE NOW', 'lgl'); ?>
-                                </a>
                             </div>
 
                             <div class="lgl-contact-info">
