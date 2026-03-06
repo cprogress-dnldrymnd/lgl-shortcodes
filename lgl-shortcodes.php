@@ -670,12 +670,19 @@ if (! class_exists('LGL_Shortcodes')) {
          */
         public function render_shortcode($atts, $content = null, $shortcode_tag = '')
         {
-            // Set default shortcode attributes. Post type default is 'post'.
-            $attributes = shortcode_atts(array(
-                'post_type' => false,
-                'search' => true,
-                'limit' => 9,
-            ), $atts, $shortcode_tag);
+
+            $attributes_arr = [];
+
+            if ($shortcode_tag == 'lgl_search') {
+                $attributes_arr['post_type'] = false;
+            }
+
+            if ($shortcode_tag == 'lgl_listing') {
+                $attributes_arr['post_type'] = false;
+                $attributes_arr['limit'] = 9;
+            }
+
+            $attributes = shortcode_atts($attributes_arr, $atts, $shortcode_tag);
 
             // Hand over execution to the template loader
             return $this->load_template($shortcode_tag, $attributes, $content);
