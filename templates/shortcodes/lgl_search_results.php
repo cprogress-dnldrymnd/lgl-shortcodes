@@ -5,11 +5,9 @@ if (!defined('ABSPATH')) {
 /**
  * Template for rendering the search results grid wrapper.
  * The loop content relies on AJAX injection mapping to partials/result-item.php.
- *
  */
 ?>
 <div class="lgl-elwg-cars-grid--default lgl-results-wrapper lgl-holder">
-
     <div class="lgls-grid-list-template">
         <div class="lgl-filter-scroll-pos"></div>
         <div class="lgl-topbar">
@@ -39,10 +37,11 @@ if (!defined('ABSPATH')) {
                 </form>
             </div>
         </div>
+        
         <div class="lgl-filter-results">
             <span class="lgl-loading-wave" id="lgl-loader" style="display: none;">Loading...</span>
-            <div class="lgl-grid-layout lgl-cols--3 lgl-layout-default" id="lgl-results-grid" data-limit="<?= $grid_limit ?>">
-            </div>
+            <div class="lgl-grid-layout lgl-cols--3 lgl-layout-default" id="lgl-results-grid" data-limit="9">
+                </div>
             <div class="lgl-pagination-wrap"></div>
         </div>
     </div>
