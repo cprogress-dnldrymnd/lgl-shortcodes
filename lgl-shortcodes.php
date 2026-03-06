@@ -1400,6 +1400,12 @@ if (! class_exists('LGL_Shortcodes')) {
                 );
             }
 
+            if ($is_featured) {
+                $args['meta_query'][] = array(
+                    'key'     => 'is_featured',
+                    'value'   => true,
+                );
+            }
 
             // Price Range (Min/Max)
             $price_min = ! empty($form_data['price_min']) ? floatval($form_data['price_min']) : 0;
