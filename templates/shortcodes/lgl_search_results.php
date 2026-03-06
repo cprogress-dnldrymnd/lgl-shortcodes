@@ -21,6 +21,7 @@ if (!defined('ABSPATH')) {
                 <form class="lgl-filter-form-sortview" id="lgl-sort-form" action="" method="get">
                     <input type="hidden" name="orderby" value="date">
                     <input type="hidden" name="order" value="desc">
+                    <input type="hidden" name="search" value="<?= $search ?>">
                     <div class="lgl-sort-block">
                         <span class="lgl-sort-title">Sort by:</span>
                         <div class="lgl-sort-field">
@@ -37,11 +38,11 @@ if (!defined('ABSPATH')) {
                 </form>
             </div>
         </div>
-        
+
         <div class="lgl-filter-results">
             <span class="lgl-loading-wave" id="lgl-loader" style="display: none;">Loading...</span>
             <div class="lgl-grid-layout lgl-cols--3 lgl-layout-default" id="lgl-results-grid" data-limit="9">
-                </div>
+            </div>
             <div class="lgl-pagination-wrap"></div>
         </div>
     </div>
