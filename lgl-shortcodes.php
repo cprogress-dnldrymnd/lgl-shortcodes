@@ -1190,7 +1190,7 @@ if (! class_exists('LGL_Shortcodes')) {
          *     @type int    $count       Total number of matched posts.
          * }
          */
-        public function get_search_results_data($post_type = 'post', $form_data = array(), $paged = 1, $posts_per_page = 9)
+        public static function get_search_results_data($post_type = 'caravan', $form_data = array(), $paged = 1, $posts_per_page = 9)
         {
             $args = array(
                 'post_type'      => $post_type,
