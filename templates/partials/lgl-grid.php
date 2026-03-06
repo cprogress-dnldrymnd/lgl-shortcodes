@@ -17,7 +17,8 @@ $year = get_post_meta($post_id, 'year', true);
 $axles = get_post_meta($post_id, 'axles', true);
 $link = get_the_permalink();
 $title = get_the_title();
-
+$disable_wishlist = !empty($lgl_options['disable_wishlist']);
+$disable_compare  = !empty($lgl_options['disable_compare']);
 ?>
 
 <article <?php post_class('lgl-post car type-car status-publish has-post-thumbnail hentry ' . $style); ?>>
