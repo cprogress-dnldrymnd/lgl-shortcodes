@@ -2,6 +2,10 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+$options = get_option('lgl_settings', array());
+if (!empty($options['disable_compare'])) {
+    return;
+}
 $count = 0;
 if (is_user_logged_in()) {
     $wishlist = get_user_meta(get_current_user_id(), 'lgl_wishlists', true);
