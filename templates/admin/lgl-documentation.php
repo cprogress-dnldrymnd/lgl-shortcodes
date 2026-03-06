@@ -20,13 +20,24 @@ if (!current_user_can('manage_options')) {
         </svg>
         <?php esc_html_e('LGL Shortcodes — Documentation', 'lgl-shortcodes'); ?>
     </h1>
-    <p class="lgl-docs__intro"><?php esc_html_e('Reference guide for all available shortcodes. Copy any shortcode example and paste it into a page or post.', 'lgl-shortcodes'); ?></p>
+
+    <p class="lgl-docs__intro"><?php esc_html_e('Reference guide for all available shortcodes and LGL Settings tabs.', 'lgl-shortcodes'); ?></p>
+
+    <nav class="lgl-docs__toc">
+        <a href="#lgl-docs-shortcodes" class="lgl-docs__toc-link"><?php esc_html_e('Shortcodes', 'lgl-shortcodes'); ?></a>
+        <a href="#lgl-docs-settings" class="lgl-docs__toc-link"><?php esc_html_e('Settings', 'lgl-shortcodes'); ?></a>
+    </nav>
+
+    <?php /* ================================================================
+           SECTION 1 — SHORTCODES
+           ================================================================ */ ?>
+
+    <h2 class="lgl-docs__section-heading" id="lgl-docs-shortcodes">
+        <?php esc_html_e('Shortcodes', 'lgl-shortcodes'); ?>
+    </h2>
 
     <?php
 
-    // -------------------------------------------------------------------------
-    // Shortcode definitions
-    // -------------------------------------------------------------------------
     $shortcodes = array(
 
         array(
@@ -40,25 +51,25 @@ if (!current_user_can('manage_options')) {
                 '[lgl_listing post_type="caravan" is_featured="true" style="style-1"]',
             ),
             'attributes'  => array(
-                array('name' => 'post_type',   'default' => '—',       'description' => 'Required. The vehicle type to display. Accepts: <code>caravan</code>, <code>motorhome</code>, <code>campervan</code>. Supports comma-separated values e.g. <code>"caravan,motorhome"</code>.'),
+                array('name' => 'post_type',   'default' => '—',       'description' => 'Required. Vehicle type to display. Accepts: <code>caravan</code>, <code>motorhome</code>, <code>campervan</code>. Supports comma-separated values e.g. <code>"caravan,motorhome"</code>.'),
                 array('name' => 'limit',       'default' => '9',       'description' => 'Number of vehicles to display per page.'),
                 array('name' => 'is_carousel', 'default' => 'false',   'description' => 'Set to <code>true</code> to render vehicles in a horizontal slider instead of a grid.'),
-                array('name' => 'style',       'default' => 'style-1', 'description' => 'Card style variant. Currently supports <code>style-1</code> & <code>style-2</code>.'),
-                array('name' => 'is_featured', 'default' => 'false',   'description' => 'Set to <code>true</code> to display only vehicles marked as featured in LGL Settings.'),
+                array('name' => 'style',       'default' => 'style-1', 'description' => 'Card style variant. Currently supports <code>style-1</code> and <code>style-2</code>.'),
+                array('name' => 'is_featured', 'default' => 'false',   'description' => 'Set to <code>true</code> to display only vehicles marked as featured in LGL Settings → Featured Vehicles.'),
             ),
         ),
 
         array(
             'tag'         => 'lgl_search',
             'label'       => 'Vehicle Search Filter Form',
-            'description' => 'Renders the vehicle search and filter form. When <code>post_type</code> is omitted the form displays a vehicle type selector and redirects to the relevant listing page on submit. When a <code>post_type</code> is set the form filters results inline via AJAX on the same page.',
+            'description' => 'Renders the vehicle search and filter form. When <code>post_type</code> is omitted the form shows a vehicle-type selector and redirects on submit. When a <code>post_type</code> is set the form filters results inline via AJAX.',
             'examples'    => array(
                 '[lgl_search]',
                 '[lgl_search post_type="caravan"]',
                 '[lgl_search post_type="motorhome"]',
             ),
             'attributes'  => array(
-                array('name' => 'post_type', 'default' => '(none)', 'description' => 'Optional. Locks the form to a specific vehicle type: <code>caravan</code>, <code>motorhome</code>, or <code>campervan</code>. When omitted a vehicle-type dropdown is shown and the form redirects to the appropriate listing page.'),
+                array('name' => 'post_type', 'default' => '(none)', 'description' => 'Optional. Locks the form to a specific vehicle type: <code>caravan</code>, <code>motorhome</code>, or <code>campervan</code>. When omitted a vehicle-type dropdown is shown and the form redirects to the appropriate listing page set under <strong>LGL Pages</strong>.'),
             ),
         ),
 
@@ -70,86 +81,86 @@ if (!current_user_can('manage_options')) {
                 '[lgl_search_results]',
             ),
             'attributes'  => array(
-                array('name' => '—', 'default' => '—', 'description' => 'No attributes. This shortcode reads filter state from the AJAX payload sent by <code>[lgl_search]</code>.'),
+                array('name' => '—', 'default' => '—', 'description' => 'No attributes. Reads filter state from the AJAX payload sent by <code>[lgl_search]</code>.'),
             ),
         ),
 
         array(
             'tag'         => 'lgl_compare',
             'label'       => 'Vehicle Comparison Table',
-            'description' => 'Displays the full side-by-side vehicle comparison interface. Vehicles are managed via the in-page Select2 search or carried over from the <code>?compare=</code> URL parameter. Only vehicles of the same type can be compared. Up to 4 vehicles per category are supported.',
+            'description' => 'Full side-by-side vehicle comparison interface. Vehicles are managed via the inline Select2 search or the <code>?compare=</code> URL parameter. Only vehicles of the same type can be compared. Up to 4 vehicles per category.',
             'examples'    => array(
                 '[lgl_compare]',
             ),
             'url_params'  => array(
-                array('param' => '?compare=ID1,ID2', 'description' => 'Pre-loads specific vehicles into the comparison table. Both IDs must belong to the same post type. Any previously staged vehicles for that type are replaced. Example: <code>?compare=6917,6908</code>'),
+                array('param' => '?compare=ID1,ID2', 'description' => 'Pre-loads specific vehicles into the table. Both IDs must be the same post type. Any previously staged vehicles for that type are replaced. Example: <code>?compare=6917,6908</code>'),
             ),
             'attributes'  => array(
-                array('name' => '—', 'default' => '—', 'description' => 'No shortcode attributes. Configure the Comparison Page under <strong>LGL Settings → LGL Pages</strong>.'),
+                array('name' => '—', 'default' => '—', 'description' => 'No shortcode attributes. Set the page under <strong>LGL Settings → LGL Pages → Vehicle Comparison Page</strong>.'),
             ),
         ),
 
         array(
             'tag'         => 'lgl_compare_duo',
             'label'       => 'Compare Duo Card',
-            'description' => 'Renders a compact two-vehicle side-by-side preview card with a VS badge and a "Compare Now" button that links to the full comparison page. Ideal for use in landing pages, blog posts, or promotional content.',
+            'description' => 'Compact two-vehicle side-by-side preview card with a VS badge and a "Compare Now" CTA linking to the full comparison page. Ideal for landing pages or blog content.',
             'examples'    => array(
                 '[lgl_compare_duo post_id_1="123" post_id_2="456"]',
             ),
             'attributes'  => array(
-                array('name' => 'post_id_1', 'default' => '—', 'description' => 'Required. The post ID of the first vehicle to display.'),
-                array('name' => 'post_id_2', 'default' => '—', 'description' => 'Required. The post ID of the second vehicle to display.'),
+                array('name' => 'post_id_1', 'default' => '—', 'description' => 'Required. Post ID of the first vehicle.'),
+                array('name' => 'post_id_2', 'default' => '—', 'description' => 'Required. Post ID of the second vehicle.'),
             ),
-            'notes'       => 'Both vehicles must be published. The "Compare Now" button links to the page set under <strong>LGL Settings → LGL Pages → Vehicle Comparison Page</strong> with both IDs passed as <code>?compare=ID1,ID2</code>.',
+            'notes' => 'Both vehicles must be published. The "Compare Now" button links to <strong>LGL Settings → LGL Pages → Vehicle Comparison Page</strong> with both IDs as <code>?compare=ID1,ID2</code>.',
         ),
 
         array(
             'tag'         => 'lgl_mini_compare',
             'label'       => 'Mini Compare Button',
-            'description' => 'Renders a small icon button that links directly to the Vehicle Comparison page. Intended for use in navigation bars or headers.',
+            'description' => 'Small icon button linking to the Vehicle Comparison page. Intended for navigation bars or headers.',
             'examples'    => array(
                 '[lgl_mini_compare]',
             ),
             'attributes'  => array(
-                array('name' => '—', 'default' => '—', 'description' => 'No attributes. The destination URL is read from <strong>LGL Settings → LGL Pages → Vehicle Comparison Page</strong>.'),
+                array('name' => '—', 'default' => '—', 'description' => 'No attributes. Destination URL is read from <strong>LGL Settings → LGL Pages → Vehicle Comparison Page</strong>.'),
             ),
         ),
 
         array(
             'tag'         => 'lgl_wishlist',
             'label'       => 'Wishlist Page',
-            'description' => 'Displays the full saved wishlist for the currently logged-in user. Shows a vehicle card grid with image, title, price, berth, year, and a remove button. Guests see a login prompt. Configure the Wishlist Page URL under LGL Settings.',
+            'description' => 'Full saved-wishlist page for the currently logged-in user. Shows a list of vehicles with thumbnail, title, price and a remove button. Guests see a login prompt.',
             'examples'    => array(
                 '[lgl_wishlist]',
             ),
             'attributes'  => array(
-                array('name' => '—', 'default' => '—', 'description' => 'No attributes. Wishlist data is stored in user meta (<code>lgl_wishlists</code>). Set the page under <strong>LGL Settings → LGL Pages → Wishlist Page</strong>.'),
+                array('name' => '—', 'default' => '—', 'description' => 'No attributes. Wishlist is stored in user meta (<code>lgl_wishlists</code>). Set the page under <strong>LGL Settings → LGL Pages → Wishlist Page</strong>.'),
             ),
         ),
 
         array(
             'tag'         => 'lgl_mini_wishlist',
             'label'       => 'Mini Wishlist Dropdown',
-            'description' => 'Renders a heart-icon toggle button with a live item count badge. Clicking it opens a dropdown showing saved vehicles with thumbnails, titles, prices, and remove buttons. Includes a link to the full Wishlist page. Requires the user to be logged in to show items.',
+            'description' => 'Heart-icon toggle with a live item count badge. Clicking opens a dropdown of saved vehicles with thumbnails, prices, and remove buttons. Includes a link to the full Wishlist page.',
             'examples'    => array(
                 '[lgl_mini_wishlist]',
             ),
             'attributes'  => array(
-                array('name' => '—', 'default' => '—', 'description' => 'No attributes. The "View Your Wishlist" footer link points to the page set under <strong>LGL Settings → LGL Pages → Wishlist Page</strong>.'),
+                array('name' => '—', 'default' => '—', 'description' => 'No attributes. "View Your Wishlist" footer link points to <strong>LGL Settings → LGL Pages → Wishlist Page</strong>.'),
             ),
         ),
 
         array(
             'tag'         => 'lgl_related_vehicles',
             'label'       => 'Related Vehicles',
-            'description' => 'Displays a grid of randomly selected vehicles related to the current single listing page. Matches by the <code>listing-make-model</code> taxonomy. Automatically excludes the current post. Intended for use inside single vehicle templates.',
+            'description' => 'Grid of randomly selected vehicles related to the current single listing by the <code>listing-make-model</code> taxonomy. Automatically excludes the current post. Intended for single vehicle templates.',
             'examples'    => array(
                 '[lgl_related_vehicles]',
                 '[lgl_related_vehicles count="4"]',
                 '[lgl_related_vehicles post_type="motorhome" count="3"]',
             ),
             'attributes'  => array(
-                array('name' => 'post_type', 'default' => '(current post type)', 'description' => 'The vehicle type to query. Defaults to the post type of the current page.'),
+                array('name' => 'post_type', 'default' => '(current post type)', 'description' => 'Vehicle type to query. Defaults to the post type of the current page.'),
                 array('name' => 'count',     'default' => '3',                   'description' => 'Number of related vehicles to display.'),
             ),
         ),
@@ -159,14 +170,10 @@ if (!current_user_can('manage_options')) {
     foreach ($shortcodes as $sc) : ?>
 
         <div class="lgl-docs__card">
-
             <div class="lgl-docs__card-header">
-                <div class="lgl-docs__card-tag">
-                    <code class="lgl-docs__tag-code">[<?php echo esc_html($sc['tag']); ?>]</code>
-                </div>
+                <code class="lgl-docs__tag-code">[<?php echo esc_html($sc['tag']); ?>]</code>
                 <h2 class="lgl-docs__card-title"><?php echo esc_html($sc['label']); ?></h2>
             </div>
-
             <div class="lgl-docs__card-body">
 
                 <p class="lgl-docs__description"><?php echo wp_kses($sc['description'], array('code' => array(), 'strong' => array())); ?></p>
@@ -178,16 +185,13 @@ if (!current_user_can('manage_options')) {
                     </div>
                 <?php endif; ?>
 
-                <!-- Attributes Table -->
                 <h3 class="lgl-docs__section-title"><?php esc_html_e('Attributes', 'lgl-shortcodes'); ?></h3>
                 <table class="lgl-docs__table widefat">
-                    <thead>
-                        <tr>
-                            <th><?php esc_html_e('Attribute', 'lgl-shortcodes'); ?></th>
-                            <th><?php esc_html_e('Default', 'lgl-shortcodes'); ?></th>
-                            <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
-                        </tr>
-                    </thead>
+                    <thead><tr>
+                        <th><?php esc_html_e('Attribute', 'lgl-shortcodes'); ?></th>
+                        <th><?php esc_html_e('Default', 'lgl-shortcodes'); ?></th>
+                        <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
+                    </tr></thead>
                     <tbody>
                         <?php foreach ($sc['attributes'] as $attr) : ?>
                             <tr>
@@ -199,16 +203,13 @@ if (!current_user_can('manage_options')) {
                     </tbody>
                 </table>
 
-                <!-- URL Parameters (optional) -->
                 <?php if (!empty($sc['url_params'])) : ?>
                     <h3 class="lgl-docs__section-title"><?php esc_html_e('URL Parameters', 'lgl-shortcodes'); ?></h3>
                     <table class="lgl-docs__table widefat">
-                        <thead>
-                            <tr>
-                                <th><?php esc_html_e('Parameter', 'lgl-shortcodes'); ?></th>
-                                <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
-                            </tr>
-                        </thead>
+                        <thead><tr>
+                            <th><?php esc_html_e('Parameter', 'lgl-shortcodes'); ?></th>
+                            <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
+                        </tr></thead>
                         <tbody>
                             <?php foreach ($sc['url_params'] as $param) : ?>
                                 <tr>
@@ -220,17 +221,12 @@ if (!current_user_can('manage_options')) {
                     </table>
                 <?php endif; ?>
 
-                <!-- Examples -->
                 <h3 class="lgl-docs__section-title"><?php esc_html_e('Usage Examples', 'lgl-shortcodes'); ?></h3>
                 <div class="lgl-docs__examples">
                     <?php foreach ($sc['examples'] as $example) : ?>
                         <div class="lgl-docs__example">
                             <code class="lgl-docs__example-code"><?php echo esc_html($example); ?></code>
-                            <button
-                                class="lgl-docs__copy-btn button button-small"
-                                data-clipboard="<?php echo esc_attr($example); ?>"
-                                title="<?php esc_attr_e('Copy to clipboard', 'lgl-shortcodes'); ?>"
-                            >
+                            <button class="lgl-docs__copy-btn button button-small" data-clipboard="<?php echo esc_attr($example); ?>" title="<?php esc_attr_e('Copy to clipboard', 'lgl-shortcodes'); ?>">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                                 <?php esc_html_e('Copy', 'lgl-shortcodes'); ?>
                             </button>
@@ -238,19 +234,201 @@ if (!current_user_can('manage_options')) {
                     <?php endforeach; ?>
                 </div>
 
-            </div><!-- /.lgl-docs__card-body -->
+            </div>
+        </div>
 
-        </div><!-- /.lgl-docs__card -->
+    <?php endforeach; ?>
+
+    <?php /* ================================================================
+           SECTION 2 — SETTINGS TABS
+           ================================================================ */ ?>
+
+    <h2 class="lgl-docs__section-heading" id="lgl-docs-settings">
+        <?php esc_html_e('Settings', 'lgl-shortcodes'); ?>
+    </h2>
+    <p class="lgl-docs__settings-intro">
+        <?php printf(
+            wp_kses( __('All settings are saved under <strong>LGL Settings</strong> in the WordPress admin sidebar. Changes take effect immediately after clicking <strong>Save Changes</strong>.', 'lgl-shortcodes'), array('strong' => array()) )
+        ); ?>
+    </p>
+
+    <?php
+
+    $settings_tabs = array(
+
+        array(
+            'slug'        => 'general',
+            'label'       => 'General Settings',
+            'description' => 'Top-level feature toggles that control which interactive features are enabled site-wide.',
+            'fields'      => array(
+                array('name' => 'Disable Wishlist', 'type' => 'Checkbox', 'default' => 'Off', 'description' => 'When checked, hides all wishlist buttons (<code>.lgl-wishlist-btn</code>) across the vehicle grid and single listing pages. The mini wishlist shortcode will also be suppressed.'),
+                array('name' => 'Disable Compare',  'type' => 'Checkbox', 'default' => 'Off', 'description' => 'When checked, hides all compare buttons (<code>.lgl-compare-btn</code>) across the vehicle grid and single listing pages.'),
+            ),
+        ),
+
+        array(
+            'slug'        => 'design',
+            'label'       => 'Design Settings',
+            'description' => 'Controls the CSS custom properties injected into <code>:root</code> on every front-end page. Changes here propagate automatically to all plugin components without requiring a CSS recompile.',
+            'fields'      => array(
+                array('name' => 'Primary Font',     'type' => 'Text',        'default' => '"DM Sans", sans-serif',  'description' => 'Sets <code>--lgl-font-primary</code>. Used for body text, labels, and most UI elements.'),
+                array('name' => 'Secondary Font',   'type' => 'Text',        'default' => '"Poppins", sans-serif',  'description' => 'Sets <code>--lgl-font-secondary</code>. Used for headings and accent typography.'),
+                array('name' => 'Accent Color',     'type' => 'Color Picker','default' => '#f6d100',                'description' => 'Sets <code>--lgl-color-accent</code>. Used for highlights, badges, and CTA accents.'),
+                array('name' => 'Primary Color',    'type' => 'Color Picker','default' => '#003793',                'description' => 'Sets <code>--lgl-color-primary</code>. Used for the search form background and primary buttons.'),
+                array('name' => 'Secondary Color',  'type' => 'Color Picker','default' => '#001537',                'description' => 'Sets <code>--lgl-color-secondary</code>. Used for headings, card titles, and dark UI surfaces.'),
+                array('name' => 'Tertiary Color',   'type' => 'Color Picker','default' => '#00e6f6',                'description' => 'Sets <code>--lgl-color-tertiary</code>. Used for gradient accents and decorative elements.'),
+                array('name' => 'Quaternary Color', 'type' => 'Color Picker','default' => '#007bff',                'description' => 'Sets <code>--lgl-color-quaternary</code>. Used for links, hover states, and interactive highlights.'),
+            ),
+        ),
+
+        array(
+            'slug'        => 'single-page',
+            'label'       => 'Single Page',
+            'description' => 'Configuration for the single vehicle detail page rendered by the plugin\'s custom template (<code>templates/single-lgl.php</code>).',
+            'fields'      => array(
+                array('name' => 'Single Vehicle Additional Content', 'type' => 'Textarea', 'default' => '(empty)', 'description' => 'Free-form HTML or plain text appended to the bottom of each single vehicle page inside the <code>.lgl-additional-content</code> block. Accepts shortcodes.'),
+                array('name' => 'Finance Calculator Button URL',     'type' => 'Text (URL)', 'default' => '#lgl-tab-overview', 'description' => 'Destination URL for the Finance Calculator CTA button on the single vehicle page. Falls back to <code>#lgl-tab-overview</code> if empty.'),
+                array('name' => 'Enquire Now Button URL',            'type' => 'Text (URL)', 'default' => '#lgl-tab-overview', 'description' => 'Destination URL for the Enquire Now button. Falls back to <code>#lgl-tab-overview</code> if empty.'),
+                array('name' => 'Reserve Now Button URL',            'type' => 'Text (URL)', 'default' => '#lgl-tab-overview', 'description' => 'Destination URL for the Reserve Now button. Falls back to <code>#lgl-tab-overview</code> if empty.'),
+            ),
+        ),
+
+        array(
+            'slug'        => 'contact',
+            'label'       => 'Contact Information',
+            'description' => 'Dealer contact details displayed in the sidebar of every single vehicle page. Each field has a hardcoded fallback so the UI is never left blank.',
+            'fields'      => array(
+                array('name' => 'Phone Number',    'type' => 'Text', 'default' => '01978 810091', 'description' => 'Displayed as a clickable <code>tel:</code> link. Non-numeric characters are automatically stripped when building the href.'),
+                array('name' => 'WhatsApp Number', 'type' => 'Text', 'default' => '01978 810091', 'description' => 'Used to build a <code>https://wa.me/</code> link. Non-numeric characters are automatically stripped.'),
+                array('name' => 'Email Address',   'type' => 'Text', 'default' => 'sales@clwydcaravans.com', 'description' => 'Displayed as a clickable <code>mailto:</code> link on the single vehicle page.'),
+                array('name' => 'Address',         'type' => 'Textarea', 'default' => 'Clwyd Caravans', 'description' => 'Displayed in the contact sidebar. Also used to generate a Google Maps search link via the Maps API.'),
+            ),
+        ),
+
+        array(
+            'slug'        => 'visibility',
+            'label'       => 'Field Visibility',
+            'description' => 'Drag-and-drop interface to control which vehicle specification fields appear on the single listing page and in the comparison table, and in what order. Changes apply to all vehicle types globally.',
+            'fields'      => array(
+                array('name' => 'Drag handles', 'type' => 'Sortable list', 'default' => '(plugin default order)', 'description' => 'Drag rows to reorder fields. The saved order is applied to both the single vehicle spec list (<code>lgl-meta-list</code>) and the comparison table rows.'),
+                array('name' => 'Hide checkbox', 'type' => 'Checkbox per field', 'default' => 'Off (all visible)', 'description' => 'Check the checkbox next to any field to hide it from the front end. Hidden fields are moved to the bottom of the list automatically and cannot be sorted until unhidden.'),
+            ),
+            'notes' => 'Fields available for ordering include all common meta fields (price, berth, year, mileage, condition, etc.) plus type-specific fields for caravans and motorhomes/campervans, and taxonomy fields (Fuel Type, Chassis, Gearbox).',
+        ),
+
+        array(
+            'slug'        => 'lgl-pages',
+            'label'       => 'LGL Pages',
+            'description' => 'Maps key plugin features to specific WordPress pages. The plugin reads these IDs to generate internal links and redirect targets across all shortcodes.',
+            'fields'      => array(
+                array('name' => 'Vehicle Comparison Page', 'type' => 'Page selector', 'default' => '(none)', 'description' => 'The page containing the <code>[lgl_compare]</code> shortcode. Used as the destination for all "Compare" links across the site, including the mini compare button and the compare duo card CTA.'),
+                array('name' => 'Wishlist Page',           'type' => 'Page selector', 'default' => '(none)', 'description' => 'The page containing the <code>[lgl_wishlist]</code> shortcode. Used as the "View Your Wishlist" link in the mini wishlist dropdown footer.'),
+                array('name' => 'Caravan Page',            'type' => 'Page selector', 'default' => '(none)', 'description' => 'The main Caravan listing page. Used as the redirect target when the global search form (<code>[lgl_search]</code> without a post type) is submitted with Caravan selected.'),
+                array('name' => 'Motorhome Page',          'type' => 'Page selector', 'default' => '(none)', 'description' => 'The main Motorhome listing page. Used as the redirect target for the global search form when Motorhome is selected.'),
+                array('name' => 'Campervan Page',          'type' => 'Page selector', 'default' => '(none)', 'description' => 'The main Campervan listing page. Used as the redirect target for the global search form when Campervan is selected.'),
+            ),
+        ),
+
+        array(
+            'slug'        => 'featured',
+            'label'       => 'Featured Vehicles',
+            'description' => 'Selects which specific vehicles are shown when <code>[lgl_listing is_featured="true"]</code> is used. Featured status is also stored as post meta (<code>is_featured</code>) and displayed as a star icon in the WP admin list table.',
+            'fields'      => array(
+                array('name' => 'Featured Caravans',   'type' => 'Multi-select (searchable)', 'default' => '(none)', 'description' => 'Select one or more published Caravans to mark as featured. Only these vehicles will appear in <code>[lgl_listing post_type="caravan" is_featured="true"]</code>.'),
+                array('name' => 'Featured Motorhomes', 'type' => 'Multi-select (searchable)', 'default' => '(none)', 'description' => 'Select one or more published Motorhomes to mark as featured.'),
+                array('name' => 'Featured Campervans', 'type' => 'Multi-select (searchable)', 'default' => '(none)', 'description' => 'Select one or more published Campervans to mark as featured.'),
+            ),
+            'notes' => 'Saving this page automatically syncs the <code>is_featured</code> post meta on all affected vehicles. The star toggle in the WP admin post list also updates this setting in real time.',
+        ),
+
+    );
+
+    foreach ($settings_tabs as $tab) : ?>
+
+        <div class="lgl-docs__card lgl-docs__card--settings">
+            <div class="lgl-docs__card-header lgl-docs__card-header--settings">
+                <span class="lgl-docs__settings-badge"><?php esc_html_e('Settings', 'lgl-shortcodes'); ?></span>
+                <h2 class="lgl-docs__card-title"><?php echo esc_html($tab['label']); ?></h2>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=lgl-settings&tab=' . $tab['slug'])); ?>" class="lgl-docs__settings-link button button-small" target="_self">
+                    <?php esc_html_e('Open Tab →', 'lgl-shortcodes'); ?>
+                </a>
+            </div>
+            <div class="lgl-docs__card-body">
+
+                <p class="lgl-docs__description"><?php echo esc_html($tab['description']); ?></p>
+
+                <?php if (!empty($tab['notes'])) : ?>
+                    <div class="lgl-docs__note">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <?php echo wp_kses($tab['notes'], array('code' => array(), 'strong' => array())); ?>
+                    </div>
+                <?php endif; ?>
+
+                <h3 class="lgl-docs__section-title"><?php esc_html_e('Fields', 'lgl-shortcodes'); ?></h3>
+                <table class="lgl-docs__table widefat">
+                    <thead><tr>
+                        <th><?php esc_html_e('Field', 'lgl-shortcodes'); ?></th>
+                        <th><?php esc_html_e('Type', 'lgl-shortcodes'); ?></th>
+                        <th><?php esc_html_e('Default', 'lgl-shortcodes'); ?></th>
+                        <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
+                    </tr></thead>
+                    <tbody>
+                        <?php foreach ($tab['fields'] as $field) : ?>
+                            <tr>
+                                <td><strong><?php echo esc_html($field['name']); ?></strong></td>
+                                <td><span class="lgl-docs__type-badge"><?php echo esc_html($field['type']); ?></span></td>
+                                <td><code><?php echo esc_html($field['default']); ?></code></td>
+                                <td><?php echo wp_kses($field['description'], array('code' => array(), 'strong' => array())); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
 
     <?php endforeach; ?>
 
 </div><!-- /.wrap.lgl-docs -->
 
 <style>
+/* ---- Layout ---- */
 .lgl-docs { max-width: 960px; }
 .lgl-docs__heading { display: flex; align-items: center; font-size: 1.6rem; margin-bottom: 6px; color: #1e2a3b; }
-.lgl-docs__intro { color: #666; margin-bottom: 30px; font-size: 14px; }
+.lgl-docs__intro { color: #666; margin-bottom: 16px; font-size: 14px; }
+.lgl-docs__settings-intro { color: #555; margin-bottom: 24px; font-size: 13px; }
 
+/* ---- TOC ---- */
+.lgl-docs__toc {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+.lgl-docs__toc-link {
+    display: inline-block;
+    padding: 6px 16px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e2a3b;
+    text-decoration: none;
+}
+.lgl-docs__toc-link:hover { background: #1e2a3b; color: #f6d100; border-color: #1e2a3b; }
+
+/* ---- Section headings ---- */
+.lgl-docs__section-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e2a3b;
+    margin: 36px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* ---- Cards ---- */
 .lgl-docs__card {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -263,12 +441,15 @@ if (!current_user_can('manage_options')) {
 .lgl-docs__card-header {
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
-    padding: 16px 24px;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
 }
+
+/* Settings card header: darker tint */
+.lgl-docs__card-header--settings { background: #f0f4ff; }
 
 .lgl-docs__tag-code {
     background: #1e2a3b;
@@ -280,16 +461,33 @@ if (!current_user_can('manage_options')) {
     white-space: nowrap;
 }
 
+.lgl-docs__settings-badge {
+    background: #003793;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    white-space: nowrap;
+}
+
 .lgl-docs__card-title {
     margin: 0;
     font-size: 1rem;
     font-weight: 700;
     color: #1e2a3b;
+    flex: 1;
 }
 
+.lgl-docs__settings-link { margin-left: auto; white-space: nowrap; }
+
+/* ---- Body ---- */
 .lgl-docs__card-body { padding: 22px 24px 26px; }
 .lgl-docs__description { margin-top: 0; color: #444; line-height: 1.65; }
 
+/* ---- Note ---- */
 .lgl-docs__note {
     display: flex;
     align-items: flex-start;
@@ -301,18 +499,21 @@ if (!current_user_can('manage_options')) {
     font-size: 13px;
     color: #92400e;
     margin-bottom: 18px;
+    line-height: 1.5;
 }
-.lgl-docs__note svg { flex-shrink: 0; margin-top: 1px; }
+.lgl-docs__note svg { flex-shrink: 0; margin-top: 2px; }
 
+/* ---- Sub-headings inside cards ---- */
 .lgl-docs__section-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .06em;
+    letter-spacing: .07em;
     color: #94a3b8;
     margin: 22px 0 8px;
 }
 
+/* ---- Tables ---- */
 .lgl-docs__table { border-collapse: collapse; width: 100%; font-size: 13px; margin-bottom: 4px; }
 .lgl-docs__table th {
     background: #f1f5f9;
@@ -337,6 +538,19 @@ if (!current_user_can('manage_options')) {
     color: #0f172a;
 }
 
+/* ---- Type badge ---- */
+.lgl-docs__type-badge {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ---- Examples ---- */
 .lgl-docs__examples { display: flex; flex-direction: column; gap: 8px; }
 .lgl-docs__example {
     display: flex;
@@ -363,10 +577,7 @@ if (!current_user_can('manage_options')) {
     flex-shrink: 0;
     cursor: pointer;
 }
-.lgl-docs__copy-btn.is-copied {
-    color: #16a34a;
-    border-color: #16a34a;
-}
+.lgl-docs__copy-btn.is-copied { color: #16a34a; border-color: #16a34a; }
 </style>
 
 <script type="text/javascript">
@@ -374,7 +585,6 @@ document.querySelectorAll('.lgl-docs__copy-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
         const text = btn.getAttribute('data-clipboard');
         if (!text) return;
-
         navigator.clipboard.writeText(text).then(function () {
             btn.classList.add('is-copied');
             btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
