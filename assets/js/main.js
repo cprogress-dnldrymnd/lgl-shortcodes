@@ -117,7 +117,7 @@
         function execute_search() {
             // Serialize primary form and combine with sorting value
             let formData = $('#lgl-search-form').serialize() + '&sort_order=' + $('#lgl-sort-order').val();
-            let postType = $('#lgl_post_type').val();
+            let postType = $('#lgl_target_post_type').val();
             let limit = parseInt($('#lgl-results-grid').data('limit'), 10) || 9;
 
             // UI State management

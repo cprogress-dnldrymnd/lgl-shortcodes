@@ -54,6 +54,8 @@ if ($active_make) {
 
 <div class="lgl-search-container lgl-holder <?= $post_type == false ? 'lgl-search-container-bg-secondary' :  '' ?>">
     <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' :  'lgl-filter-form-ajax' ?>">
+        <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
+
         <?php if ($post_type == false) { ?>
             <?php
             //post type select option
@@ -74,7 +76,7 @@ if ($active_make) {
             <?php if (!empty($vehicle_types)) : ?>
                 <div class="lgl-filter-group">
                     <label for="lgl_vehicle_type">Leisure Vehicle Type</label>
-                    <select name="post_type" id="lgl_post_type_select" class="lgl-select2" data-placeholder="Leisure Vehicle Type" required>
+                    <select name="post_type" id="lgl_post_type" class="lgl-select2" data-placeholder="Leisure Vehicle Type" required>
                         <option value="">Leisure Vehicle Type</option>
                         <?php foreach ($vehicle_types as $type_key => $type_label) : ?>
                             <option value="<?php echo esc_attr($type_key); ?>"
