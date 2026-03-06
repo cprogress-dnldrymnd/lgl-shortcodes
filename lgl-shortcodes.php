@@ -1532,9 +1532,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 echo '<span class="dashicons dashicons-warning" style="margin-right: 8px; color: #a7aaad;" aria-hidden="true"></span>';
             }
         }
-    }
-
-    /**
+        /**
          * Injects a custom 'Featured' column into the WP Admin post list table.
          * Positions the column immediately after the bulk selection checkbox for maximum visibility.
          *
@@ -1568,7 +1566,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 $is_featured = get_post_meta($post_id, 'is_featured', true);
                 $post_type   = get_post_type($post_id);
                 $nonce       = wp_create_nonce('lgl_toggle_featured_nonce');
-                
+
                 $is_active = ($is_featured === 'true');
                 $class     = $is_active ? 'dashicons-star-filled' : 'dashicons-star-empty';
                 $color     = $is_active ? '#f39c12' : '#b5bcc2'; // Gold if featured, grey if not
@@ -1706,6 +1704,9 @@ if (! class_exists('LGL_Shortcodes')) {
                 'new_status' => $new_status
             ));
         }
+    }
+
+
 
     // Instantiate the plugin architecture
     new LGL_Shortcodes();
