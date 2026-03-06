@@ -1400,7 +1400,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 );
             }
 
-            if ($is_featured) {
+            if ($is_featured == 'true') {
                 $args['meta_query'][] = array(
                     'key'     => 'is_featured',
                     'value'   => true,
