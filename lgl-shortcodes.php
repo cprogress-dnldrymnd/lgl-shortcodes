@@ -243,7 +243,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 'vehicle_comparison_page_id' => array('label' => 'Vehicle Comparison Page', 'type' => 'select_page', 'default' => ''),
                 'caravan_page' => array('label' => 'Caravan Page', 'type' => 'select_page', 'default' => ''),
                 'motorhome_page' => array('label' => 'Motorhome Page', 'type' => 'select_page', 'default' => ''),
-				'campervan_page' => array('label' => 'Campervan Page', 'type' => 'select_page', 'default' => ''),
+                'campervan_page' => array('label' => 'Campervan Page', 'type' => 'select_page', 'default' => ''),
             );
 
             foreach ($lgl_pages_fields as $id => $field) {
@@ -679,7 +679,7 @@ if (! class_exists('LGL_Shortcodes')) {
             return $this->load_template($shortcode_tag, $attributes, $content);
         }
 
-     
+
 
         /**
          * Generates the internal HTML payload for the mini wishlist items list.
@@ -1160,6 +1160,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
             $post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : 'post';
             $paged     = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+            $posts_per_page = isset($_POST['limit']) ? intval($_POST['limit']) : 9;
             $form_data = array();
 
             // Parse serialized form data
@@ -1170,7 +1171,7 @@ if (! class_exists('LGL_Shortcodes')) {
             $args = array(
                 'post_type'      => $post_type,
                 'post_status'    => 'publish',
-                'posts_per_page' => 9,
+                'posts_per_page' => $posts_per_page,
                 'paged'          => $paged,
                 'meta_query'     => array('relation' => 'AND'),
                 'tax_query'      => array('relation' => 'AND')

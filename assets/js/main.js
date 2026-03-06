@@ -118,6 +118,7 @@
             // Serialize primary form and combine with sorting value
             let formData = $('#lgl-search-form').serialize() + '&sort_order=' + $('#lgl-sort-order').val();
             let postType = $('#lgl_target_post_type').val();
+            let limit = parseInt($('#lgl-results-grid').data('limit'), 10) || 9;
 
             // UI State management
             $('#lgl-loader').show();
@@ -132,7 +133,8 @@
                     nonce: lgl_ajax_obj.nonce,
                     post_type: postType,
                     form_data: formData,
-                    paged: currentPage
+                    paged: currentPage,
+                    limit: limit,
                 },
                 success: function (response) {
                     if (response.success) {
