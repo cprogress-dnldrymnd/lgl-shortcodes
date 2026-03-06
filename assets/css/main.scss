@@ -324,7 +324,6 @@
 
     .lgl-post--thumbnail {
         position: relative;
-        aspect-ratio: 16/10;
         overflow: hidden;
 
         img {
@@ -332,6 +331,7 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s ease;
+            aspect-ratio: 16/10;
         }
 
         &:hover img {
@@ -460,6 +460,22 @@
                     height: 20px;
                 }
             }
+        }
+    }
+    &.style-2 {
+        .lgl-cover-image {
+            position: relative;
+            padding-bottom: 100%;
+            img {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+        .lgl-post--infor {
+            position: absolute;;
         }
     }
 }
