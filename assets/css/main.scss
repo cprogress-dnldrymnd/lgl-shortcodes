@@ -689,7 +689,7 @@
     }
 }
 
-.single-lgl {
+.single-lgl.single-lgl.single-lgl {
     background-color: var(--lgl-color-light-blue);
     .lgl-holder {
         padding-left: 20px;
@@ -703,6 +703,10 @@
             width: 30px;
             height: 30px;
         }
+    }
+    .lgl-post.lgl-post.lgl-post {
+        border: none;
+        background-color: transparent;
     }
 }
 

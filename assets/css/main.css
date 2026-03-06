@@ -519,17 +519,20 @@
           color: var(--lgl-color-quaternary);
           background-color: transparent; }
 
-.single-lgl {
+.single-lgl.single-lgl.single-lgl {
   background-color: var(--lgl-color-light-blue); }
-  .single-lgl .lgl-holder {
+  .single-lgl.single-lgl.single-lgl .lgl-holder {
     padding-left: 20px;
     padding-right: 20px;
     max-width: 1300px;
     margin-left: auto;
     margin-right: auto; }
-  .single-lgl .lgl-post--meta.lgl-post--meta svg {
+  .single-lgl.single-lgl.single-lgl .lgl-post--meta.lgl-post--meta svg {
     width: 30px;
     height: 30px; }
+  .single-lgl.single-lgl.single-lgl .lgl-post.lgl-post.lgl-post {
+    border: none;
+    background-color: transparent; }
 
 .lgl-post--wrap {
   position: relative;
