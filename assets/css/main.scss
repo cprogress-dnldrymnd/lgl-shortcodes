@@ -1500,3 +1500,224 @@
         }
     }
 }
+
+/*compare duo*/
+// =========================================================
+//   LGL Compare Duo — lgl_compare_duo shortcode styles
+// =========================================================
+
+// --- Variables
+$color-primary: var(--lgl-color-primary, #e6c619);
+$color-secondary: var(--lgl-color-secondary, #1a2540);
+$color-muted: #94a3b8;
+$color-text: #64748b;
+$color-bg-empty: #e2e8f0;
+$transition-base: 0.2s ease;
+$aspect-ratio: 16 / 10;
+$border-radius: 16px;
+
+// --- Block
+.lgl-compare-duo {
+    container-type: inline-size;
+
+    // --- Card wrapper
+    &__card {
+        background: #fff;
+        border-radius: $border-radius;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    // --- Two-column vehicle row
+    &__vehicles {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: stretch;
+    }
+
+    // --- Individual vehicle column
+    &__vehicle {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // --- Image link
+    &__image-link {
+        display: block;
+
+        .lgl-cover-image {
+            aspect-ratio: $aspect-ratio;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+        }
+
+        &:hover .lgl-cover-image img {
+            transform: scale(1.04);
+        }
+    }
+
+    // --- Empty image placeholder
+    &__no-image {
+        width: 100%;
+        aspect-ratio: $aspect-ratio;
+        background: $color-bg-empty;
+    }
+
+    // --- Body (text content)
+    &__body {
+        padding: 18px 20px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+
+        .lgl-value {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: $color-primary;
+        }
+    }
+
+    // --- Title
+    &__title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1.35;
+        margin: 0;
+        color: $color-secondary;
+
+        a {
+            color: inherit;
+            text-decoration: none;
+
+            &:hover {
+                color: $color-primary;
+            }
+        }
+    }
+
+    // --- Price
+    &__price {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: $color-secondary;
+        margin: 4px 0 0;
+    }
+
+    // --- Meta items (Berth / Year)
+    &__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 20px;
+        margin-top: 8px;
+    }
+
+    &__meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: $color-text;
+        font-size: 0.85rem;
+
+        svg {
+            flex-shrink: 0;
+            color: $color-muted;
+        }
+    }
+
+    &__meta-label {
+        font-weight: 500;
+        color: $color-muted;
+    }
+
+    &__meta-value {
+        font-weight: 600;
+        color: $color-secondary;
+    }
+
+    // --- VS badge
+    &__vs {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        padding: 0 4px;
+
+        span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: $color-primary;
+            color: $color-secondary;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+    }
+
+    // --- CTA bar
+    &__cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 16px 24px;
+        background: $color-secondary;
+        color: $color-primary;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 0;
+        transition:
+            background $transition-base,
+            color $transition-base;
+        border: none;
+        cursor: pointer;
+
+        svg {
+            transition: transform $transition-base;
+        }
+
+        &:hover {
+            background: $color-primary;
+            color: $color-secondary;
+            text-decoration: none;
+
+            svg {
+                transform: translateX(4px);
+            }
+        }
+    }
+}
+
+// --- Responsive (container query)
+@container (max-width: 540px) {
+    .lgl-compare-duo {
+        &__vehicles {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+        }
+
+        &__vs {
+            padding: 10px 0;
+        }
+    }
+}
