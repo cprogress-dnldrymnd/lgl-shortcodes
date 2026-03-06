@@ -680,6 +680,8 @@ if (! class_exists('LGL_Shortcodes')) {
             if ($shortcode_tag == 'lgl_listing') {
                 $attributes_arr['post_type'] = false;
                 $attributes_arr['limit'] = 9;
+                $attributes_arr['is_carousel'] = false;
+                $attributes_arr['style'] = 'style-1';
             }
 
             $attributes = shortcode_atts($attributes_arr, $atts, $shortcode_tag);
@@ -1198,7 +1200,7 @@ if (! class_exists('LGL_Shortcodes')) {
          *     @type int    $count       Total number of matched posts.
          * }
          */
-        public static function get_search_results_data($post_type = 'caravan', $form_data = array(), $paged = 1, $posts_per_page = 9)
+        public static function get_search_results_data($post_type = 'caravan', $form_data = array(), $paged = 1, $posts_per_page = 9, $is_carousel = false, $style = 'style-1')
         {
             $args = array(
                 'post_type'      => $post_type,
