@@ -92,8 +92,10 @@ $render_vehicle_col = function (array $v) {
                         <?php
                         echo LGL_Shortcodes::render_inline_svg('berth');
                         ?>
-                        <span class="lgl-compare-duo__meta-label"><?php esc_html_e('Berth', 'lgl-shortcodes'); ?></span>
-                        <span class="lgl-compare-duo__meta-value"><?php echo esc_html($v['berth']); ?></span>
+                        <span class="lgl-compare-duo__meta-label-value">
+                            <span class="lgl-compare-duo__meta-label"><?php esc_html_e('Berth', 'lgl-shortcodes'); ?></span>
+                            <span class="lgl-compare-duo__meta-value"><?php echo esc_html($v['berth']); ?></span>
+                        </span>
                     </div>
                 <?php endif; ?>
 

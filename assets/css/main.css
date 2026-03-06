@@ -1272,7 +1272,8 @@
     align-items: center;
     gap: 5px;
     color: var(--lgl-color-gray);
-    font-size: 0.85rem; }
+    font-size: 0.85rem;
+    line-height: 1.2; }
     .lgl-compare-duo__meta-item svg {
       flex-shrink: 0;
       color: var(--lgl-color-secondary);
