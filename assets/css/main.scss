@@ -539,6 +539,9 @@
             gap: 10px;
             svg {
                 fill: var(--lgl-color-secondary);
+                width: 25px;
+                height: 25px;
+                flex: 0 0 25px;
             }
             .label-val {
                 display: flex;

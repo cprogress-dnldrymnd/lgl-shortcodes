@@ -391,7 +391,10 @@
       padding: 12px 16px;
       gap: 10px; }
       .lgl-post--meta.lgl-post--meta .lgl-post--meta-row .lgl-post--meta-item svg {
-        fill: var(--lgl-color-secondary); }
+        fill: var(--lgl-color-secondary);
+        width: 25px;
+        height: 25px;
+        flex: 0 0 25px; }
       .lgl-post--meta.lgl-post--meta .lgl-post--meta-row .lgl-post--meta-item .label-val {
         display: flex;
         flex-direction: column;
