@@ -15,7 +15,9 @@ $grid_limit  = $show_search ? 9 : 6;
 ?>
 <div class="lgl-elwg-cars-grid--default lgl-results-wrapper lgl-holder">
     <input type="hidden" name="search" value="<?= esc_attr($search) ?>">
-    <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
+    <?php if (!$show_search) { ?>
+        <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
+    <?php } ?>
     <div class="lgls-grid-list-template">
         <div class="lgl-filter-scroll-pos"></div>
         <?php if ($show_search) : ?>
