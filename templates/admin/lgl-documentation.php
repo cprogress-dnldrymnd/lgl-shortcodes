@@ -12,11 +12,11 @@ if (!current_user_can('manage_options')) {
 
     <h1 class="lgl-docs__heading">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="vertical-align:middle;margin-right:8px;">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <polyline points="10 9 9 9 8 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <polyline points="10 9 9 9 8 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         </svg>
         <?php esc_html_e('LGL Shortcodes — Documentation', 'lgl-shortcodes'); ?>
     </h1>
@@ -180,18 +180,24 @@ if (!current_user_can('manage_options')) {
 
                 <?php if (!empty($sc['notes'])) : ?>
                     <div class="lgl-docs__note">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
                         <?php echo wp_kses($sc['notes'], array('code' => array(), 'strong' => array())); ?>
                     </div>
                 <?php endif; ?>
 
                 <h3 class="lgl-docs__section-title"><?php esc_html_e('Attributes', 'lgl-shortcodes'); ?></h3>
                 <table class="lgl-docs__table widefat">
-                    <thead><tr>
-                        <th><?php esc_html_e('Attribute', 'lgl-shortcodes'); ?></th>
-                        <th><?php esc_html_e('Default', 'lgl-shortcodes'); ?></th>
-                        <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
-                    </tr></thead>
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Attribute', 'lgl-shortcodes'); ?></th>
+                            <th><?php esc_html_e('Default', 'lgl-shortcodes'); ?></th>
+                            <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <?php foreach ($sc['attributes'] as $attr) : ?>
                             <tr>
@@ -206,10 +212,12 @@ if (!current_user_can('manage_options')) {
                 <?php if (!empty($sc['url_params'])) : ?>
                     <h3 class="lgl-docs__section-title"><?php esc_html_e('URL Parameters', 'lgl-shortcodes'); ?></h3>
                     <table class="lgl-docs__table widefat">
-                        <thead><tr>
-                            <th><?php esc_html_e('Parameter', 'lgl-shortcodes'); ?></th>
-                            <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
-                        </tr></thead>
+                        <thead>
+                            <tr>
+                                <th><?php esc_html_e('Parameter', 'lgl-shortcodes'); ?></th>
+                                <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <?php foreach ($sc['url_params'] as $param) : ?>
                                 <tr>
@@ -227,7 +235,10 @@ if (!current_user_can('manage_options')) {
                         <div class="lgl-docs__example">
                             <code class="lgl-docs__example-code"><?php echo esc_html($example); ?></code>
                             <button class="lgl-docs__copy-btn button button-small" data-clipboard="<?php echo esc_attr($example); ?>" title="<?php esc_attr_e('Copy to clipboard', 'lgl-shortcodes'); ?>">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
                                 <?php esc_html_e('Copy', 'lgl-shortcodes'); ?>
                             </button>
                         </div>
@@ -248,7 +259,7 @@ if (!current_user_can('manage_options')) {
     </h2>
     <p class="lgl-docs__settings-intro">
         <?php printf(
-            wp_kses( __('All settings are saved under <strong>LGL Settings</strong> in the WordPress admin sidebar. Changes take effect immediately after clicking <strong>Save Changes</strong>.', 'lgl-shortcodes'), array('strong' => array()) )
+            wp_kses(__('All settings are saved under <strong>LGL Settings</strong> in the WordPress admin sidebar. Changes take effect immediately after clicking <strong>Save Changes</strong>.', 'lgl-shortcodes'), array('strong' => array()))
         ); ?>
     </p>
 
@@ -273,11 +284,11 @@ if (!current_user_can('manage_options')) {
             'fields'      => array(
                 array('name' => 'Primary Font',     'type' => 'Text',        'default' => '"DM Sans", sans-serif',  'description' => 'Sets <code>--lgl-font-primary</code>. Used for body text, labels, and most UI elements.'),
                 array('name' => 'Secondary Font',   'type' => 'Text',        'default' => '"Poppins", sans-serif',  'description' => 'Sets <code>--lgl-font-secondary</code>. Used for headings and accent typography.'),
-                array('name' => 'Accent Color',     'type' => 'Color Picker','default' => '#f6d100',                'description' => 'Sets <code>--lgl-color-accent</code>. Used for highlights, badges, and CTA accents.'),
-                array('name' => 'Primary Color',    'type' => 'Color Picker','default' => '#003793',                'description' => 'Sets <code>--lgl-color-primary</code>. Used for the search form background and primary buttons.'),
-                array('name' => 'Secondary Color',  'type' => 'Color Picker','default' => '#001537',                'description' => 'Sets <code>--lgl-color-secondary</code>. Used for headings, card titles, and dark UI surfaces.'),
-                array('name' => 'Tertiary Color',   'type' => 'Color Picker','default' => '#00e6f6',                'description' => 'Sets <code>--lgl-color-tertiary</code>. Used for gradient accents and decorative elements.'),
-                array('name' => 'Quaternary Color', 'type' => 'Color Picker','default' => '#007bff',                'description' => 'Sets <code>--lgl-color-quaternary</code>. Used for links, hover states, and interactive highlights.'),
+                array('name' => 'Accent Color',     'type' => 'Color Picker', 'default' => '#f6d100',                'description' => 'Sets <code>--lgl-color-accent</code>. Used for highlights, badges, and CTA accents.'),
+                array('name' => 'Primary Color',    'type' => 'Color Picker', 'default' => '#003793',                'description' => 'Sets <code>--lgl-color-primary</code>. Used for the search form background and primary buttons.'),
+                array('name' => 'Secondary Color',  'type' => 'Color Picker', 'default' => '#001537',                'description' => 'Sets <code>--lgl-color-secondary</code>. Used for headings, card titles, and dark UI surfaces.'),
+                array('name' => 'Tertiary Color',   'type' => 'Color Picker', 'default' => '#00e6f6',                'description' => 'Sets <code>--lgl-color-tertiary</code>. Used for gradient accents and decorative elements.'),
+                array('name' => 'Quaternary Color', 'type' => 'Color Picker', 'default' => '#007bff',                'description' => 'Sets <code>--lgl-color-quaternary</code>. Used for links, hover states, and interactive highlights.'),
             ),
         ),
 
@@ -287,9 +298,9 @@ if (!current_user_can('manage_options')) {
             'description' => 'Configuration for the single vehicle detail page rendered by the plugin\'s custom template (<code>templates/single-lgl.php</code>).',
             'fields'      => array(
                 array('name' => 'Single Vehicle Additional Content', 'type' => 'Textarea', 'default' => '(empty)', 'description' => 'Free-form HTML or plain text appended to the bottom of each single vehicle page inside the <code>.lgl-additional-content</code> block. Accepts shortcodes.'),
-                array('name' => 'Finance Calculator Button URL',     'type' => 'Text (URL)', 'default' => '#lgl-tab-overview', 'description' => 'Destination URL for the Finance Calculator CTA button on the single vehicle page. Falls back to <code>#lgl-tab-overview</code> if empty.'),
-                array('name' => 'Enquire Now Button URL',            'type' => 'Text (URL)', 'default' => '#lgl-tab-overview', 'description' => 'Destination URL for the Enquire Now button. Falls back to <code>#lgl-tab-overview</code> if empty.'),
-                array('name' => 'Reserve Now Button URL',            'type' => 'Text (URL)', 'default' => '#lgl-tab-overview', 'description' => 'Destination URL for the Reserve Now button. Falls back to <code>#lgl-tab-overview</code> if empty.'),
+                array('name' => 'Finance Calculator Button URL',     'type' => 'Text (URL)', 'default' => '(none)', 'description' => 'Destination URL for the Finance Calculator CTA button on the single vehicle page. If left empty the button is <strong>not rendered</strong> at all.'),
+                array('name' => 'Enquire Now Button URL',            'type' => 'Text (URL)', 'default' => '(none)', 'description' => 'Destination URL for the Enquire Now button. If left empty the button is <strong>not rendered</strong> at all.'),
+                array('name' => 'Reserve Now Button URL',            'type' => 'Text (URL)', 'default' => '(none)', 'description' => 'Destination URL for the Reserve Now button. If left empty the button is <strong>not rendered</strong> at all.'),
             ),
         ),
 
@@ -359,19 +370,25 @@ if (!current_user_can('manage_options')) {
 
                 <?php if (!empty($tab['notes'])) : ?>
                     <div class="lgl-docs__note">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
                         <?php echo wp_kses($tab['notes'], array('code' => array(), 'strong' => array())); ?>
                     </div>
                 <?php endif; ?>
 
                 <h3 class="lgl-docs__section-title"><?php esc_html_e('Fields', 'lgl-shortcodes'); ?></h3>
                 <table class="lgl-docs__table widefat">
-                    <thead><tr>
-                        <th><?php esc_html_e('Field', 'lgl-shortcodes'); ?></th>
-                        <th><?php esc_html_e('Type', 'lgl-shortcodes'); ?></th>
-                        <th><?php esc_html_e('Default', 'lgl-shortcodes'); ?></th>
-                        <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
-                    </tr></thead>
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Field', 'lgl-shortcodes'); ?></th>
+                            <th><?php esc_html_e('Type', 'lgl-shortcodes'); ?></th>
+                            <th><?php esc_html_e('Default', 'lgl-shortcodes'); ?></th>
+                            <th><?php esc_html_e('Description', 'lgl-shortcodes'); ?></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <?php foreach ($tab['fields'] as $field) : ?>
                             <tr>
@@ -392,207 +409,267 @@ if (!current_user_can('manage_options')) {
 </div><!-- /.wrap.lgl-docs -->
 
 <style>
-/* ---- Layout ---- */
-.lgl-docs { max-width: 960px; }
-.lgl-docs__heading { display: flex; align-items: center; font-size: 1.6rem; margin-bottom: 6px; color: #1e2a3b; }
-.lgl-docs__intro { color: #666; margin-bottom: 16px; font-size: 14px; }
-.lgl-docs__settings-intro { color: #555; margin-bottom: 24px; font-size: 13px; }
+    /* ---- Layout ---- */
+    .lgl-docs {
+        max-width: 960px;
+    }
 
-/* ---- TOC ---- */
-.lgl-docs__toc {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-}
-.lgl-docs__toc-link {
-    display: inline-block;
-    padding: 6px 16px;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #1e2a3b;
-    text-decoration: none;
-}
-.lgl-docs__toc-link:hover { background: #1e2a3b; color: #f6d100; border-color: #1e2a3b; }
+    .lgl-docs__heading {
+        display: flex;
+        align-items: center;
+        font-size: 1.6rem;
+        margin-bottom: 6px;
+        color: #1e2a3b;
+    }
 
-/* ---- Section headings ---- */
-.lgl-docs__section-heading {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #1e2a3b;
-    margin: 36px 0 16px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e2e8f0;
-}
+    .lgl-docs__intro {
+        color: #666;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
 
-/* ---- Cards ---- */
-.lgl-docs__card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    margin-bottom: 28px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,.05);
-}
+    .lgl-docs__settings-intro {
+        color: #555;
+        margin-bottom: 24px;
+        font-size: 13px;
+    }
 
-.lgl-docs__card-header {
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-}
+    /* ---- TOC ---- */
+    .lgl-docs__toc {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
 
-/* Settings card header: darker tint */
-.lgl-docs__card-header--settings { background: #f0f4ff; }
+    .lgl-docs__toc-link {
+        display: inline-block;
+        padding: 6px 16px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e2a3b;
+        text-decoration: none;
+    }
 
-.lgl-docs__tag-code {
-    background: #1e2a3b;
-    color: #f6d100;
-    padding: 4px 12px;
-    border-radius: 5px;
-    font-size: 13px;
-    font-family: monospace;
-    white-space: nowrap;
-}
+    .lgl-docs__toc-link:hover {
+        background: #1e2a3b;
+        color: #f6d100;
+        border-color: #1e2a3b;
+    }
 
-.lgl-docs__settings-badge {
-    background: #003793;
-    color: #fff;
-    padding: 3px 10px;
-    border-radius: 5px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    white-space: nowrap;
-}
+    /* ---- Section headings ---- */
+    .lgl-docs__section-heading {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1e2a3b;
+        margin: 36px 0 16px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e2e8f0;
+    }
 
-.lgl-docs__card-title {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #1e2a3b;
-    flex: 1;
-}
+    /* ---- Cards ---- */
+    .lgl-docs__card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        margin-bottom: 28px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
+    }
 
-.lgl-docs__settings-link { margin-left: auto; white-space: nowrap; }
+    .lgl-docs__card-header {
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
 
-/* ---- Body ---- */
-.lgl-docs__card-body { padding: 22px 24px 26px; }
-.lgl-docs__description { margin-top: 0; color: #444; line-height: 1.65; }
+    /* Settings card header: darker tint */
+    .lgl-docs__card-header--settings {
+        background: #f0f4ff;
+    }
 
-/* ---- Note ---- */
-.lgl-docs__note {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 13px;
-    color: #92400e;
-    margin-bottom: 18px;
-    line-height: 1.5;
-}
-.lgl-docs__note svg { flex-shrink: 0; margin-top: 2px; }
+    .lgl-docs__tag-code {
+        background: #1e2a3b;
+        color: #f6d100;
+        padding: 4px 12px;
+        border-radius: 5px;
+        font-size: 13px;
+        font-family: monospace;
+        white-space: nowrap;
+    }
 
-/* ---- Sub-headings inside cards ---- */
-.lgl-docs__section-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    color: #94a3b8;
-    margin: 22px 0 8px;
-}
+    .lgl-docs__settings-badge {
+        background: #003793;
+        color: #fff;
+        padding: 3px 10px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        white-space: nowrap;
+    }
 
-/* ---- Tables ---- */
-.lgl-docs__table { border-collapse: collapse; width: 100%; font-size: 13px; margin-bottom: 4px; }
-.lgl-docs__table th {
-    background: #f1f5f9;
-    color: #475569;
-    font-weight: 600;
-    text-align: left;
-    padding: 8px 12px;
-    border: 1px solid #e2e8f0;
-}
-.lgl-docs__table td {
-    padding: 8px 12px;
-    border: 1px solid #e2e8f0;
-    vertical-align: top;
-    color: #334155;
-    line-height: 1.6;
-}
-.lgl-docs__table code {
-    background: #f1f5f9;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 12px;
-    color: #0f172a;
-}
+    .lgl-docs__card-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1e2a3b;
+        flex: 1;
+    }
 
-/* ---- Type badge ---- */
-.lgl-docs__type-badge {
-    display: inline-block;
-    background: #e0f2fe;
-    color: #0369a1;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
-}
+    .lgl-docs__settings-link {
+        margin-left: auto;
+        white-space: nowrap;
+    }
 
-/* ---- Examples ---- */
-.lgl-docs__examples { display: flex; flex-direction: column; gap: 8px; }
-.lgl-docs__example {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 8px 12px;
-}
-.lgl-docs__example-code {
-    flex: 1;
-    font-size: 13px;
-    font-family: monospace;
-    color: #0f172a;
-    background: none;
-    white-space: nowrap;
-    overflow: auto;
-}
-.lgl-docs__copy-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    flex-shrink: 0;
-    cursor: pointer;
-}
-.lgl-docs__copy-btn.is-copied { color: #16a34a; border-color: #16a34a; }
+    /* ---- Body ---- */
+    .lgl-docs__card-body {
+        padding: 22px 24px 26px;
+    }
+
+    .lgl-docs__description {
+        margin-top: 0;
+        color: #444;
+        line-height: 1.65;
+    }
+
+    /* ---- Note ---- */
+    .lgl-docs__note {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: #92400e;
+        margin-bottom: 18px;
+        line-height: 1.5;
+    }
+
+    .lgl-docs__note svg {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    /* ---- Sub-headings inside cards ---- */
+    .lgl-docs__section-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        color: #94a3b8;
+        margin: 22px 0 8px;
+    }
+
+    /* ---- Tables ---- */
+    .lgl-docs__table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    .lgl-docs__table th {
+        background: #f1f5f9;
+        color: #475569;
+        font-weight: 600;
+        text-align: left;
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .lgl-docs__table td {
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        vertical-align: top;
+        color: #334155;
+        line-height: 1.6;
+    }
+
+    .lgl-docs__table code {
+        background: #f1f5f9;
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 12px;
+        color: #0f172a;
+    }
+
+    /* ---- Type badge ---- */
+    .lgl-docs__type-badge {
+        display: inline-block;
+        background: #e0f2fe;
+        color: #0369a1;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* ---- Examples ---- */
+    .lgl-docs__examples {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .lgl-docs__example {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 8px 12px;
+    }
+
+    .lgl-docs__example-code {
+        flex: 1;
+        font-size: 13px;
+        font-family: monospace;
+        color: #0f172a;
+        background: none;
+        white-space: nowrap;
+        overflow: auto;
+    }
+
+    .lgl-docs__copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .lgl-docs__copy-btn.is-copied {
+        color: #16a34a;
+        border-color: #16a34a;
+    }
 </style>
 
 <script type="text/javascript">
-document.querySelectorAll('.lgl-docs__copy-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-        const text = btn.getAttribute('data-clipboard');
-        if (!text) return;
-        navigator.clipboard.writeText(text).then(function () {
-            btn.classList.add('is-copied');
-            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-            setTimeout(function () {
-                btn.classList.remove('is-copied');
-                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
-            }, 2000);
+    document.querySelectorAll('.lgl-docs__copy-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const text = btn.getAttribute('data-clipboard');
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(function() {
+                btn.classList.add('is-copied');
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+                setTimeout(function() {
+                    btn.classList.remove('is-copied');
+                    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+                }, 2000);
+            });
         });
     });
-});
 </script>
