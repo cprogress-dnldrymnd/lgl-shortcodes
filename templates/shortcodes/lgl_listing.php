@@ -9,8 +9,8 @@ if ($post_type) {
         is_featured: $is_featured
     );
     if ($is_carousel) {
-        echo '<div class="swiper swiper-vehicles">';
-        echo '<div class="swiper swiper-wrapper">';
+        echo '<div class="vehicle-slider-holder">';
+        echo '<div class="vehicle-slider-jr">';
     } else {
         echo '<div class="lgl-grid-layout lgl-cols--3 lgl-layout-default ">';
     }

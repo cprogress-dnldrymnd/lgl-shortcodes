@@ -1456,7 +1456,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 while ($query->have_posts()) {
                     $query->the_post();
                     if ($is_carousel) {
-                        echo '<div class="swiper-slide">';
+                        echo '<div class="vehicle-slide">';
                     }
                     include LGL_SHORTCODES_PATH . 'templates/partials/lgl-grid.php';
                     if ($is_carousel) {
