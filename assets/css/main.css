@@ -1109,4 +1109,11 @@
   color: #64748b;
   font-family: var(--lgl-font-primary, sans-serif); }
 
+.vehicle-slider-js .slick-slide {
+  margin: 0 15px; }
+
+/* 2. Apply a negative margin to the list container to pull the edges flush */
+.vehicle-slider-js .slick-list {
+  margin: 0 -15px; }
+
 /*# sourceMappingURL=main.css.map */
