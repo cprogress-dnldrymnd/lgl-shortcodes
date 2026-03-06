@@ -1501,20 +1501,14 @@
     }
 }
 
-/*compare duo*/
 // =========================================================
 //   LGL Compare Duo — lgl_compare_duo shortcode styles
 // =========================================================
 
-// --- Variables
-$color-primary: var(--lgl-color-primary, #e6c619);
-$color-secondary: var(--lgl-color-secondary, #1a2540);
-$color-muted: #94a3b8;
-$color-text: #64748b;
-$color-bg-empty: #e2e8f0;
+// --- Non-color local variables (layout/animation only)
 $transition-base: 0.2s ease;
-$aspect-ratio: 16 / 10;
-$border-radius: 16px;
+$aspect-ratio:    16 / 10;
+$border-radius:   16px;
 
 // --- Block
 .lgl-compare-duo {
@@ -1522,7 +1516,7 @@ $border-radius: 16px;
 
     // --- Card wrapper
     &__card {
-        background: #fff;
+        background: var(--lgl-color-white);
         border-radius: $border-radius;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         overflow: hidden;
@@ -1566,7 +1560,7 @@ $border-radius: 16px;
     &__no-image {
         width: 100%;
         aspect-ratio: $aspect-ratio;
-        background: $color-bg-empty;
+        background: var(--lgl-color-medium-gray);
     }
 
     // --- Body (text content)
@@ -1582,7 +1576,7 @@ $border-radius: 16px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            color: $color-primary;
+            color: var(--lgl-color-accent);
         }
     }
 
@@ -1592,14 +1586,14 @@ $border-radius: 16px;
         font-weight: 700;
         line-height: 1.35;
         margin: 0;
-        color: $color-secondary;
+        color: var(--lgl-color-secondary);
 
         a {
             color: inherit;
             text-decoration: none;
 
             &:hover {
-                color: $color-primary;
+                color: var(--lgl-color-accent);
             }
         }
     }
@@ -1608,7 +1602,7 @@ $border-radius: 16px;
     &__price {
         font-size: 1.15rem;
         font-weight: 700;
-        color: $color-secondary;
+        color: var(--lgl-color-secondary);
         margin: 4px 0 0;
     }
 
@@ -1624,23 +1618,23 @@ $border-radius: 16px;
         display: flex;
         align-items: center;
         gap: 5px;
-        color: $color-text;
+        color: var(--lgl-color-dark-gray);
         font-size: 0.85rem;
 
         svg {
             flex-shrink: 0;
-            color: $color-muted;
+            color: var(--lgl-color-gray);
         }
     }
 
     &__meta-label {
         font-weight: 500;
-        color: $color-muted;
+        color: var(--lgl-color-gray);
     }
 
     &__meta-value {
         font-weight: 600;
-        color: $color-secondary;
+        color: var(--lgl-color-secondary);
     }
 
     // --- VS badge
@@ -1659,8 +1653,8 @@ $border-radius: 16px;
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: $color-primary;
-            color: $color-secondary;
+            background: var(--lgl-color-accent);
+            color: var(--lgl-color-secondary);
             font-size: 0.78rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -1678,17 +1672,15 @@ $border-radius: 16px;
         gap: 10px;
         width: 100%;
         padding: 16px 24px;
-        background: $color-secondary;
-        color: $color-primary;
+        background: var(--lgl-color-secondary);
+        color: var(--lgl-color-accent);
         font-weight: 700;
         font-size: 0.95rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         text-decoration: none;
         border-radius: 0;
-        transition:
-            background $transition-base,
-            color $transition-base;
+        transition: background $transition-base, color $transition-base;
         border: none;
         cursor: pointer;
 
@@ -1697,8 +1689,8 @@ $border-radius: 16px;
         }
 
         &:hover {
-            background: $color-primary;
-            color: $color-secondary;
+            background: var(--lgl-color-accent);
+            color: var(--lgl-color-secondary);
             text-decoration: none;
 
             svg {
