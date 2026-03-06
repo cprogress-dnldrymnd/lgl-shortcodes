@@ -656,6 +656,7 @@ if (! class_exists('LGL_Shortcodes')) {
             add_shortcode('lgl_mini_wishlist', array($this, 'render_shortcode'));
             add_shortcode('lgl_compare', array($this, 'render_shortcode'));
             add_shortcode('lgl_mini_compare', array($this, 'render_shortcode'));
+            add_shortcode('lgl_listing_grid', array($this, 'render_shortcode'));
         }
 
         /**
@@ -844,6 +845,8 @@ if (! class_exists('LGL_Shortcodes')) {
 
             wp_send_json_success($results);
         }
+
+
 
         /**
          * AJAX handler to process and render the vehicle comparison table.
@@ -1133,7 +1136,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
         /**
          * AJAX handler to fetch and render the filtered search results and pagination UI.
-         * Compiles taxonomy and meta queries based on serialized form data.
+         * Delegates query execution to get_search_results_data() for reusability.
          * Implements an MD5-hashed transient cache to store complex query outputs for 1 hour.
          * Bypasses transient caching entirely for users with administrative privileges.
          *
@@ -1143,42 +1146,63 @@ if (! class_exists('LGL_Shortcodes')) {
         {
             check_ajax_referer('lgl_search_nonce', 'nonce');
 
-            // Generate an MD5 hash of the exact POST payload to create a highly specific cache key
             $query_hash = md5(wp_json_encode($_POST));
             $cache_key  = 'lgl_search_' . $query_hash;
 
-            // Determine if the current user is an administrator
             $is_admin = current_user_can('manage_options');
 
-            // Intercept execution and return cached payload if available (Skip for Admins)
-            if (!$is_admin) {
+            if (! $is_admin) {
                 $cached_response = get_transient($cache_key);
                 if (false !== $cached_response) {
                     wp_send_json_success($cached_response);
                 }
             }
 
-            $post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : 'post';
-            $paged     = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
-            $posts_per_page = isset($_POST['limit']) ? intval($_POST['limit']) : 9;
-            $form_data = array();
+            $post_type      = isset($_POST['post_type'])  ? sanitize_text_field($_POST['post_type']) : 'post';
+            $paged          = isset($_POST['paged'])       ? max(1, intval($_POST['paged']))        : 1;
+            $posts_per_page = isset($_POST['limit'])       ? intval($_POST['limit'])                  : 9;
+            $form_data      = array();
 
-            // Parse serialized form data
             if (isset($_POST['form_data'])) {
                 parse_str($_POST['form_data'], $form_data);
             }
 
+            $response_data = $this->get_search_results_data($post_type, $form_data, $paged, $posts_per_page);
+
+            if (! $is_admin) {
+                set_transient($cache_key, $response_data, HOUR_IN_SECONDS);
+            }
+
+            wp_send_json_success($response_data);
+        }
+
+        /**
+         * Builds and executes the search query, returning the results HTML, pagination, and count.
+         * Reusable for both AJAX and non-AJAX (direct/server-side) rendering contexts.
+         *
+         * @param string $post_type     The post type to query.
+         * @param array  $form_data     Associative array of filter parameters (sort_order, condition, berth, price_min, price_max, listing_make, listing_model).
+         * @param int    $paged         The current page number.
+         * @param int    $posts_per_page Number of results to return per page.
+         * @return array {
+         *     @type string $html        Rendered grid item HTML.
+         *     @type string $pagination  Rendered pagination HTML.
+         *     @type int    $count       Total number of matched posts.
+         * }
+         */
+        public function get_search_results_data($post_type = 'post', $form_data = array(), $paged = 1, $posts_per_page = 9)
+        {
             $args = array(
                 'post_type'      => $post_type,
                 'post_status'    => 'publish',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $paged,
                 'meta_query'     => array('relation' => 'AND'),
-                'tax_query'      => array('relation' => 'AND')
+                'tax_query'      => array('relation' => 'AND'),
             );
 
-            // Handle Sorting if passed via sort_order dropdown (matching user markup)
-            if (!empty($form_data['sort_order'])) {
+            // Handle Sorting
+            if (! empty($form_data['sort_order'])) {
                 switch ($form_data['sort_order']) {
                     case 'date_low':
                         $args['orderby'] = 'date';
@@ -1194,6 +1218,16 @@ if (! class_exists('LGL_Shortcodes')) {
                         $args['meta_key'] = 'price';
                         $args['order']    = 'ASC';
                         break;
+                    case 'mileage_high':
+                        $args['orderby']  = 'meta_value_num';
+                        $args['meta_key'] = 'mileage';
+                        $args['order']    = 'DESC';
+                        break;
+                    case 'mileage_low':
+                        $args['orderby']  = 'meta_value_num';
+                        $args['meta_key'] = 'mileage';
+                        $args['order']    = 'ASC';
+                        break;
                     case 'date_high':
                     default:
                         $args['orderby'] = 'date';
@@ -1203,30 +1237,30 @@ if (! class_exists('LGL_Shortcodes')) {
             }
 
             // Meta Queries
-            if (!empty($form_data['condition'])) {
+            if (! empty($form_data['condition'])) {
                 $args['meta_query'][] = array(
                     'key'     => 'condition',
                     'value'   => sanitize_text_field($form_data['condition']),
-                    'compare' => '='
+                    'compare' => '=',
                 );
             }
 
-            if (!empty($form_data['berth'])) {
+            if (! empty($form_data['berth'])) {
                 $args['meta_query'][] = array(
                     'key'     => 'berth',
                     'value'   => sanitize_text_field($form_data['berth']),
-                    'compare' => '='
+                    'compare' => '=',
                 );
             }
 
             // Price Range (Min/Max)
-            $price_min = !empty($form_data['price_min']) ? floatval($form_data['price_min']) : 0;
-            $price_max = !empty($form_data['price_max']) ? floatval($form_data['price_max']) : 0;
+            $price_min = ! empty($form_data['price_min']) ? floatval($form_data['price_min']) : 0;
+            $price_max = ! empty($form_data['price_max']) ? floatval($form_data['price_max']) : 0;
 
             if ($price_min > 0 || $price_max > 0) {
                 $price_query = array(
                     'key'  => 'price',
-                    'type' => 'NUMERIC'
+                    'type' => 'NUMERIC',
                 );
                 if ($price_min > 0 && $price_max > 0) {
                     $price_query['value']   = array($price_min, $price_max);
@@ -1242,20 +1276,20 @@ if (! class_exists('LGL_Shortcodes')) {
             }
 
             // Tax Queries
-            $make_id  = !empty($form_data['listing_make']) ? intval($form_data['listing_make']) : 0;
-            $model_id = !empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
+            $make_id  = ! empty($form_data['listing_make'])  ? intval($form_data['listing_make'])  : 0;
+            $model_id = ! empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
 
             if ($model_id > 0) {
                 $args['tax_query'][] = array(
                     'taxonomy' => 'listing-make-model',
                     'field'    => 'term_id',
-                    'terms'    => $model_id
+                    'terms'    => $model_id,
                 );
             } elseif ($make_id > 0) {
                 $args['tax_query'][] = array(
                     'taxonomy' => 'listing-make-model',
                     'field'    => 'term_id',
-                    'terms'    => $make_id
+                    'terms'    => $make_id,
                 );
             }
 
@@ -1263,8 +1297,6 @@ if (! class_exists('LGL_Shortcodes')) {
             $query = new WP_Query($args);
 
             ob_start();
-
-            // Render specific block logic to maintain the exact DOM structure requested.
             if ($query->have_posts()) {
                 while ($query->have_posts()) {
                     $query->the_post();
@@ -1273,10 +1305,9 @@ if (! class_exists('LGL_Shortcodes')) {
             } else {
                 echo '<div class="lgl-no-results">No vehicles found matching your criteria.</div>';
             }
-
             $html = ob_get_clean();
 
-            // Construct Pagination HTML payload
+            // Construct Pagination HTML
             $pagination_html = '';
             if ($query->max_num_pages > 1) {
                 $pagination_html = paginate_links(array(
@@ -1287,24 +1318,16 @@ if (! class_exists('LGL_Shortcodes')) {
                     'prev_text' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                     'next_text' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                     'type'      => 'list',
-                    'add_args'  => false
+                    'add_args'  => false,
                 ));
             }
             wp_reset_postdata();
 
-            // Package the data array
-            $response_data = array(
+            return array(
                 'html'       => $html,
                 'pagination' => $pagination_html,
-                'count'      => $query->found_posts
+                'count'      => $query->found_posts,
             );
-
-            // Save payload to a 1-hour transient (Skip for Admins to prevent cache thrashing during testing)
-            if (!$is_admin) {
-                set_transient($cache_key, $response_data, HOUR_IN_SECONDS);
-            }
-
-            wp_send_json_success($response_data);
         }
 
         /**
