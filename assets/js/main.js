@@ -76,7 +76,7 @@
 
 
         //search redirect
-        $('#lgl_post_type_select').on('change', function () {
+        $('#lgl_post_type').on('change', function () {
             let url = $(this).val();
 
             $('#lgl-search-form').attr('action', url);
