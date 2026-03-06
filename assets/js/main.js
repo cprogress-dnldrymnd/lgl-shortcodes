@@ -419,7 +419,15 @@
                         settings: {
                             slidesToShow: 2
                         }
+                    },
+                    {
+                        breakpoint: 1025,
+                        settings: {
+                            slidesToShow: 3
+                        }
                     }
+
+
                 ],
                 prevArrow: '<button type="button" class="slick-prev">Prev</button>',
                 nextArrow: '<button type="button" class="slick-next">Next</button>'
