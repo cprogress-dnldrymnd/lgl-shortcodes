@@ -1395,6 +1395,12 @@
             float: none;
             > div {
                 height: 100%;
+                > div {
+                    height: 100%;
+                    > .lgl-post {
+                        height: 100%;
+                    }
+                }
             }
         }
     }

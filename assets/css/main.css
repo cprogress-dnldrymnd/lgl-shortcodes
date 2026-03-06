@@ -1118,6 +1118,10 @@
     float: none; }
     .vehicle-slider-js .slick-list .slick-slide > div {
       height: 100%; }
+      .vehicle-slider-js .slick-list .slick-slide > div > div {
+        height: 100%; }
+        .vehicle-slider-js .slick-list .slick-slide > div > div > .lgl-post {
+          height: 100%; }
 .vehicle-slider-js .slick-track {
   display: flex !important; }
 
