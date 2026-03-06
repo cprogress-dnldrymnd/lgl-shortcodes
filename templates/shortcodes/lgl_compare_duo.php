@@ -19,6 +19,7 @@ if (!defined('ABSPATH')) {
 // Resolve comparison page URL from plugin settings
 $options = get_option('lgl_settings', array());
 if (!empty($options['disable_compare'])) {
+    echo 'Compare is disabled';
     return 'Compare is disabled';
 }
 $page_id     = isset($options['vehicle_comparison_page_id']) ? intval($options['vehicle_comparison_page_id']) : 0;

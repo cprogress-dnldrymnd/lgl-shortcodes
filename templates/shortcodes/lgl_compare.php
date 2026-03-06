@@ -14,7 +14,8 @@ if (!defined('ABSPATH')) {
 
 $options = get_option('lgl_settings', array());
 if (!empty($options['disable_compare'])) {
-    return 'Compare is disabled';
+    echo 'Compare is disabled';
+    return;
 }
 
 // ==========================================================================

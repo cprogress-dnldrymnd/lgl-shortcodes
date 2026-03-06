@@ -13,7 +13,8 @@ if (!defined('ABSPATH')) {
 }
 $options = get_option('lgl_settings', array());
 if (!empty($options['disable_wishlist'])) {
-    return 'Wishlist is disabled';
+    echo 'Wishlist is disabled';
+    return;
 }
 
 if (!is_user_logged_in()) : ?>
