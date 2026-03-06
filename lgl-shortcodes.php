@@ -85,6 +85,19 @@ if (! class_exists('LGL_Shortcodes')) {
             // Cache Invalidation Hooks for taxonomy modifications
             add_action('saved_term', array($this, 'clear_lgl_taxonomy_cache'), 10, 3);
             add_action('delete_term', array($this, 'clear_lgl_taxonomy_cache'), 10, 3);
+
+            // Hooks for WP Admin List Table Featured Star Integration
+            $lgl_cpts = array('caravan', 'motorhome', 'campervan');
+            foreach ($lgl_cpts as $cpt) {
+                add_filter("manage_{$cpt}_posts_columns", array($this, 'add_featured_list_column'));
+                add_action("manage_{$cpt}_posts_custom_column", array($this, 'render_featured_list_column'), 10, 2);
+            }
+
+            // Enqueue JS specifically for the list table
+            add_action('admin_enqueue_scripts', array($this, 'enqueue_featured_toggle_script'));
+
+            // AJAX endpoint for the star toggle
+            add_action('wp_ajax_lgl_toggle_featured_status', array($this, 'ajax_toggle_featured_status'));
         }
 
         /**
@@ -1520,6 +1533,179 @@ if (! class_exists('LGL_Shortcodes')) {
             }
         }
     }
+
+    /**
+         * Injects a custom 'Featured' column into the WP Admin post list table.
+         * Positions the column immediately after the bulk selection checkbox for maximum visibility.
+         *
+         * @param array $columns Existing associative array of column headers.
+         * @return array Modified array of column headers.
+         */
+        public function add_featured_list_column($columns)
+        {
+            $new_columns = array();
+            foreach ($columns as $key => $title) {
+                $new_columns[$key] = $title;
+                if ($key === 'cb') {
+                    // Inject immediately after the checkbox
+                    $new_columns['lgl_featured'] = '<span class="dashicons dashicons-star-filled" title="Featured Vehicle"></span>';
+                }
+            }
+            return $new_columns;
+        }
+
+        /**
+         * Renders the interactive star icon within the custom 'Featured' column.
+         * Evaluates the current 'is_featured' post meta to determine the initial UI state.
+         *
+         * @param string $column  The name of the column being rendered.
+         * @param int    $post_id The ID of the current post row.
+         * @return void
+         */
+        public function render_featured_list_column($column, $post_id)
+        {
+            if ($column === 'lgl_featured') {
+                $is_featured = get_post_meta($post_id, 'is_featured', true);
+                $post_type   = get_post_type($post_id);
+                $nonce       = wp_create_nonce('lgl_toggle_featured_nonce');
+                
+                $is_active = ($is_featured === 'true');
+                $class     = $is_active ? 'dashicons-star-filled' : 'dashicons-star-empty';
+                $color     = $is_active ? '#f39c12' : '#b5bcc2'; // Gold if featured, grey if not
+
+                echo sprintf(
+                    '<a href="#" class="lgl-toggle-featured-btn" data-post-id="%d" data-post-type="%s" data-nonce="%s" style="color: %s; text-decoration: none; outline: none; box-shadow: none;">
+                        <span class="dashicons %s"></span>
+                    </a>',
+                    intval($post_id),
+                    esc_attr($post_type),
+                    esc_attr($nonce),
+                    esc_attr($color),
+                    esc_attr($class)
+                );
+            }
+        }
+
+        /**
+         * Enqueues the inline JavaScript required to handle the async star click events.
+         * Strictly limits execution to the 'edit.php' screen to prevent global admin bloat.
+         *
+         * @param string $hook The current admin page hook.
+         * @return void
+         */
+        public function enqueue_featured_toggle_script($hook)
+        {
+            if ($hook !== 'edit.php') {
+                return;
+            }
+
+            $script = "
+            jQuery(document).ready(function($) {
+                $('.lgl-toggle-featured-btn').on('click', function(e) {
+                    e.preventDefault();
+                    
+                    var \$btn    = $(this);
+                    var \$icon   = \$btn.find('.dashicons');
+                    var postId   = \$btn.data('post-id');
+                    var postType = \$btn.data('post-type');
+                    var nonce    = \$btn.data('nonce');
+                    
+                    // Optimistic UI update: immediately toggle state while awaiting server response
+                    var isCurrentlyFeatured = \$icon.hasClass('dashicons-star-filled');
+                    
+                    if (isCurrentlyFeatured) {
+                        \$icon.removeClass('dashicons-star-filled').addClass('dashicons-star-empty');
+                        \$btn.css('color', '#b5bcc2');
+                    } else {
+                        \$icon.removeClass('dashicons-star-empty').addClass('dashicons-star-filled');
+                        \$btn.css('color', '#f39c12');
+                    }
+                    
+                    // Dispatch AJAX payload
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'lgl_toggle_featured_status',
+                            post_id: postId,
+                            post_type: postType,
+                            nonce: nonce,
+                            new_status: isCurrentlyFeatured ? 'false' : 'true'
+                        },
+                        success: function(response) {
+                            if (!response.success) {
+                                // Revert UI if server fails
+                                alert('Failed to update featured status.');
+                                location.reload();
+                            }
+                        }
+                    });
+                });
+            });
+            ";
+
+            wp_add_inline_script('jquery', $script);
+        }
+
+        /**
+         * Processes the async request to toggle a vehicle's featured status.
+         * Updates the specific post meta and runs array diffs against the LGL settings
+         * payload to ensure the global Select2 options remain perfectly synced.
+         *
+         * @return void
+         */
+        public function ajax_toggle_featured_status()
+        {
+            if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_key($_POST['nonce']), 'lgl_toggle_featured_nonce')) {
+                wp_send_json_error('Security validation failed.');
+            }
+
+            if (!current_user_can('edit_posts')) {
+                wp_send_json_error('Insufficient permissions.');
+            }
+
+            $post_id    = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+            $post_type  = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : '';
+            $new_status = isset($_POST['new_status']) && $_POST['new_status'] === 'true' ? 'true' : 'false';
+
+            if ($post_id <= 0 || empty($post_type)) {
+                wp_send_json_error('Invalid payload.');
+            }
+
+            // 1. Update Post Meta
+            update_post_meta($post_id, 'is_featured', $new_status);
+
+            // 2. Synchronize with global LGL Settings array
+            $options = get_option('lgl_settings', array());
+            $setting_key = 'featured_' . $post_type; // e.g., 'featured_caravan'
+
+            if (!isset($options[$setting_key]) || !is_array($options[$setting_key])) {
+                $options[$setting_key] = array();
+            }
+
+            // Ensure strict integer comparison
+            $options[$setting_key] = array_map('intval', $options[$setting_key]);
+
+            if ($new_status === 'true') {
+                // Add to array if not present
+                if (!in_array($post_id, $options[$setting_key], true)) {
+                    $options[$setting_key][] = $post_id;
+                }
+            } else {
+                // Remove from array if present
+                $options[$setting_key] = array_diff($options[$setting_key], array($post_id));
+            }
+
+            // Re-index array to prevent JSON object conversion on save
+            $options[$setting_key] = array_values($options[$setting_key]);
+
+            update_option('lgl_settings', $options);
+
+            wp_send_json_success(array(
+                'post_id'    => $post_id,
+                'new_status' => $new_status
+            ));
+        }
 
     // Instantiate the plugin architecture
     new LGL_Shortcodes();
