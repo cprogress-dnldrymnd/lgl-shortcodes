@@ -247,6 +247,15 @@ if (! class_exists('LGL_Shortcodes')) {
                 'disable_wishlist'  => array('label' => 'Disable Wishlist',  'type' => 'checkbox', 'default' => '0'),
                 'disable_compare'   => array('label' => 'Disable Compare',   'type' => 'checkbox', 'default' => '0'),
                 'currency_symbol'   => array('label' => 'Currency Symbol',   'type' => 'text',     'default' => '$'),
+                'currency_position' => array(
+                    'label' => 'Currency Position',
+                    'type' => 'select',
+                    'default' => 'before',
+                    'options' => array(
+                        'before' => 'Before price (e.g. £10,000)',
+                        'after'  => 'After price (e.g. 10,000£)',
+                    )
+                ),
             );
 
             foreach ($general_fields as $id => $field) {
