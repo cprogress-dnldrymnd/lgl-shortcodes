@@ -900,7 +900,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 if (!$post || $post->post_status !== 'publish') continue;
 
                 $price = get_post_meta($post_id, 'price', true);
-                $formatted_price = $price ? '$' . number_format((float)$price, 0) : 'N/A';
+                $formatted_price = esc_html($this::format_price($price));
 
                 echo '<li class="lgl-wishlist-item" data-post-id="' . esc_attr($post_id) . '">';
                 echo '  <div class="lgl-wishlist-thumb">' . get_the_post_thumbnail($post_id, 'thumbnail') . '</div>';
