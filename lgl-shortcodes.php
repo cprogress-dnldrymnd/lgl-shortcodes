@@ -226,7 +226,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
         /**
          * Registers settings, sections, and fields via the WordPress Settings API.
-         * Includes the new Sortable Field Manager block and Comparison Settings.
+         * Includes the new Sortable Field Manager block, Comparison Settings, and Finance Specialist configuration.
          *
          * @return void
          */
@@ -237,11 +237,6 @@ if (! class_exists('LGL_Shortcodes')) {
 
             // --- TAB 1: General Settings ---
             add_settings_section('lgl_general_section', 'General Configuration', null, 'lgl-settings-general');
-
-            $general_fields = array(
-                'disable_wishlist' => array('label' => 'Disable Wishlist', 'type' => 'checkbox', 'default' => '0'),
-                'disable_compare'  => array('label' => 'Disable Compare', 'type' => 'checkbox', 'default' => '0'),
-            );
 
             $general_fields = array(
                 'disable_wishlist'  => array('label' => 'Disable Wishlist',  'type' => 'checkbox', 'default' => '0'),
@@ -391,6 +386,26 @@ if (! class_exists('LGL_Shortcodes')) {
                     'lgl-settings-featured',
                     'lgl_featured_section',
                     array('id' => $id, 'type' => $field['type'], 'post_type' => $field['post_type'], 'default' => $field['default'])
+                );
+            }
+
+            // --- TAB 8: Finance Specialist ---
+            add_settings_section('lgl_finance_section', 'Finance Specialist Configurations', null, 'lgl-settings-finance');
+
+            $finance_fields = array(
+                'finance_heading'     => array('label' => 'Heading', 'type' => 'text', 'default' => 'Finance Specialist'),
+                'finance_description' => array('label' => 'Description', 'type' => 'textarea', 'default' => 'We can assist you in finding the most suitable vehicle based on your monthly budget. Use our slider below to adjust how much you would like to spend each month.'),
+                'finance_footer_text' => array('label' => 'Footer Text', 'type' => 'text', 'default' => 'Finance provided by Close Brothers Motor Finance'),
+            );
+
+            foreach ($finance_fields as $id => $field) {
+                add_settings_field(
+                    $id,
+                    $field['label'],
+                    array($this, 'render_field'),
+                    'lgl-settings-finance',
+                    'lgl_finance_section',
+                    array('id' => $id, 'type' => $field['type'], 'default' => $field['default'])
                 );
             }
         }
@@ -625,6 +640,7 @@ if (! class_exists('LGL_Shortcodes')) {
         /**
          * Renders the HTML architecture for the tabbed settings interface.
          * Utilizes client-side JS tab switching to ensure all fields remain in the DOM during save.
+         * Includes dynamically generated 'Finance Specialist' tab.
          *
          * @return void
          */
@@ -647,6 +663,7 @@ if (! class_exists('LGL_Shortcodes')) {
                     <a href="#visibility" class="nav-tab <?php echo $active_tab == 'visibility' ? 'nav-tab-active' : ''; ?>" data-tab="visibility">Field Visibility</a>
                     <a href="#lgl-pages" class="nav-tab <?php echo $active_tab == 'lgl-pages' ? 'nav-tab-active' : ''; ?>" data-tab="lgl-pages">LGL Pages</a>
                     <a href="#featured" class="nav-tab <?php echo $active_tab == 'featured' ? 'nav-tab-active' : ''; ?>" data-tab="featured">Featured Vehicles</a>
+                    <a href="#finance" class="nav-tab <?php echo $active_tab == 'finance' ? 'nav-tab-active' : ''; ?>" data-tab="finance">Finance Specialist</a>
                 </h2>
 
                 <form method="post" action="options.php">
@@ -678,6 +695,10 @@ if (! class_exists('LGL_Shortcodes')) {
 
                     <div id="tab-featured" class="lgl-tab-content" <?php echo $active_tab == 'featured' ? '' : 'style="display:none;"'; ?>>
                         <?php do_settings_sections('lgl-settings-featured'); ?>
+                    </div>
+
+                    <div id="tab-finance" class="lgl-tab-content" <?php echo $active_tab == 'finance' ? '' : 'style="display:none;"'; ?>>
+                        <?php do_settings_sections('lgl-settings-finance'); ?>
                     </div>
 
                     <?php submit_button(); ?>
