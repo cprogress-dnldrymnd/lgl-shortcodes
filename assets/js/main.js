@@ -561,9 +561,7 @@
 
 /**
  * Initializes the Finance Specialist range slider module.
- * Binds DOM nodes and attaches event listeners to synchronize the slider's 
- * internal value with the frontend UI, applying currency formatting, dynamic track fill,
- * and routing parameter injection for cross-page filtering.
+ * Operates in index-mode: maps the linear slider integer to a discrete array of real database prices.
  * * @return {void}
  */
 const initFinanceSlider = () => {
@@ -571,84 +569,82 @@ const initFinanceSlider = () => {
     const output = document.querySelector('.lgl-slider-output');
     const actionButtons = document.querySelectorAll('.lgl-btn-finance');
 
-    // Terminate execution if the required DOM nodes are not present on the current page
     if (!slider || !output) return;
 
+    // Parse the injected array of exact database prices
+    let priceData = [];
+    try {
+        priceData = JSON.parse(slider.getAttribute('data-prices') || '[]');
+    } catch (e) {
+        console.error('LGL Finance Slider: Failed to parse price data.', e);
+        return;
+    }
+
+    if (priceData.length === 0) return;
+
     /**
-     * Formats a raw numeric string or integer into a localized string with comma separators.
-     * * @param {number|string} value - The raw numerical value extracted from the range input.
-     * @return {string} The formatted numerical string (e.g., "25,000").
+     * Formats a raw numeric value into a localized string with comma separators.
      */
     const formatCurrency = (value) => {
-        const numericValue = parseInt(value, 10);
-        return new Intl.NumberFormat('en-GB').format(numericValue);
+        return new Intl.NumberFormat('en-GB').format(value);
     };
 
     /**
-     * Calculates the active percentage of the slider and updates the CSS custom property
-     * to dynamically paint the track background using a linear gradient.
-     * * @param {HTMLInputElement} sliderElement - The range input DOM node.
-     * @return {void}
+     * Calculates the active percentage of the track for dynamic linear-gradient painting.
      */
     const updateSliderFill = (sliderElement) => {
-        const min = parseFloat(sliderElement.min) || 0;
-        const max = parseFloat(sliderElement.max) || 100;
-        const val = parseFloat(sliderElement.value);
+        const min = parseInt(sliderElement.min, 10);
+        const max = parseInt(sliderElement.max, 10);
+        const val = parseInt(sliderElement.value, 10);
         
         const percentage = ((val - min) / (max - min)) * 100;
-        
-        // Mutate the inline CSS variable to drive the linear-gradient color stop
         sliderElement.style.setProperty('--lgl-slider-fill', `${percentage}%`);
     };
 
     /**
      * Appends or updates the 'price_max' query parameter on all target action buttons.
-     * Utilizes the native URL API to safely parse and rebuild the href attribute.
-     * * @param {string|number} value - The current value of the budget slider.
-     * @return {void}
      */
-    const updateActionLinks = (value) => {
+    const updateActionLinks = (actualPrice) => {
         if (!actionButtons.length) return;
 
         actionButtons.forEach(button => {
             try {
-                // button.href resolves to the absolute URL, preventing parsing errors
+                // Ignore hash links if a page isn't set in backend
+                if (button.getAttribute('href') === '#') return;
+
                 const url = new URL(button.href);
-                
-                // Inject or overwrite the specific query parameter
-                url.searchParams.set('price_max', value);
-                
-                // Reconstruct and assign the modified URL string
+                url.searchParams.set('price_max', actualPrice);
                 button.href = url.toString();
             } catch (error) {
-                console.error('LGL Finance Slider: Invalid URL encountered on action button.', error);
+                console.error('LGL Finance Slider: Invalid URL encountered.', error);
             }
         });
     };
 
     /**
-     * Event handler callback for the slider 'input' event.
-     * Mutates the DOM text content, triggers track fill recalculation, and syncs URLs.
-     * * @param {Event} e - The native DOM input event.
-     * @return {void}
+     * Event handler for the slider 'input' event.
      */
     const handleSliderInput = (e) => {
-        const currentValue = e.target.value;
+        // e.target.value is the array index, not the actual price
+        const index = parseInt(e.target.value, 10);
+        const actualPrice = priceData[index];
         
-        output.textContent = formatCurrency(currentValue);
+        output.textContent = formatCurrency(actualPrice);
         updateSliderFill(e.target);
-        updateActionLinks(currentValue);
+        updateActionLinks(actualPrice);
     };
 
-    // Attach the event listener for continuous real-time DOM updates
+    // Attach listener
     slider.addEventListener('input', handleSliderInput);
 
-    // Bootstrap initial DOM state and URL parameters upon load
-    const initialValue = slider.value;
-    output.textContent = formatCurrency(initialValue);
+    // Bootstrap initial DOM state
+    const initialIndex = parseInt(slider.value, 10);
+    const initialPrice = priceData[initialIndex];
+    
+    output.textContent = formatCurrency(initialPrice);
     updateSliderFill(slider);
-    updateActionLinks(initialValue);
+    updateActionLinks(initialPrice);
 };
 
-// Defer module execution until the HTML document has been completely parsed
+// Defer execution
 document.addEventListener('DOMContentLoaded', initFinanceSlider);
