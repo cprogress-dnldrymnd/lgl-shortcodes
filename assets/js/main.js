@@ -558,3 +558,50 @@
     });
 
 })(jQuery);
+
+/**
+ * Initializes the Finance Specialist range slider module.
+ * Binds DOM nodes and attaches event listeners to synchronize the slider's 
+ * internal value with the frontend UI, applying currency formatting in real-time.
+ * * @return {void}
+ */
+const initFinanceSlider = () => {
+    const slider = document.querySelector('.lgl-budget-slider');
+    const output = document.querySelector('.lgl-slider-output');
+
+    // Terminate execution if the required DOM nodes are not present on the current page
+    if (!slider || !output) {
+        return;
+    }
+
+    /**
+     * Formats a raw numeric string or integer into a localized string with comma separators.
+     * Utilizes the 'en-GB' locale to match the GBP (£) structure in the UI.
+     * * @param {number|string} value - The raw numerical value extracted from the range input.
+     * @return {string} The formatted numerical string (e.g., "25,000").
+     */
+    const formatCurrency = (value) => {
+        const numericValue = parseInt(value, 10);
+        return new Intl.NumberFormat('en-GB').format(numericValue);
+    };
+
+    /**
+     * Event handler callback for the slider 'input' event.
+     * Mutates the DOM text content to reflect the currently selected value.
+     * * @param {Event} e - The native DOM input event.
+     * @return {void}
+     */
+    const handleSliderInput = (e) => {
+        // Use textContent instead of innerHTML to prevent XSS and improve rendering performance
+        output.textContent = formatCurrency(e.target.value);
+    };
+
+    // Attach the event listener for continuous real-time DOM updates during interaction
+    slider.addEventListener('input', handleSliderInput);
+
+    // Bootstrap the initial output display on DOM load to synchronize with the hardcoded HTML value attribute
+    output.textContent = formatCurrency(slider.value);
+};
+
+// Defer module execution until the HTML document has been completely parsed
+document.addEventListener('DOMContentLoaded', initFinanceSlider);
