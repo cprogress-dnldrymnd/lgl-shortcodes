@@ -477,7 +477,7 @@
             }
             .lgl-post--infor {
                 position: absolute;
-                bottom: 20px;
+                bottom: 35px;
                 left: 0;
                 right: 0;
                 z-index: 2;
@@ -495,6 +495,9 @@
                     @media (max-width: 767px) {
                         padding-left: 20px;
                     }
+                }
+                @media(max-width: 767px) {
+                    bottom: 20px;
                 }
             }
         }

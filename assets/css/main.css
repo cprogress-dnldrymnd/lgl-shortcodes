@@ -346,7 +346,7 @@
           z-index: 1; }
       .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor {
         position: absolute;
-        bottom: 20px;
+        bottom: 35px;
         left: 0;
         right: 0;
         z-index: 2; }
@@ -361,6 +361,9 @@
           @media (max-width: 767px) {
             .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor .lgl-post--body {
               padding-left: 20px; } }
+        @media (max-width: 767px) {
+          .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor {
+            bottom: 20px; } }
     .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--meta.lgl-post--meta.lgl-post--meta {
       background-color: var(--lgl-color-white);
       border-radius: 0 10px 10px 0;
