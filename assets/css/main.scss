@@ -1549,6 +1549,10 @@
         }
         &.slick-prev {
             left: var(--offset);
+            @media (max-width: 767px) {
+                left: auto;
+                right: 55px;
+            }
         }
         &.slick-next {
             right: var(--offset);
@@ -1561,11 +1565,11 @@
             --offset: 0;
             top: auto;
             transform: none;
-            bottom: -50px;
+            bottom: -60px;
         }
     }
     @media (max-width: 767px) {
-        padding-bottom: 60px;
+        padding-bottom: 70px;
     }
     @media (min-width: 768px) {
         padding-left: 60px;

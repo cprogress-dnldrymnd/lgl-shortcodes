@@ -1245,6 +1245,10 @@
     height: 20px; }
   .vehicle-slider-holder .slick-arrow.slick-prev {
     left: var(--offset); }
+    @media (max-width: 767px) {
+      .vehicle-slider-holder .slick-arrow.slick-prev {
+        left: auto;
+        right: 55px; } }
   .vehicle-slider-holder .slick-arrow.slick-next {
     right: var(--offset); }
   .vehicle-slider-holder .slick-arrow:hover {
@@ -1255,10 +1259,10 @@
       --offset: 0;
       top: auto;
       transform: none;
-      bottom: -50px; } }
+      bottom: -60px; } }
 @media (max-width: 767px) {
   .vehicle-slider-holder {
-    padding-bottom: 60px; } }
+    padding-bottom: 70px; } }
 @media (min-width: 768px) {
   .vehicle-slider-holder {
     padding-left: 60px;
