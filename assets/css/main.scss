@@ -446,6 +446,12 @@
                 position: relative;
                 padding-bottom: 100%;
                 height: 100%;
+                @media (max-width: 480px) {
+                    padding-bottom: 110%;
+                }
+                @media (max-width: 360px) {
+                    padding-bottom: 120%;
+                }
                 .lgl-post--icon-btn {
                     z-index: 2;
                 }
@@ -1517,8 +1523,6 @@
 }
 
 .vehicle-slider-holder {
-    padding-left: 60px;
-    padding-right: 60px;
     .slick-arrow {
         position: absolute;
         top: 50%;
@@ -1552,8 +1556,18 @@
             color: var(--lgl-color-white);
         }
         @media (max-width: 767px) {
-            --offset: 10px;
+            --offset: 0;
+            top: auto;
+            transform: none;
+            bottom: -50px;
         }
+    }
+    @media (max-width: 767px) {
+        padding-bottom: 60px;
+    }
+    @media (min-width: 768px) {
+        padding-left: 60px;
+        padding-right: 60px;
     }
 }
 
