@@ -1197,8 +1197,8 @@
   .vehicle-slider-js .slick-list .slick-track {
     overflow: hidden; }
   .vehicle-slider-js .slick-list .slick-slide {
-    padding-left: 7.5px;
-    padding-right: 7.5px;
+    margin-left: -15px;
+    margin-right: -15px;
     display: flex;
     height: auto;
     float: none; }
