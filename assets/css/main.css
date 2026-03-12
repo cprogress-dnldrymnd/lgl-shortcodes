@@ -463,6 +463,10 @@
   gap: 10px;
   pointer-events: none;
   /* Let clicks pass through */ }
+  @media (max-width: 767px) {
+    #lgl-notification-container {
+      right: 20px;
+      left: 20px; } }
 
 .lgl-toast {
   background-color: var(--lgl-color-primary);
