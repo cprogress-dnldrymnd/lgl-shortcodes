@@ -1488,10 +1488,9 @@
 
 .vehicle-slider-js {
     .slick-list {
-        margin: 0 -15px;
-
         .slick-slide {
-            margin: 0 15px;
+            padding-left: 7.5px;
+            padding-right: 7.5px;
             display: flex;
             height: auto;
             float: none;
