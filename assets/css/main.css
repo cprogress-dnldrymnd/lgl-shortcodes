@@ -382,11 +382,14 @@
         @media (max-width: 767px) {
           .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor {
             bottom: 20px; } }
+        @media (max-width: 767px) {
+          .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--inner .lgl-post--infor {
+            bottom: 0; } }
     .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--meta.lgl-post--meta.lgl-post--meta {
-      background-color: var(--lgl-color-white);
-      border-radius: 0 10px 10px 0; }
+      background-color: var(--lgl-color-white); }
       @media (min-width: 481px) {
         .lgl-post.lgl-post.lgl-post.style-2 .lgl-post--meta.lgl-post--meta.lgl-post--meta {
+          border-radius: 0 10px 10px 0;
           width: 80%; } }
 
 .lgl-post--readmore.lgl-post--readmore.lgl-post--readmore a {

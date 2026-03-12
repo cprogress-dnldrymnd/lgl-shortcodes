@@ -520,12 +520,15 @@
                 @media (max-width: 767px) {
                     bottom: 20px;
                 }
+                @media (max-width: 767px) {
+                    bottom: 0;
+                }
             }
         }
         .lgl-post--meta.lgl-post--meta.lgl-post--meta {
             background-color: var(--lgl-color-white);
-            border-radius: 0 10px 10px 0;
             @media (min-width: 481px) {
+                border-radius: 0 10px 10px 0;
                 width: 80%;
             }
         }
