@@ -64,7 +64,7 @@ $v2 = $get_vehicle_data($id_2);
  * Helper: render a single vehicle column.
  */
 $render_vehicle_col = function (array $v) {
-    $price_formatted = !empty($v['price']) ? '$' . number_format((float) $v['price'], 0) : '';
+    $price_formatted = esc_html(LGL_Shortcodes::format_price($v['price'], 2));
 ?>
     <div class="lgl-compare-duo__vehicle">
         <a href="<?php echo esc_url($v['permalink']); ?>" class="lgl-compare-duo__image-link">
