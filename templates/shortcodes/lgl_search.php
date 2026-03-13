@@ -24,12 +24,72 @@ if (!empty($raw_prices)) {
 $prices = array_unique($prices);
 sort($prices, SORT_NUMERIC);
 
-// Fetch top-level terms for the 'Make'
-$makes = get_terms(array(
-    'taxonomy'   => 'listing-make-model',
-    'parent'     => 0,
-    'hide_empty' => false
-));
+// Fetch makes filtered to only those with published posts of the current post_type.
+// When post_type is false (global search form), all top-level makes are returned as
+// the vehicle type hasn't been chosen yet — JS will reload them on type selection.
+if ($post_type) {
+    $type_post_ids = get_posts(array(
+        'post_type'      => $post_type,
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+    ));
+
+    $makes = array();
+
+    if (!empty($type_post_ids)) {
+        $assigned_terms = wp_get_object_terms($type_post_ids, 'listing-make-model', array('fields' => 'all'));
+
+        if (!is_wp_error($assigned_terms) && !empty($assigned_terms)) {
+            $make_ids = array();
+            foreach ($assigned_terms as $term) {
+                // Models point to their parent make; top-level terms are already makes
+                $make_ids[] = ($term->parent > 0) ? (int) $term->parent : (int) $term->term_id;
+            }
+            $make_ids = array_unique($make_ids);
+
+            $makes = get_terms(array(
+                'taxonomy'   => 'listing-make-model',
+                'include'    => $make_ids,
+                'hide_empty' => false,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+            ));
+
+            if (is_wp_error($makes)) {
+                $makes = array();
+            }
+        }
+    }
+} else {
+    // Global search form — no post_type yet, return all top-level makes
+    $makes = get_terms(array(
+        'taxonomy'   => 'listing-make-model',
+        'parent'     => 0,
+        'hide_empty' => false,
+    ));
+}
+
+// Filter active make models to only those belonging to the current post_type as well
+if ($post_type && $active_make) {
+    $active_make_models = get_terms(array(
+        'taxonomy'   => 'listing-make-model',
+        'parent'     => $active_make,
+        'hide_empty' => false,
+    ));
+
+    if (!is_wp_error($active_make_models) && !empty($active_make_models) && !empty($type_post_ids)) {
+        $assigned_model_ids = array();
+        $assigned_all = wp_get_object_terms($type_post_ids, 'listing-make-model', array('fields' => 'ids'));
+        if (!is_wp_error($assigned_all)) {
+            $assigned_model_ids = array_map('intval', $assigned_all);
+        }
+
+        $active_make_models = array_filter($active_make_models, function ($model) use ($assigned_model_ids) {
+            return in_array((int) $model->term_id, $assigned_model_ids, true);
+        });
+    }
+}
 
 // -------------------------------------------------------------------
 // Read active URL parameters to pre-populate the filter fields
