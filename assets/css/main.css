@@ -260,7 +260,7 @@
           color: var(--lgl-color-quaternary);
           transform: scale(1.05); }
         .lgl-post.lgl-post.lgl-post .lgl-post--thumbnail .lgl-post--icon-btn a.added, .lgl-post.lgl-post.lgl-post .lgl-post--thumbnail .lgl-post--icon-btn a.is-active {
-          color: var(--lgl-color-tertiary);
+          color: var(--lgl-color-accent);
           background: var(--lgl-color-secondary); }
         .lgl-post.lgl-post.lgl-post .lgl-post--thumbnail .lgl-post--icon-btn a svg {
           width: 18px;
