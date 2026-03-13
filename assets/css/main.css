@@ -33,11 +33,6 @@
   padding: 30px; }
   .lgl-search-container.lgl-search-container.lgl-search-container.lgl-search-container-bg-secondary {
     background-color: var(--lgl-color-secondary); }
-    @media (max-width: 1024px) {
-      .lgl-search-container.lgl-search-container.lgl-search-container.lgl-search-container-bg-secondary {
-        padding: 0; }
-        .lgl-search-container.lgl-search-container.lgl-search-container.lgl-search-container-bg-secondary .lgl-filter-form .lgl-filter-group {
-          width: 100%; } }
   .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form {
     display: flex;
     gap: 0;

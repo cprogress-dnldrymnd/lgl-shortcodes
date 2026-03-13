@@ -43,15 +43,14 @@
     margin-bottom: 0;
     background-color: var(--lgl-color-primary);
     padding: 30px;
-
+    @media (max-width: 1024px) {
+        padding: 0;
+        .lgl-filter-form .lgl-filter-group {
+            width: 100%;
+        }
+    }
     &.lgl-search-container-bg-secondary {
         background-color: var(--lgl-color-secondary);
-        @media (max-width: 1024px) {
-            padding: 0;
-            .lgl-filter-form .lgl-filter-group {
-                width: 100%;
-            }
-        }
     }
     .lgl-filter-form {
         display: flex;
