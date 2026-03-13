@@ -4,7 +4,7 @@
  * Plugin Name: LGL Shortcodes
  * Plugin URI: https://digitallydisruptive.co.uk/
  * Description: A robust, OOP-based plugin to output customized data via shortcodes using a dynamic template routing system.
- * Version: 3.1.5
+ * Version: 3.1.6
  * Author: Digitally Disruptive - Donald Raymundo
  * Author URI: https://digitallydisruptive.co.uk/
  * Text Domain: lgl-shortcodes
@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '3.1.5'); // Update this version number with each release for cache busting.
+define('LGL_SHORTCODES_VERSION', '3.1.6'); // Update this version number with each release for cache busting.
 
 if (! class_exists('LGL_Shortcodes')) {
 
@@ -1386,42 +1386,77 @@ if (! class_exists('LGL_Shortcodes')) {
         {
             check_ajax_referer('lgl_search_nonce', 'nonce');
 
-            $parent_id = isset($_POST['make_id']) ? intval($_POST['make_id']) : 0;
+            $parent_id = isset($_POST['make_id'])   ? intval($_POST['make_id'])              : 0;
+            $post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : '';
 
             if ($parent_id <= 0) {
                 wp_send_json_success(array());
             }
 
-            // Define a unique cache key based on the parent ID
-            $cache_key = 'lgl_models_' . $parent_id;
+            // Include post_type in the cache key so each vehicle type gets its own cached list
+            $cache_key = 'lgl_models_' . $parent_id . ($post_type ? '_' . $post_type : '');
 
-            // Determine if the current user is an administrator
             $is_admin = current_user_can('manage_options');
 
-            // Attempt to retrieve pre-compiled results from the database (Skip for Admins)
             $results = false;
             if (!$is_admin) {
                 $results = get_transient($cache_key);
             }
 
             if (false === $results) {
-                $terms = get_terms(array(
+                // Fetch all child terms (models) under this make
+                $all_models = get_terms(array(
                     'taxonomy'   => 'listing-make-model',
                     'hide_empty' => false,
                     'parent'     => $parent_id,
                 ));
 
                 $results = array();
-                if (!is_wp_error($terms) && !empty($terms)) {
-                    foreach ($terms as $term) {
-                        $results[] = array(
-                            'id'   => $term->term_id,
-                            'text' => $term->name
-                        );
+
+                if (!is_wp_error($all_models) && !empty($all_models)) {
+
+                    if (!empty($post_type)) {
+                        // Retrieve all published post IDs for this vehicle type
+                        $post_ids = get_posts(array(
+                            'post_type'      => $post_type,
+                            'post_status'    => 'publish',
+                            'posts_per_page' => -1,
+                            'fields'         => 'ids',
+                        ));
+
+                        // Collect term IDs actually assigned to posts of this vehicle type
+                        $assigned_term_ids = array();
+                        if (!empty($post_ids)) {
+                            $assigned_terms = wp_get_object_terms(
+                                $post_ids,
+                                'listing-make-model',
+                                array('fields' => 'ids')
+                            );
+                            if (!is_wp_error($assigned_terms)) {
+                                $assigned_term_ids = array_map('intval', $assigned_terms);
+                            }
+                        }
+
+                        // Only keep models whose term_id appears in the assigned set
+                        foreach ($all_models as $term) {
+                            if (in_array((int) $term->term_id, $assigned_term_ids, true)) {
+                                $results[] = array(
+                                    'id'   => $term->term_id,
+                                    'text' => $term->name,
+                                );
+                            }
+                        }
+                    } else {
+                        // No post_type filter — return all child models (original behaviour)
+                        foreach ($all_models as $term) {
+                            $results[] = array(
+                                'id'   => $term->term_id,
+                                'text' => $term->name,
+                            );
+                        }
                     }
                 }
 
-                // Set the transient cache for 12 hours (Skip for Admins)
                 if (!$is_admin) {
                     set_transient($cache_key, $results, 12 * HOUR_IN_SECONDS);
                 }

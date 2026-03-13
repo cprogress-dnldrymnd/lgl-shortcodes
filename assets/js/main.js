@@ -43,6 +43,14 @@
             let make_id = $(this).val();
             let $model_select = $('#lgl_model');
 
+            // Resolve current post_type: prefer the hidden input (type-specific search form),
+            // fall back to the vehicle type select (global search form).
+            let postType = $('#lgl_target_post_type').val() || '';
+            if (!postType) {
+                const selectedText = $('#lgl_post_type').find('option:selected').text().trim().toLowerCase();
+                postType = selectedText.replace(/s$/, '');
+            }
+
             // Reset model dropdown
             $model_select.empty()
                 .append('<option value="">Select Model</option>')
@@ -56,7 +64,8 @@
                     data: {
                         action: 'lgl_get_models',
                         nonce: lgl_ajax_obj.nonce,
-                        make_id: make_id
+                        make_id: make_id,
+                        post_type: postType
                     },
                     success: function (response) {
                         if (response.success && response.data.length > 0) {
