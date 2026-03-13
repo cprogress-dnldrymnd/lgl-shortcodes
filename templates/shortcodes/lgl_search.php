@@ -92,14 +92,17 @@ if ($active_make) {
         <!-- Make -->
         <div class="lgl-filter-group">
             <label for="lgl_make">Make</label>
-            <select name="listing_make" id="lgl_make" class="lgl-select2" data-placeholder="Select Make">
-                <option value="">All Makes</option>
-                <?php foreach ($makes as $make) : ?>
-                    <option value="<?php echo esc_attr($make->term_id); ?>"
-                        <?php selected($active_make, $make->term_id); ?>>
-                        <?php echo esc_html($make->name); ?>
-                    </option>
-                <?php endforeach; ?>
+            <select name="listing_make" id="lgl_make" class="lgl-select2" data-placeholder="Select Make"
+                <?php echo ($post_type == false) ? 'disabled' : ''; ?>>
+                <option value=""><?php echo ($post_type == false) ? 'Select Vehicle Type First' : 'All Makes'; ?></option>
+                <?php if ($post_type != false) : ?>
+                    <?php foreach ($makes as $make) : ?>
+                        <option value="<?php echo esc_attr($make->term_id); ?>"
+                            <?php selected($active_make, $make->term_id); ?>>
+                            <?php echo esc_html($make->name); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </select>
         </div>
 

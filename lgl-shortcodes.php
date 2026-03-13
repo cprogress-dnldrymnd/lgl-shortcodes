@@ -50,6 +50,8 @@ if (! class_exists('LGL_Shortcodes')) {
             // AJAX endpoints for dependent dropdowns and search results
             add_action('wp_ajax_lgl_get_models', array($this, 'ajax_get_models'));
             add_action('wp_ajax_nopriv_lgl_get_models', array($this, 'ajax_get_models'));
+            add_action('wp_ajax_lgl_get_makes', array($this, 'ajax_get_makes'));
+            add_action('wp_ajax_nopriv_lgl_get_makes', array($this, 'ajax_get_makes'));
             add_action('wp_ajax_lgl_fetch_results', array($this, 'ajax_fetch_results'));
             add_action('wp_ajax_nopriv_lgl_fetch_results', array($this, 'ajax_fetch_results'));
             add_action('wp_ajax_lgl_add_to_wishlist', array($this, 'ajax_add_to_wishlist'));
@@ -1300,6 +1302,76 @@ if (! class_exists('LGL_Shortcodes')) {
             return array_map(function ($value) {
                 return intval(trim($value));
             }, explode(',', $inputString));
+        }
+
+        /**
+         * AJAX handler to fetch top-level taxonomy terms (makes) that have at least one
+         * published post of the requested post type.
+         * Traverses assigned model terms back to their parent make to build the filtered list.
+         *
+         * @return void
+         */
+        public function ajax_get_makes()
+        {
+            check_ajax_referer('lgl_search_nonce', 'nonce');
+
+            $post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : '';
+
+            if (empty($post_type)) {
+                wp_send_json_success(array());
+            }
+
+            // Retrieve all published post IDs for this vehicle type
+            $post_ids = get_posts(array(
+                'post_type'      => $post_type,
+                'post_status'    => 'publish',
+                'posts_per_page' => -1,
+                'fields'         => 'ids',
+            ));
+
+            if (empty($post_ids)) {
+                wp_send_json_success(array());
+            }
+
+            // Collect all listing-make-model terms assigned to these posts
+            $assigned_terms = wp_get_object_terms($post_ids, 'listing-make-model', array('fields' => 'all'));
+
+            if (is_wp_error($assigned_terms) || empty($assigned_terms)) {
+                wp_send_json_success(array());
+            }
+
+            // Walk assigned terms upward: models (parent > 0) point to their make; 
+            // top-level terms are already makes.
+            $make_ids = array();
+            foreach ($assigned_terms as $term) {
+                if ($term->parent > 0) {
+                    $make_ids[] = (int) $term->parent;
+                } else {
+                    $make_ids[] = (int) $term->term_id;
+                }
+            }
+            $make_ids = array_unique($make_ids);
+
+            // Fetch the resolved make objects ordered alphabetically
+            $makes = get_terms(array(
+                'taxonomy'   => 'listing-make-model',
+                'include'    => $make_ids,
+                'hide_empty' => false,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+            ));
+
+            $results = array();
+            if (!is_wp_error($makes) && !empty($makes)) {
+                foreach ($makes as $make) {
+                    $results[] = array(
+                        'id'   => $make->term_id,
+                        'text' => $make->name,
+                    );
+                }
+            }
+
+            wp_send_json_success($results);
         }
 
         /**

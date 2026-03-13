@@ -44,7 +44,10 @@
             let $model_select = $('#lgl_model');
 
             // Reset model dropdown
-            $model_select.empty().append('<option value="">Select Model</option>').prop('disabled', true);
+            $model_select.empty()
+                .append('<option value="">Select Model</option>')
+                .prop('disabled', true)
+                .trigger('change');
 
             if (make_id) {
                 $.ajax({
@@ -57,6 +60,7 @@
                     },
                     success: function (response) {
                         if (response.success && response.data.length > 0) {
+                            $model_select.empty().append('<option value="">All Models</option>');
                             $.each(response.data, function (index, item) {
                                 $model_select.append(new Option(item.text, item.id, false, false));
                             });
@@ -75,12 +79,61 @@
         });
 
 
-        //search redirect
+        //search redirect + dynamic make loading
         $('#lgl_post_type').on('change', function () {
-            let url = $(this).val();
+            const url       = $(this).val();
+            const $makeSelect  = $('#lgl_make');
+            const $modelSelect = $('#lgl_model');
 
-            $('#lgl-search-form').attr('action', url);
-            $('#lgl-search-form').attr('method', 'GET');
+            // Always reset both dependent dropdowns first
+            $makeSelect.empty()
+                .append('<option value="">Select Vehicle Type First</option>')
+                .prop('disabled', true)
+                .trigger('change'); // notify Select2
+
+            $modelSelect.empty()
+                .append('<option value="">Select Make First</option>')
+                .prop('disabled', true)
+                .trigger('change');
+
+            // Point the form at the correct results page
+            if (url) {
+                $('#lgl-search-form').attr('action', url).attr('method', 'GET');
+            }
+
+            if (!url) return;
+
+            // Derive the post_type slug from the destination URL's path segment
+            // e.g. /caravans/ → we pass it as a POST param; the backend resolves the slug.
+            // We read the hidden input the PHP template sets on non-global search forms;
+            // for the global form we derive post_type by reading the select option text.
+            const selectedText = $(this).find('option:selected').text().trim().toLowerCase();
+            // Normalise: "Caravan" → "caravan", "Motorhome" → "motorhome" etc.
+            const postTypeSlug = selectedText.replace(/s$/, ''); // strip trailing 's' if present
+
+            $.ajax({
+                url: lgl_ajax_obj.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'lgl_get_makes',
+                    nonce:  lgl_ajax_obj.nonce,
+                    post_type: postTypeSlug
+                },
+                success: function (response) {
+                    if (response.success && response.data.length > 0) {
+                        $makeSelect.empty().append('<option value="">All Makes</option>');
+                        $.each(response.data, function (i, item) {
+                            $makeSelect.append(new Option(item.text, item.id, false, false));
+                        });
+                        $makeSelect.prop('disabled', false).trigger('change');
+                    } else {
+                        // No makes for this type – keep disabled with a helpful label
+                        $makeSelect.empty()
+                            .append('<option value="">No Makes Available</option>')
+                            .trigger('change');
+                    }
+                }
+            });
         });
 
 
