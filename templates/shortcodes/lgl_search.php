@@ -113,9 +113,19 @@ if ($active_make) {
 ?>
 
 <style>
-/* --- Mobile search toggle (< 1025px) ---------------------------------- */
+/* ============================================================
+   LGL Search Offcanvas
+   Strategy: one form, always inside .lgl-search-offcanvas.
+   On mobile  (< 1025px) → fixed panel sliding from left.
+   On desktop (≥ 1025px) → reset to normal static flow so the
+   existing inline layout is completely unchanged.
+   ============================================================ */
+
+/* --- Toggle button: only rendered on mobile ------------------- */
 .lgl-search-mobile-toggle {
     display: none;
+    align-items: center;
+    gap: 10px;
     width: 100%;
     padding: 12px 20px;
     background: var(--lgl-color-primary, #003793);
@@ -128,215 +138,338 @@ if ($active_make) {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 0;
 }
 
-.lgl-search-mobile-toggle svg {
-    flex-shrink: 0;
-    transition: transform 0.3s ease;
+/* --- Offcanvas header (hidden on desktop) --------------------- */
+.lgl-offcanvas-header {
+    display: none;
 }
 
-.lgl-search-mobile-toggle.is-open svg {
-    transform: rotate(180deg);
+/* --- Backdrop (hidden on desktop) ----------------------------- */
+.lgl-search-offcanvas-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99998;
+    opacity: 0;
+    transition: opacity 0.35s ease;
 }
 
+/* ---- Mobile overrides ---------------------------------------- */
 @media (max-width: 1024px) {
+
+    /* Show the trigger button */
     .lgl-search-mobile-toggle {
         display: flex;
     }
 
-    /* Collapsed state — zero-height with overflow hidden for smooth transition */
-    .lgl-search-collapsible {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.35s ease;
+    /* Activate the backdrop layer */
+    .lgl-search-offcanvas-backdrop {
+        display: block;
+        pointer-events: none;
     }
 
-    /* Expanded state driven by JS toggling the class */
-    .lgl-search-collapsible.is-open {
-        max-height: 2000px; /* large enough to never clip even long filter lists */
+    .lgl-search-offcanvas-backdrop.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Offcanvas panel */
+    .lgl-search-offcanvas {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 320px !important;
+        max-width: 90vw !important;
+        height: 100% !important;
+        background: #fff !important;
+        z-index: 99999 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        overflow-y: auto !important;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        /* Reset any theme/plugin inline widths */
+        border-radius: 0 !important;
+    }
+
+    .lgl-search-offcanvas.is-open {
+        transform: translateX(0) !important;
+    }
+
+    /* Show the header bar inside the panel */
+    .lgl-offcanvas-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: var(--lgl-color-primary, #003793);
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .lgl-offcanvas-header h3 {
+        margin: 0;
+        font-family: var(--lgl-font-primary, sans-serif);
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    /* Close (×) button */
+    .lgl-offcanvas-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.2s;
+    }
+
+    .lgl-offcanvas-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* The .lgl-search-container lives inside .lgl-offcanvas-body on mobile */
+    .lgl-offcanvas-body {
+        padding: 20px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* Lock body scroll while panel is open */
+    body.lgl-offcanvas-open {
+        overflow: hidden;
     }
 }
 </style>
 
-<div class="lgl-search-container lgl-holder <?= $post_type == false ? 'lgl-search-container-bg-secondary' : '' ?>">
+<!-- ① Mobile trigger button -->
+<button type="button"
+        class="lgl-search-mobile-toggle"
+        aria-expanded="false"
+        aria-controls="lgl-search-offcanvas"
+        aria-label="Start a new search">
+    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+    </svg>
+    Start a New Search
+</button>
 
-    <!-- Mobile toggle button — hidden above 1024px via CSS -->
-    <button type="button" class="lgl-search-mobile-toggle" aria-expanded="false" aria-controls="lgl-search-collapsible">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-        </svg>
-        <span class="lgl-toggle-label">Start a New Search</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-left:auto;">
-            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-        </svg>
-    </button>
+<!-- ② Backdrop (mobile only, fades in behind panel) -->
+<div class="lgl-search-offcanvas-backdrop" id="lgl-search-backdrop" aria-hidden="true"></div>
 
-    <!-- Collapsible wrapper — always visible on desktop, toggled on mobile -->
-    <div class="lgl-search-collapsible" id="lgl-search-collapsible">
-        <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' : 'lgl-filter-form-ajax' ?>">
-            <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
+<!-- ③ Offcanvas — static on desktop, fixed sliding panel on mobile.
+        The form lives here once; no duplication, no ID conflicts. -->
+<div class="lgl-search-offcanvas"
+     id="lgl-search-offcanvas"
+     role="dialog"
+     aria-modal="true"
+     aria-label="Search filters">
 
-        <?php if ($post_type == false) { ?>
-            <?php
-            //post type select option
-            $options = get_option('lgl_settings', array());
+    <!-- Header bar (CSS hides this on desktop) -->
+    <div class="lgl-offcanvas-header">
+        <h3>Search Filters</h3>
+        <button type="button" class="lgl-offcanvas-close" aria-label="Close search filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </button>
+    </div>
 
-            $caravan_page   = $options['caravan_page']   ?? false;
-            $motorhome_page = $options['motorhome_page'] ?? false;
-            $campervan_page = $options['campervan_page'] ?? false;
+    <!-- Body (padding only applied on mobile via .lgl-offcanvas-body) -->
+    <div class="lgl-offcanvas-body">
 
-            // Build vehicle type options from configured pages
-            $vehicle_types = array();
-            if ($caravan_page)   $vehicle_types[get_the_permalink($caravan_page)]   = 'Caravan';
-            if ($motorhome_page) $vehicle_types[get_the_permalink($motorhome_page)] = 'Motorhome';
-            if ($campervan_page) $vehicle_types[get_the_permalink($campervan_page)] = 'Campervan';
-            ?>
+        <div class="lgl-search-container lgl-holder <?= $post_type == false ? 'lgl-search-container-bg-secondary' : '' ?>">
+            <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' : 'lgl-filter-form-ajax' ?>">
+                <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
 
-            <!-- Leisure Vehicle Type -->
-            <?php if (!empty($vehicle_types)) : ?>
+                <?php if ($post_type == false) { ?>
+                    <?php
+                    $options = get_option('lgl_settings', array());
+
+                    $caravan_page   = $options['caravan_page']   ?? false;
+                    $motorhome_page = $options['motorhome_page'] ?? false;
+                    $campervan_page = $options['campervan_page'] ?? false;
+
+                    $vehicle_types = array();
+                    if ($caravan_page)   $vehicle_types[get_the_permalink($caravan_page)]   = 'Caravan';
+                    if ($motorhome_page) $vehicle_types[get_the_permalink($motorhome_page)] = 'Motorhome';
+                    if ($campervan_page) $vehicle_types[get_the_permalink($campervan_page)] = 'Campervan';
+                    ?>
+
+                    <?php if (!empty($vehicle_types)) : ?>
+                        <div class="lgl-filter-group">
+                            <label for="lgl_vehicle_type">Leisure Vehicle Type</label>
+                            <select name="post_type" id="lgl_post_type" class="lgl-select2" data-placeholder="Leisure Vehicle Type" required>
+                                <option value="">Leisure Vehicle Type</option>
+                                <?php foreach ($vehicle_types as $type_key => $type_label) : ?>
+                                    <option value="<?php echo esc_attr($type_key); ?>"
+                                        <?php selected($active_post_type, $type_key); ?>>
+                                        <?php echo esc_html($type_label); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    <?php endif; ?>
+                <?php } ?>
+
+                <!-- Make -->
                 <div class="lgl-filter-group">
-                    <label for="lgl_vehicle_type">Leisure Vehicle Type</label>
-                    <select name="post_type" id="lgl_post_type" class="lgl-select2" data-placeholder="Leisure Vehicle Type" required>
-                        <option value="">Leisure Vehicle Type</option>
-                        <?php foreach ($vehicle_types as $type_key => $type_label) : ?>
-                            <option value="<?php echo esc_attr($type_key); ?>"
-                                <?php selected($active_post_type, $type_key); ?>>
-                                <?php echo esc_html($type_label); ?>
-                            </option>
-                        <?php endforeach; ?>
+                    <label for="lgl_make">Make</label>
+                    <select name="listing_make" id="lgl_make" class="lgl-select2" data-placeholder="Select Make"
+                        <?php echo ($post_type == false) ? 'disabled' : ''; ?>>
+                        <option value=""><?php echo ($post_type == false) ? 'Select Vehicle Type First' : 'All Makes'; ?></option>
+                        <?php if ($post_type != false) : ?>
+                            <?php foreach ($makes as $make) : ?>
+                                <option value="<?php echo esc_attr($make->term_id); ?>"
+                                    <?php selected($active_make, $make->term_id); ?>>
+                                    <?php echo esc_html($make->name); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
                 </div>
-            <?php endif; ?>
-        <?php } ?>
 
-        <!-- Make -->
-        <div class="lgl-filter-group">
-            <label for="lgl_make">Make</label>
-            <select name="listing_make" id="lgl_make" class="lgl-select2" data-placeholder="Select Make"
-                <?php echo ($post_type == false) ? 'disabled' : ''; ?>>
-                <option value=""><?php echo ($post_type == false) ? 'Select Vehicle Type First' : 'All Makes'; ?></option>
-                <?php if ($post_type != false) : ?>
-                    <?php foreach ($makes as $make) : ?>
-                        <option value="<?php echo esc_attr($make->term_id); ?>"
-                            <?php selected($active_make, $make->term_id); ?>>
-                            <?php echo esc_html($make->name); ?>
-                        </option>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </select>
-        </div>
+                <!-- Model -->
+                <div class="lgl-filter-group">
+                    <label for="lgl_model">Model</label>
+                    <select name="listing_model" id="lgl_model" class="lgl-select2" data-placeholder="Select Model"
+                        <?php echo empty($active_make_models) ? 'disabled' : ''; ?>>
+                        <?php if (empty($active_make_models)) : ?>
+                            <option value="">Select Make First</option>
+                        <?php else : ?>
+                            <option value="">All Models</option>
+                            <?php foreach ($active_make_models as $model) : ?>
+                                <option value="<?php echo esc_attr($model->term_id); ?>"
+                                    <?php selected($active_model, $model->term_id); ?>>
+                                    <?php echo esc_html($model->name); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </div>
 
-        <!-- Model (pre-populated when a make URL param is active) -->
-        <div class="lgl-filter-group">
-            <label for="lgl_model">Model</label>
-            <select name="listing_model" id="lgl_model" class="lgl-select2" data-placeholder="Select Model"
-                <?php echo empty($active_make_models) ? 'disabled' : ''; ?>>
-                <?php if (empty($active_make_models)) : ?>
-                    <option value="">Select Make First</option>
-                <?php else : ?>
-                    <option value="">All Models</option>
-                    <?php foreach ($active_make_models as $model) : ?>
-                        <option value="<?php echo esc_attr($model->term_id); ?>"
-                            <?php selected($active_model, $model->term_id); ?>>
-                            <?php echo esc_html($model->name); ?>
-                        </option>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </select>
-        </div>
-
-        <?php if ($post_type != false) { ?>
-            <!-- Condition -->
-            <div class="lgl-filter-group">
-                <label for="lgl_condition">Condition</label>
-                <select name="condition" id="lgl_condition" class="lgl-select2" data-placeholder="Any Condition">
-                    <option value="">Any Condition</option>
-                    <?php foreach ($conditions as $cond) : ?>
-                        <option value="<?php echo esc_attr($cond); ?>"
-                            <?php selected($active_condition, $cond); ?>>
-                            <?php echo esc_html($cond); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <!-- Berth -->
-            <div class="lgl-filter-group">
-                <label for="lgl_berth">Berth</label>
-                <select name="berth" id="lgl_berth" class="lgl-select2" data-placeholder="Any Berth">
-                    <option value="">Any Berth</option>
-                    <?php foreach ($berths as $berth) : ?>
-                        <option value="<?php echo esc_attr($berth); ?>"
-                            <?php selected($active_berth, $berth); ?>>
-                            <?php echo esc_html($berth); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <!-- Min Price -->
-            <div class="lgl-filter-group">
-                <select name="price_min" id="lgl_price_min" class="lgl-select2" data-placeholder="Min Price">
-                    <option value="">Min Price</option>
-                    <?php foreach ($prices as $price) : ?>
-                        <option value="<?php echo esc_attr($price); ?>"
-                            <?php selected((float) $active_price_min, $price); ?>>
-                            <?php echo esc_html( LGL_Shortcodes::format_price( $price ) ); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <!-- Max Price -->
-            <div class="lgl-filter-group">
-                <select name="price_max" id="lgl_price_max" class="lgl-select2" data-placeholder="Max Price">
-                    <option value="">Max Price</option>
-                    <?php foreach ($prices as $price) : ?>
-                        <option value="<?php echo esc_attr($price); ?>"
-                            <?php selected((float) $active_price_max, $price); ?>>
-                            <?php echo esc_html( LGL_Shortcodes::format_price( $price ) ); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-        <?php } ?>
-
-        <div class="lgl-filter-group lgl-submit-group">
-            <button type="submit" class="lgl-search-submit">
                 <?php if ($post_type != false) { ?>
-                    SEARCH NOW
-                <?php } else { ?>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                    </svg>
+
+                    <!-- Condition -->
+                    <div class="lgl-filter-group">
+                        <label for="lgl_condition">Condition</label>
+                        <select name="condition" id="lgl_condition" class="lgl-select2" data-placeholder="Any Condition">
+                            <option value="">Any Condition</option>
+                            <?php foreach ($conditions as $cond) : ?>
+                                <option value="<?php echo esc_attr($cond); ?>"
+                                    <?php selected($active_condition, $cond); ?>>
+                                    <?php echo esc_html($cond); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Berth -->
+                    <div class="lgl-filter-group">
+                        <label for="lgl_berth">Berth</label>
+                        <select name="berth" id="lgl_berth" class="lgl-select2" data-placeholder="Any Berth">
+                            <option value="">Any Berth</option>
+                            <?php foreach ($berths as $berth) : ?>
+                                <option value="<?php echo esc_attr($berth); ?>"
+                                    <?php selected($active_berth, $berth); ?>>
+                                    <?php echo esc_html($berth); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Min Price -->
+                    <div class="lgl-filter-group">
+                        <select name="price_min" id="lgl_price_min" class="lgl-select2" data-placeholder="Min Price">
+                            <option value="">Min Price</option>
+                            <?php foreach ($prices as $price) : ?>
+                                <option value="<?php echo esc_attr($price); ?>"
+                                    <?php selected((float) $active_price_min, $price); ?>>
+                                    <?php echo esc_html(LGL_Shortcodes::format_price($price)); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Max Price -->
+                    <div class="lgl-filter-group">
+                        <select name="price_max" id="lgl_price_max" class="lgl-select2" data-placeholder="Max Price">
+                            <option value="">Max Price</option>
+                            <?php foreach ($prices as $price) : ?>
+                                <option value="<?php echo esc_attr($price); ?>"
+                                    <?php selected((float) $active_price_max, $price); ?>>
+                                    <?php echo esc_html(LGL_Shortcodes::format_price($price)); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                 <?php } ?>
-            </button>
+
+                <div class="lgl-filter-group lgl-submit-group">
+                    <button type="submit" class="lgl-search-submit">
+                        <?php if ($post_type != false) { ?>
+                            SEARCH NOW
+                        <?php } else { ?>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        <?php } ?>
+                    </button>
+                </div>
+
+            </form>
         </div>
 
-        </form>
-    </div><!-- /.lgl-search-collapsible -->
-
-</div><!-- /.lgl-search-container -->
+    </div><!-- /.lgl-offcanvas-body -->
+</div><!-- /.lgl-search-offcanvas -->
 
 <script>
 (function () {
-    var btn        = document.querySelector('.lgl-search-mobile-toggle');
-    var panel      = document.getElementById('lgl-search-collapsible');
-    var label      = btn ? btn.querySelector('.lgl-toggle-label') : null;
+    var toggleBtn = document.querySelector('.lgl-search-mobile-toggle');
+    var panel     = document.getElementById('lgl-search-offcanvas');
+    var backdrop  = document.getElementById('lgl-search-backdrop');
+    var closeBtn  = panel ? panel.querySelector('.lgl-offcanvas-close') : null;
 
-    if (!btn || !panel) return;
+    if (!toggleBtn || !panel || !backdrop) return;
 
-    btn.addEventListener('click', function () {
-        var isOpen = panel.classList.toggle('is-open');
-        btn.classList.toggle('is-open', isOpen);
-        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        if (label) {
-            label.textContent = isOpen ? 'Close Search' : 'Start a New Search';
+    function openPanel() {
+        panel.classList.add('is-open');
+        backdrop.classList.add('is-visible');
+        document.body.classList.add('lgl-offcanvas-open');
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        // Shift focus to the close button for keyboard accessibility
+        if (closeBtn) closeBtn.focus();
+    }
+
+    function closePanel() {
+        panel.classList.remove('is-open');
+        backdrop.classList.remove('is-visible');
+        document.body.classList.remove('lgl-offcanvas-open');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.focus();
+    }
+
+    toggleBtn.addEventListener('click', openPanel);
+    if (closeBtn) closeBtn.addEventListener('click', closePanel);
+    backdrop.addEventListener('click', closePanel);
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && panel.classList.contains('is-open')) {
+            closePanel();
         }
     });
 })();
