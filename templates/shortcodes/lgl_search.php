@@ -112,9 +112,73 @@ if ($active_make) {
 }
 ?>
 
-<div class="lgl-search-container lgl-holder <?= $post_type == false ? 'lgl-search-container-bg-secondary' :  '' ?>">
-    <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' :  'lgl-filter-form-ajax' ?>">
-        <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
+<style>
+/* --- Mobile search toggle (< 1025px) ---------------------------------- */
+.lgl-search-mobile-toggle {
+    display: none;
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--lgl-color-primary, #003793);
+    color: #fff;
+    font-family: var(--lgl-font-primary, sans-serif);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 0;
+}
+
+.lgl-search-mobile-toggle svg {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.lgl-search-mobile-toggle.is-open svg {
+    transform: rotate(180deg);
+}
+
+@media (max-width: 1024px) {
+    .lgl-search-mobile-toggle {
+        display: flex;
+    }
+
+    /* Collapsed state — zero-height with overflow hidden for smooth transition */
+    .lgl-search-collapsible {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+    }
+
+    /* Expanded state driven by JS toggling the class */
+    .lgl-search-collapsible.is-open {
+        max-height: 2000px; /* large enough to never clip even long filter lists */
+    }
+}
+</style>
+
+<div class="lgl-search-container lgl-holder <?= $post_type == false ? 'lgl-search-container-bg-secondary' : '' ?>">
+
+    <!-- Mobile toggle button — hidden above 1024px via CSS -->
+    <button type="button" class="lgl-search-mobile-toggle" aria-expanded="false" aria-controls="lgl-search-collapsible">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+        </svg>
+        <span class="lgl-toggle-label">Start a New Search</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-left:auto;">
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+        </svg>
+    </button>
+
+    <!-- Collapsible wrapper — always visible on desktop, toggled on mobile -->
+    <div class="lgl-search-collapsible" id="lgl-search-collapsible">
+        <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' : 'lgl-filter-form-ajax' ?>">
+            <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
 
         <?php if ($post_type == false) { ?>
             <?php
@@ -253,5 +317,27 @@ if ($active_make) {
                 <?php } ?>
             </button>
         </div>
-    </form>
-</div>
+
+        </form>
+    </div><!-- /.lgl-search-collapsible -->
+
+</div><!-- /.lgl-search-container -->
+
+<script>
+(function () {
+    var btn        = document.querySelector('.lgl-search-mobile-toggle');
+    var panel      = document.getElementById('lgl-search-collapsible');
+    var label      = btn ? btn.querySelector('.lgl-toggle-label') : null;
+
+    if (!btn || !panel) return;
+
+    btn.addEventListener('click', function () {
+        var isOpen = panel.classList.toggle('is-open');
+        btn.classList.toggle('is-open', isOpen);
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        if (label) {
+            label.textContent = isOpen ? 'Close Search' : 'Start a New Search';
+        }
+    });
+})();
+</script>
