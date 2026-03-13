@@ -4,7 +4,7 @@
  * Plugin Name: LGL Shortcodes
  * Plugin URI: https://digitallydisruptive.co.uk/
  * Description: A robust, OOP-based plugin to output customized data via shortcodes using a dynamic template routing system.
- * Version: 3.1.6
+ * Version: 3.1.7
  * Author: Digitally Disruptive - Donald Raymundo
  * Author URI: https://digitallydisruptive.co.uk/
  * Text Domain: lgl-shortcodes
@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '3.1.6'); // Update this version number with each release for cache busting.
+define('LGL_SHORTCODES_VERSION', '3.1.7'); // Update this version number with each release for cache busting.
 
 if (! class_exists('LGL_Shortcodes')) {
 
@@ -905,6 +905,36 @@ if (! class_exists('LGL_Shortcodes')) {
         }
 
         /**
+         * Returns a clean wishlist array for a given user, filtering out any post IDs
+         * that no longer exist or are no longer published.
+         * Automatically persists the cleaned array back to user meta when stale IDs are found,
+         * so the stored data self-heals on the next wishlist interaction.
+         *
+         * @param int $user_id The user ID to fetch and validate the wishlist for.
+         * @return int[] Array of valid, published post IDs.
+         */
+        private function get_valid_wishlist(int $user_id): array
+        {
+            $raw = get_user_meta($user_id, 'lgl_wishlists', true);
+
+            if (!is_array($raw) || empty($raw)) {
+                return array();
+            }
+
+            // Keep only IDs whose post status is still 'publish'
+            $valid = array_values(array_filter($raw, function ($post_id) {
+                return get_post_status((int) $post_id) === 'publish';
+            }));
+
+            // Auto-heal: persist cleaned list when stale IDs were removed
+            if (count($valid) !== count($raw)) {
+                update_user_meta($user_id, 'lgl_wishlists', $valid);
+            }
+
+            return $valid;
+        }
+
+        /**
          * Generates the internal HTML payload for the mini wishlist items list.
          * Used for initial shortcode rendering and subsequent AJAX refresh states.
          *
@@ -917,9 +947,9 @@ if (! class_exists('LGL_Shortcodes')) {
             }
 
             $user_id = get_current_user_id();
-            $wishlist = get_user_meta($user_id, 'lgl_wishlists', true);
+            $wishlist = $this->get_valid_wishlist($user_id);
 
-            if (!is_array($wishlist) || empty($wishlist)) {
+            if (empty($wishlist)) {
                 return '<div class="lgl-wishlist-empty">Your wishlist is currently empty.</div>';
             }
 
@@ -928,7 +958,6 @@ if (! class_exists('LGL_Shortcodes')) {
 
             foreach ($wishlist as $post_id) {
                 $post = get_post($post_id);
-                if (!$post || $post->post_status !== 'publish') continue;
 
                 $price = get_post_meta($post_id, 'price', true);
                 $formatted_price = esc_html(LGL_Shortcodes::format_price($price));
@@ -966,8 +995,7 @@ if (! class_exists('LGL_Shortcodes')) {
             }
 
             $html = $this->get_mini_wishlist_html();
-            $wishlist = get_user_meta(get_current_user_id(), 'lgl_wishlists', true);
-            $count = is_array($wishlist) ? count($wishlist) : 0;
+            $count = count($this->get_valid_wishlist(get_current_user_id()));
 
             wp_send_json_success(array(
                 'html'  => $html,
@@ -995,11 +1023,8 @@ if (! class_exists('LGL_Shortcodes')) {
                 wp_send_json_error('Invalid post ID.');
             }
 
-            // Retrieve current wishlist (returns an empty string if it doesn't exist, so cast to array)
-            $wishlist = get_user_meta($user_id, 'lgl_wishlists', true);
-            if (!is_array($wishlist)) {
-                $wishlist = array();
-            }
+            // Retrieve current wishlist, already filtered to valid/published posts
+            $wishlist = $this->get_valid_wishlist($user_id);
 
             $status = '';
 
