@@ -31,6 +31,11 @@
   margin-bottom: 0;
   background-color: var(--lgl-color-primary);
   padding: 30px; }
+  @media (max-width: 1024px) {
+    .lgl-search-container.lgl-search-container.lgl-search-container {
+      padding: 0; }
+      .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-filter-group {
+        width: 100%; } }
   .lgl-search-container.lgl-search-container.lgl-search-container.lgl-search-container-bg-secondary {
     background-color: var(--lgl-color-secondary); }
   .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form {
