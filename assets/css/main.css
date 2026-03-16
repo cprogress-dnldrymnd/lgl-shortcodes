@@ -1421,7 +1421,7 @@
   width: 100%;
   padding: 12px 20px;
   background: var(--lgl-color-primary, #003793);
-  color: var(--lgl-white);
+  color: var(--lgl-color-white);
   font-family: var(--lgl-font-primary, sans-serif);
   font-size: 15px;
   font-weight: 600;
@@ -1449,8 +1449,7 @@
 @media (max-width: 1024px) {
   /* Show the trigger button */
   .lgl-search-mobile-toggle-wrapper {
-    display: flex;
-    padding-bottom: 20px; }
+    display: flex; }
 
   /* Activate the backdrop layer */
   .lgl-search-offcanvas-backdrop {
