@@ -33,6 +33,7 @@
     function search_form() {
         let currentPage = 1;
         let isUpdatingFilters = false;
+        let activeSearchXhr = null;
 
         // Initialize Select2 on target classes
         $('.lgl-select2').select2({
@@ -206,22 +207,53 @@
         }
 
         /**
+ * Enables or disables all filter selects in the search form during a loading state.
+ * Skips fields that are intentionally disabled (e.g. model when no make is selected).
+ */
+        function _set_filters_disabled(disabled) {
+            const $selects = $('#lgl-search-form select.lgl-select2');
+
+            if (disabled) {
+                $selects.each(function () {
+                    if ($(this).prop('disabled')) {
+                        $(this).data('lgl-was-disabled', true);
+                    }
+                    $(this).prop('disabled', true).trigger('change.select2'); // ← change.select2 only
+                });
+            } else {
+                $selects.each(function () {
+                    if (!$(this).data('lgl-was-disabled')) {
+                        $(this).prop('disabled', false).trigger('change.select2'); // ← change.select2 only
+                    }
+                    $(this).removeData('lgl-was-disabled');
+                });
+            }
+        }
+        /**
          * Compiles form parameters and dispatches the AJAX search payload.
          *
          * @return void
          */
         function execute_search() {
-            // Serialize primary form and combine with sorting value
+            // Abort any in-flight search — prevents double-loading when dependent
+            // dropdowns (e.g. model) fire a second change event after being repopulated
+            if (activeSearchXhr) {
+                activeSearchXhr.abort();
+                activeSearchXhr = null;
+            }
+
             let formData = $('#lgl-search-form').serialize() + '&sort_order=' + $('#lgl-sort-order').val();
             let postType = $('#lgl_target_post_type').val();
             let limit = parseInt($('#lgl-results-grid').data('limit'), 10) || 9;
 
-            // UI State management
+            // Disable all filter fields while loading
+            _set_filters_disabled(true);
+
             $('#lgl-loader').show();
             $('#lgl-results-grid').css('opacity', '0.5');
             $('.lgl-pagination-wrap').css('opacity', '0.5');
 
-            $.ajax({
+            activeSearchXhr = $.ajax({
                 url: lgl_ajax_obj.ajax_url,
                 type: 'POST',
                 data: {
@@ -237,23 +269,28 @@
                         $('#lgl-results-grid').html(response.data.html);
                         $('.lgl-pagination-wrap').html(response.data.pagination);
 
-                        // Update UI string dynamically
                         let visibleCount = $('#lgl-results-grid .lgl-post').length;
                         $('#lgl-results-count').html('Showing ' + visibleCount + ' of ' + response.data.count + ' results');
                     } else {
                         alert('Error fetching results.');
                     }
                 },
-                error: function () {
-                    alert('A server error occurred. Please try again.');
+                error: function (xhr) {
+                    // Silently ignore aborted requests; alert on genuine errors
+                    if (xhr.statusText !== 'abort') {
+                        alert('A server error occurred. Please try again.');
+                    }
                 },
                 complete: function () {
+                    activeSearchXhr = null;
                     $('#lgl-loader').hide();
                     $('#lgl-results-grid').css('opacity', '1');
                     $('.lgl-pagination-wrap').css('opacity', '1');
+                    _set_filters_disabled(false);
                 }
             });
         }
+
 
         // Trigger initial search to populate grid on load
         if ($('#lgl-search-form').length) {
