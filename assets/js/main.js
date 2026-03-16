@@ -207,6 +207,33 @@
         }
 
         /**
+ * Enables or disables all filter selects in the search form during a loading state.
+ * Skips fields that are intentionally disabled (e.g. model when no make is selected).
+ */
+        function _set_filters_disabled(disabled) {
+            // Track which selects were already disabled before we touched them
+            // so we don't accidentally re-enable them on completion
+            const $selects = $('#lgl-search-form select.lgl-select2');
+
+            if (disabled) {
+                $selects.each(function () {
+                    // Mark already-disabled fields so we can preserve their state
+                    if ($(this).prop('disabled')) {
+                        $(this).data('lgl-was-disabled', true);
+                    }
+                    $(this).prop('disabled', true).trigger('change'); // refresh Select2 appearance
+                });
+            } else {
+                $selects.each(function () {
+                    // Only re-enable fields that were active before the search started
+                    if (!$(this).data('lgl-was-disabled')) {
+                        $(this).prop('disabled', false).trigger('change');
+                    }
+                    $(this).removeData('lgl-was-disabled');
+                });
+            }
+        }
+        /**
          * Compiles form parameters and dispatches the AJAX search payload.
          *
          * @return void
