@@ -1449,7 +1449,8 @@
 @media (max-width: 1024px) {
   /* Show the trigger button */
   .lgl-search-mobile-toggle-wrapper {
-    display: flex; }
+    display: flex;
+    padding-bottom: 20px; }
 
   /* Activate the backdrop layer */
   .lgl-search-offcanvas-backdrop {
