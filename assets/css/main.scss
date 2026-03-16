@@ -1833,8 +1833,11 @@ $border-radius: 16px;
     opacity: 0;
     transition: opacity 0.35s ease;
 }
-
+.lgl-search-mobile-toggle-wrapper {
+    display: none;
+}
 /* ---- Mobile overrides ---------------------------------------- */
+
 @media (max-width: 1024px) {
     /* Show the trigger button */
     .lgl-search-mobile-toggle-wrapper {
