@@ -112,163 +112,23 @@ if ($active_make) {
 }
 ?>
 
-<style>
-/* ============================================================
-   LGL Search Offcanvas
-   Strategy: one form, always inside .lgl-search-offcanvas.
-   On mobile  (< 1025px) → fixed panel sliding from left.
-   On desktop (≥ 1025px) → reset to normal static flow so the
-   existing inline layout is completely unchanged.
-   ============================================================ */
-
-/* --- Toggle button: only rendered on mobile ------------------- */
-.lgl-search-mobile-toggle {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 12px 20px;
-    background: var(--lgl-color-primary, #003793);
-    color: #fff;
-    font-family: var(--lgl-font-primary, sans-serif);
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-/* --- Offcanvas header (hidden on desktop) --------------------- */
-.lgl-offcanvas-header {
-    display: none;
-}
-
-/* --- Backdrop (hidden on desktop) ----------------------------- */
-.lgl-search-offcanvas-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 99998;
-    opacity: 0;
-    transition: opacity 0.35s ease;
-}
-
-/* ---- Mobile overrides ---------------------------------------- */
-@media (max-width: 1024px) {
-
-    /* Show the trigger button */
-    .lgl-search-mobile-toggle {
-        display: flex;
-    }
-
-    /* Activate the backdrop layer */
-    .lgl-search-offcanvas-backdrop {
-        display: block;
-        pointer-events: none;
-    }
-
-    .lgl-search-offcanvas-backdrop.is-visible {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* Offcanvas panel */
-    .lgl-search-offcanvas {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 320px !important;
-        max-width: 90vw !important;
-        height: 100% !important;
-        background: #fff !important;
-        z-index: 99999 !important;
-        transform: translateX(-100%) !important;
-        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        overflow-y: auto !important;
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18) !important;
-        display: flex !important;
-        flex-direction: column !important;
-        /* Reset any theme/plugin inline widths */
-        border-radius: 0 !important;
-    }
-
-    .lgl-search-offcanvas.is-open {
-        transform: translateX(0) !important;
-    }
-
-    /* Show the header bar inside the panel */
-    .lgl-offcanvas-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 20px;
-        background: var(--lgl-color-primary, #003793);
-        color: #fff;
-        flex-shrink: 0;
-    }
-
-    .lgl-offcanvas-header h3 {
-        margin: 0;
-        font-family: var(--lgl-font-primary, sans-serif);
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: #fff;
-    }
-
-    /* Close (×) button */
-    .lgl-offcanvas-close {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        background: rgba(255, 255, 255, 0.15);
-        border: none;
-        border-radius: 50%;
-        color: #fff;
-        cursor: pointer;
-        flex-shrink: 0;
-        transition: background 0.2s;
-    }
-
-    .lgl-offcanvas-close:hover {
-        background: rgba(255, 255, 255, 0.3);
-    }
-
-    /* The .lgl-search-container lives inside .lgl-offcanvas-body on mobile */
-    .lgl-offcanvas-body {
-        padding: 20px;
-        flex: 1;
-        overflow-y: auto;
-    }
-
-    /* Lock body scroll while panel is open */
-    body.lgl-offcanvas-open {
-        overflow: hidden;
-    }
-}
-</style>
-
 <?php if ($post_type) : ?>
-<!-- ① Mobile trigger button (only when a post_type is set) -->
-<button type="button"
-        class="lgl-search-mobile-toggle"
-        aria-expanded="false"
-        aria-controls="lgl-search-offcanvas"
-        aria-label="Start a new search">
-    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-    </svg>
-    Start a New Search
-</button>
+    <!-- ① Mobile trigger button (only when a post_type is set) -->
+    <div class="lgl-search-mobile-toggle-wrapper">
+        <button type="button"
+            class="lgl-search-mobile-toggle"
+            aria-expanded="false"
+            aria-controls="lgl-search-offcanvas"
+            aria-label="Start a new search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+            Start a New Search
+        </button>
+    </div>
 
-<!-- ② Backdrop (mobile only, fades in behind panel) -->
-<div class="lgl-search-offcanvas-backdrop" id="lgl-search-backdrop" aria-hidden="true"></div>
+    <!-- ② Backdrop (mobile only, fades in behind panel) -->
+    <div class="lgl-search-offcanvas-backdrop" id="lgl-search-backdrop" aria-hidden="true"></div>
 <?php endif; ?>
 
 <!-- ③ Offcanvas — static on desktop, fixed sliding panel on mobile.
@@ -276,24 +136,24 @@ if ($active_make) {
         When no post_type is set, the offcanvas chrome is skipped entirely
         and the form renders as a plain inline container. -->
 <?php if ($post_type) : ?>
-<div class="lgl-search-offcanvas"
-     id="lgl-search-offcanvas"
-     role="dialog"
-     aria-modal="true"
-     aria-label="Search filters">
+    <div class="lgl-search-offcanvas"
+        id="lgl-search-offcanvas"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search filters">
 
-    <!-- Header bar (CSS hides this on desktop) -->
-    <div class="lgl-offcanvas-header">
-        <h3>Search Filters</h3>
-        <button type="button" class="lgl-offcanvas-close" aria-label="Close search filters">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-            </svg>
-        </button>
-    </div>
+        <!-- Header bar (CSS hides this on desktop) -->
+        <div class="lgl-offcanvas-header">
+            <h3>Search Filters</h3>
+            <button type="button" class="lgl-offcanvas-close" aria-label="Close search filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+            </button>
+        </div>
 
-    <div class="lgl-offcanvas-body">
-<?php endif; ?>
+        <div class="lgl-offcanvas-body">
+        <?php endif; ?>
 
         <div class="lgl-search-container lgl-holder <?= $post_type == false ? 'lgl-search-container-bg-secondary' : '' ?>">
             <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' : 'lgl-filter-form-ajax' ?>">
@@ -429,7 +289,7 @@ if ($active_make) {
                             SEARCH NOW
                         <?php } else { ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                             </svg>
                         <?php } ?>
                     </button>
@@ -438,46 +298,46 @@ if ($active_make) {
             </form>
         </div>
 
-    <?php if ($post_type) : ?>
-    </div><!-- /.lgl-offcanvas-body -->
-</div><!-- /.lgl-search-offcanvas -->
+        <?php if ($post_type) : ?>
+        </div><!-- /.lgl-offcanvas-body -->
+    </div><!-- /.lgl-search-offcanvas -->
 
-<script>
-(function () {
-    var toggleBtn = document.querySelector('.lgl-search-mobile-toggle');
-    var panel     = document.getElementById('lgl-search-offcanvas');
-    var backdrop  = document.getElementById('lgl-search-backdrop');
-    var closeBtn  = panel ? panel.querySelector('.lgl-offcanvas-close') : null;
+    <script>
+        (function() {
+            var toggleBtn = document.querySelector('.lgl-search-mobile-toggle');
+            var panel = document.getElementById('lgl-search-offcanvas');
+            var backdrop = document.getElementById('lgl-search-backdrop');
+            var closeBtn = panel ? panel.querySelector('.lgl-offcanvas-close') : null;
 
-    if (!toggleBtn || !panel || !backdrop) return;
+            if (!toggleBtn || !panel || !backdrop) return;
 
-    function openPanel() {
-        panel.classList.add('is-open');
-        backdrop.classList.add('is-visible');
-        document.body.classList.add('lgl-offcanvas-open');
-        toggleBtn.setAttribute('aria-expanded', 'true');
-        // Shift focus to the close button for keyboard accessibility
-        if (closeBtn) closeBtn.focus();
-    }
+            function openPanel() {
+                panel.classList.add('is-open');
+                backdrop.classList.add('is-visible');
+                document.body.classList.add('lgl-offcanvas-open');
+                toggleBtn.setAttribute('aria-expanded', 'true');
+                // Shift focus to the close button for keyboard accessibility
+                if (closeBtn) closeBtn.focus();
+            }
 
-    function closePanel() {
-        panel.classList.remove('is-open');
-        backdrop.classList.remove('is-visible');
-        document.body.classList.remove('lgl-offcanvas-open');
-        toggleBtn.setAttribute('aria-expanded', 'false');
-        toggleBtn.focus();
-    }
+            function closePanel() {
+                panel.classList.remove('is-open');
+                backdrop.classList.remove('is-visible');
+                document.body.classList.remove('lgl-offcanvas-open');
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                toggleBtn.focus();
+            }
 
-    toggleBtn.addEventListener('click', openPanel);
-    if (closeBtn) closeBtn.addEventListener('click', closePanel);
-    backdrop.addEventListener('click', closePanel);
+            toggleBtn.addEventListener('click', openPanel);
+            if (closeBtn) closeBtn.addEventListener('click', closePanel);
+            backdrop.addEventListener('click', closePanel);
 
-    // Close on Escape key
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && panel.classList.contains('is-open')) {
-            closePanel();
-        }
-    });
-})();
-</script>
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && panel.classList.contains('is-open')) {
+                    closePanel();
+                }
+            });
+        })();
+    </script>
 <?php endif; ?>

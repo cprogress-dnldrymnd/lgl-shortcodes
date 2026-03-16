@@ -48,7 +48,7 @@
             padding: 0;
             background-color: transparent;
             border-radius: 0;
-                border: 1px solid var(--lgl-color-light-gray);
+            border: 1px solid var(--lgl-color-light-gray);
 
             .lgl-filter-form .lgl-filter-group {
                 width: 100%;
@@ -181,7 +181,6 @@
         .select2-selection__placeholder {
             color: var(--lgl-color-secondary);
         }
- 
 
         @media (max-width: 767px) {
             min-height: 48px;
@@ -1788,7 +1787,145 @@ $border-radius: 16px;
     }
 }
 
+/* ============================================================
+   LGL Search Offcanvas
+   Strategy: one form, always inside .lgl-search-offcanvas.
+   On mobile  (< 1025px) → fixed panel sliding from left.
+   On desktop (≥ 1025px) → reset to normal static flow so the
+   existing inline layout is completely unchanged.
+   ============================================================ */
 
+/* --- Toggle button: only rendered on mobile ------------------- */
 .lgl-offcanvas-close {
     padding: 0 !important;
+}
+
+.lgl-search-mobile-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--lgl-color-primary, #003793);
+    color: var(--lgl-white);
+    font-family: var(--lgl-font-primary, sans-serif);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* --- Offcanvas header (hidden on desktop) --------------------- */
+.lgl-offcanvas-header {
+    display: none;
+}
+
+/* --- Backdrop (hidden on desktop) ----------------------------- */
+.lgl-search-offcanvas-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99998;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+/* ---- Mobile overrides ---------------------------------------- */
+@media (max-width: 1024px) {
+    /* Show the trigger button */
+    .lgl-search-mobile-toggle-wrapper {
+        display: flex;
+    }
+
+    /* Activate the backdrop layer */
+    .lgl-search-offcanvas-backdrop {
+        display: block;
+        pointer-events: none;
+    }
+
+    .lgl-search-offcanvas-backdrop.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Offcanvas panel */
+    .lgl-search-offcanvas {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 320px !important;
+        max-width: 90vw !important;
+        height: 100% !important;
+        background: #fff !important;
+        z-index: 99999 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        overflow-y: auto !important;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        /* Reset any theme/plugin inline widths */
+        border-radius: 0 !important;
+    }
+
+    .lgl-search-offcanvas.is-open {
+        transform: translateX(0) !important;
+    }
+
+    /* Show the header bar inside the panel */
+    .lgl-offcanvas-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: var(--lgl-color-primary, #003793);
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .lgl-offcanvas-header h3 {
+        margin: 0;
+        font-family: var(--lgl-font-primary, sans-serif);
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    /* Close (×) button */
+    .lgl-offcanvas-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.2s;
+    }
+
+    .lgl-offcanvas-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* The .lgl-search-container lives inside .lgl-offcanvas-body on mobile */
+    .lgl-offcanvas-body {
+        padding: 20px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* Lock body scroll while panel is open */
+    body.lgl-offcanvas-open {
+        overflow: hidden;
+    }
 }
