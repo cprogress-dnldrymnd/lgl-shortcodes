@@ -49,8 +49,7 @@
             // fall back to the vehicle type select (global search form).
             let postType = $('#lgl_target_post_type').val() || '';
             if (!postType) {
-                const selectedText = $('#lgl_post_type').find('option:selected').text().trim().toLowerCase();
-                postType = selectedText.replace(/s$/, '');
+                postType = $('#lgl_post_type').find('option:selected').data('post-type') || '';
             }
 
             // Reset model dropdown
@@ -80,6 +79,71 @@
                     }
                 });
             }
+        });
+
+        // Vehicle Type change → load Makes for the selected type (global search form only)
+        // Fires when the user picks Caravan / Motorhome / Campervan from #lgl_post_type.
+        $('#lgl_post_type').on('change', function () {
+            const $selected = $(this).find('option:selected');
+            const postTypeSlug = $selected.data('post-type'); // e.g. "motorhome"
+            const $makeSelect = $('#lgl_make');
+            const $modelSelect = $('#lgl_model');
+
+            // Always reset both dependent dropdowns first
+            $makeSelect
+                .empty()
+                .append('<option value="">Select Vehicle Type First</option>')
+                .prop('disabled', true)
+                .trigger('change'); // refresh Select2 display
+
+            $modelSelect
+                .empty()
+                .append('<option value="">Select Make First</option>')
+                .prop('disabled', true)
+                .trigger('change');
+
+            // Nothing selected — stop here
+            if (!postTypeSlug) {
+                return;
+            }
+
+            // Show a loading hint while the AJAX request is in flight
+            $makeSelect
+                .empty()
+                .append('<option value="">Loading makes…</option>')
+                .trigger('change');
+
+            $.ajax({
+                url: lgl_ajax_obj.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'lgl_get_makes',
+                    nonce: lgl_ajax_obj.nonce,
+                    post_type: postTypeSlug,
+                },
+                success: function (response) {
+                    $makeSelect.empty().append('<option value="">All Makes</option>');
+
+                    if (response.success && response.data.length > 0) {
+                        $.each(response.data, function (i, item) {
+                            $makeSelect.append(new Option(item.text, item.id, false, false));
+                        });
+                        $makeSelect.prop('disabled', false).trigger('change');
+                    } else {
+                        // No makes available for this type
+                        $makeSelect
+                            .empty()
+                            .append('<option value="">No makes available</option>')
+                            .trigger('change');
+                    }
+                },
+                error: function () {
+                    $makeSelect
+                        .empty()
+                        .append('<option value="">Error loading makes</option>')
+                        .trigger('change');
+                },
+            });
         });
 
         // Handle Search Execution (Reset to Page 1 on strict filter changes)
