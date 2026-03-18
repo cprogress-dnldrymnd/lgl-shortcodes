@@ -2364,13 +2364,14 @@ $border-radius: 16px;
 }
 
 .lgl-mini-account a {
-    color: #fff;
+    color: var(--lgl-color-white);
     text-decoration: none;
     transition: opacity 0.18s;
 }
 
 .lgl-mini-account a:hover {
     opacity: 0.8;
+    color: var(--lgl-color-accent);
 }
 
 .lgl-mini-account__divider {
