@@ -1912,7 +1912,8 @@
    Wishlist Full-Page Grid Table
    ============================================= */
 .lgl-wishlist-table {
-  width: 100%; }
+  width: 100%;
+  line-height: 1; }
   .lgl-wishlist-table__head,
   .lgl-wishlist-table .lgl-wishlist-item {
     display: grid;
