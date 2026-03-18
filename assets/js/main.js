@@ -40,6 +40,39 @@
             width: '100%'
         });
 
+        $('#lgl-search-form.lgl-filter-form-no-ajax').on('submit', function (e) {
+            e.preventDefault();
+
+            // The option VALUE is the full archive page URL set in LGL Settings → LGL Pages
+            const destUrl = $('#lgl_post_type').val();
+
+            if (!destUrl) {
+                // No vehicle type chosen — shake the dropdown gently as a hint
+                $('#lgl_post_type').closest('.lgl-filter-group').addClass('lgl-field-error');
+                setTimeout(function () {
+                    $('#lgl_post_type').closest('.lgl-filter-group').removeClass('lgl-field-error');
+                }, 1200);
+                return;
+            }
+
+            // Build optional make / model query params
+            const makeVal = $('#lgl_make').val() || '';
+            const modelVal = $('#lgl_model').val() || '';
+
+            let redirectUrl = destUrl;
+            const params = [];
+
+            if (makeVal) params.push('listing_make=' + encodeURIComponent(makeVal));
+            if (modelVal) params.push('listing_model=' + encodeURIComponent(modelVal));
+
+            if (params.length) {
+                // Append to any existing query string already on the URL
+                redirectUrl += (destUrl.indexOf('?') !== -1 ? '&' : '?') + params.join('&');
+            }
+
+            window.location.href = redirectUrl;
+        });
+
         // Dependent Dropdown Logic (Make -> Model)
         $('#lgl_make').on('change', function () {
             let make_id = $(this).val();
