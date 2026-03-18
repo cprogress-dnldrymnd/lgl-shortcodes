@@ -967,7 +967,6 @@
     display: grid;
     grid-template-columns: 80px 1fr auto;
     grid-template-areas: "thumb info remove";
-    align-items: center;
     gap: 0 12px;
     padding: 12px 0;
     border-bottom: 1px solid var(--lgl-color-light-gray); }
@@ -1018,12 +1017,13 @@
     margin-top: 3px; }
     .lgl-mini-wishlist-dropdown .lgl-wishlist-meta span {
       font-size: 11px;
-      color: #555;
+      color: var(--lgl-color-primary);
       background: var(--lgl-color-soft-gray);
       border: 1px solid var(--lgl-color-light-gray);
-      padding: 1px 7px;
-      border-radius: 20px;
-      white-space: nowrap; }
+      white-space: nowrap;
+      line-height: 1;
+      padding: 5px;
+      border-radius: 5px; }
   .lgl-mini-wishlist-dropdown .lgl-wishlist-remove {
     grid-area: remove;
     margin-left: 0;
@@ -1034,7 +1034,6 @@
   padding: 0;
   width: 28px;
   height: 28px;
-  border-radius: 50%;
   background: transparent !important;
   border: none;
   display: flex;

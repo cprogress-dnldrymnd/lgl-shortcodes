@@ -1237,7 +1237,6 @@
         display: grid;
         grid-template-columns: 80px 1fr auto;
         grid-template-areas: "thumb info remove";
-        align-items: center;
         gap: 0 12px;
         padding: 12px 0;
         border-bottom: 1px solid var(--lgl-color-light-gray);
@@ -1307,12 +1306,13 @@
 
         span {
             font-size: 11px;
-            color: #555;
+            color: var(--lgl-color-primary);
             background: var(--lgl-color-soft-gray);
             border: 1px solid var(--lgl-color-light-gray);
-            padding: 1px 7px;
-            border-radius: 20px;
             white-space: nowrap;
+            line-height: 1;
+            padding: 5px;
+            border-radius: 5px;
         }
     }
 
@@ -1328,7 +1328,7 @@
     padding: 0;
     width: 28px;
     height: 28px;
-    background: transparent!important;
+    background: transparent !important;
     border: none;
     display: flex;
     align-items: center;
