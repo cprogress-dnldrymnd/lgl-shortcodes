@@ -1255,6 +1255,7 @@
         overflow: hidden;
         flex-shrink: 0;
         margin-right: 0;
+        position: relative;
 
         img {
             width: 100%;
@@ -1327,8 +1328,7 @@
     padding: 0;
     width: 28px;
     height: 28px;
-    border-radius: 50%;
-    background: var(--lgl-color-soft-gray) !important;
+    background: transparent!important;
     border: none;
     display: flex;
     align-items: center;
