@@ -2351,7 +2351,6 @@ if (! class_exists('LGL_Shortcodes')) {
                 echo '<div class="wrap"><p>' . esc_html__('Documentation template not found.', 'lgl-shortcodes') . '</p></div>';
             }
         }
-
         /**
          * AJAX handler to update the current user's account details.
          * Handles first name, last name, email address, and optional password change.
@@ -2362,6 +2361,11 @@ if (! class_exists('LGL_Shortcodes')) {
         public function ajax_lgl_update_account()
         {
 
+            // Flush any buffered output (PHP notices/warnings) so they can't corrupt the JSON response.
+            if (ob_get_length()) {
+                ob_clean();
+            }
+
             // Security: verify the shared plugin nonce
             check_ajax_referer('lgl_search_nonce', 'nonce');
 
@@ -2370,8 +2374,12 @@ if (! class_exists('LGL_Shortcodes')) {
                 wp_send_json_error(array('message' => __('You must be logged in to update your account.', 'lgl-shortcodes')));
             }
 
-            $user_id    = get_current_user_id();
-            $user       = get_userdata($user_id);
+            $user_id = get_current_user_id();
+            $user    = get_userdata($user_id);
+
+            if (! $user) {
+                wp_send_json_error(array('message' => __('Could not load your account. Please refresh and try again.', 'lgl-shortcodes')));
+            }
 
             // ── Sanitise inputs ──────────────────────────────────────────────────────
             $first_name       = sanitize_text_field(wp_unslash($_POST['first_name']       ?? ''));
@@ -2402,11 +2410,15 @@ if (! class_exists('LGL_Shortcodes')) {
             $change_password = ! empty($new_password);
 
             if ($change_password) {
+
                 if (empty($current_password)) {
                     wp_send_json_error(array('message' => __('Please enter your current password to set a new one.', 'lgl-shortcodes')));
                 }
 
-                if (! wp_check_password($current_password, $user->user_pass, $user_id)) {
+                // Use wp_authenticate_username_password to safely check the current password
+                // without triggering phpass warnings that can break JSON output.
+                $auth = wp_authenticate($user->user_login, $current_password);
+                if (is_wp_error($auth)) {
                     wp_send_json_error(array('message' => __('Your current password is incorrect.', 'lgl-shortcodes')));
                 }
 
