@@ -1234,9 +1234,7 @@
 
     // ── Scoped item layout — only affects dropdown, never full-page table ──
     .lgl-wishlist-item {
-        display: grid;
-        grid-template-columns: 80px 1fr auto;
-        grid-template-areas: "thumb info remove";
+        display: flex;
         gap: 0 12px;
         padding: 12px 0;
         border-bottom: 1px solid var(--lgl-color-light-gray);

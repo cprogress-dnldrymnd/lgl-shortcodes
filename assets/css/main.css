@@ -964,8 +964,7 @@
     visibility: visible;
     transform: translateY(0); }
   .lgl-mini-wishlist-dropdown .lgl-wishlist-item {
-    display: grid;
-    grid-template-columns: 80px 1fr auto;
+    display: flex;
     grid-template-areas: "thumb info remove";
     gap: 0 12px;
     padding: 12px 0;
