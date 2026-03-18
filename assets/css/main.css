@@ -12,7 +12,7 @@
   --lgl-color-light-gray: #e4ecff;
   --lgl-color-medium-gray: #d9d9d9;
   --lgl-color-soft-gray: #f0f0f0;
-  --lgl-color-dark-gray: #555;
+  --lgl-color-dark-gray: var(--lgl-color-gray);
   --lgl-color-gray: #969696;
   --lgl-color-light-blue: #f7faff;
   --lgl-color-light-blue-gray: #ececec;
@@ -1961,7 +1961,7 @@
   .lgl-wishlist-table .lgl-wt-col--condition,
   .lgl-wishlist-table .lgl-wt-col--year,
   .lgl-wishlist-table .lgl-wt-col--berth {
-    color: #555; }
+    color: var(--lgl-color-gray); }
   .lgl-wishlist-table .lgl-wt-col--remove {
     display: flex;
     justify-content: flex-end; }
