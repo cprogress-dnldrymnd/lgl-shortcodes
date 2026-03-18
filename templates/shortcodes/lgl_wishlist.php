@@ -42,9 +42,70 @@ $wishlist = is_array($wishlist) ? array_values(array_filter(array_map('intval', 
         </div>
 
     <?php else : ?>
+        <div class="lgl-wishlist-page__list" id="lgl-wishlist-page-list">
 
-        <div class="lgl-mini-wishlist-content lgl-wishlist-page__list" id="lgl-wishlist-page-list">
-            <?php echo $this->get_mini_wishlist_html(); ?>
+            <div class="lgl-wishlist-table">
+
+                {{-- Header row --}}
+                <div class="lgl-wishlist-table__head">
+                    <div class="lgl-wt-col lgl-wt-col--thumb"></div>
+                    <div class="lgl-wt-col lgl-wt-col--title"><?php esc_html_e('Vehicle', 'lgl-shortcodes'); ?></div>
+                    <div class="lgl-wt-col lgl-wt-col--price"><?php esc_html_e('Price', 'lgl-shortcodes'); ?></div>
+                    <div class="lgl-wt-col lgl-wt-col--condition"><?php esc_html_e('Condition', 'lgl-shortcodes'); ?></div>
+                    <div class="lgl-wt-col lgl-wt-col--year"><?php esc_html_e('Year', 'lgl-shortcodes'); ?></div>
+                    <div class="lgl-wt-col lgl-wt-col--berth"><?php esc_html_e('Berth', 'lgl-shortcodes'); ?></div>
+                    <div class="lgl-wt-col lgl-wt-col--remove"></div>
+                </div>
+
+                <div class="lgl-wishlist-table__body">
+                    <?php foreach ($wishlist as $post_id) :
+                        $post      = get_post($post_id);
+                        if (!$post) continue;
+                        $price     = get_post_meta($post_id, 'price', true);
+                        $condition = get_post_meta($post_id, 'condition', true);
+                        $year      = get_post_meta($post_id, 'year', true);
+                        $berth     = get_post_meta($post_id, 'berth', true);
+                    ?>
+                        <div class="lgl-wishlist-item" data-post-id="<?php echo esc_attr($post_id); ?>">
+                            <div class="lgl-wt-col lgl-wt-col--thumb">
+                                <a href="<?php echo esc_url(get_permalink($post_id)); ?>">
+                                    <?php echo get_the_post_thumbnail($post_id, 'thumbnail'); ?>
+                                </a>
+                            </div>
+                            <div class="lgl-wt-col lgl-wt-col--title">
+                                <span class="lgl-wt-label"><?php esc_html_e('Vehicle', 'lgl-shortcodes'); ?></span>
+                                <a href="<?php echo esc_url(get_permalink($post_id)); ?>">
+                                    <?php echo esc_html($post->post_title); ?>
+                                </a>
+                            </div>
+                            <div class="lgl-wt-col lgl-wt-col--price">
+                                <span class="lgl-wt-label"><?php esc_html_e('Price', 'lgl-shortcodes'); ?></span>
+                                <?php echo esc_html(LGL_Shortcodes::format_price($price, 2)); ?>
+                            </div>
+                            <div class="lgl-wt-col lgl-wt-col--condition">
+                                <span class="lgl-wt-label"><?php esc_html_e('Condition', 'lgl-shortcodes'); ?></span>
+                                <?php echo esc_html($condition ?: '—'); ?>
+                            </div>
+                            <div class="lgl-wt-col lgl-wt-col--year">
+                                <span class="lgl-wt-label"><?php esc_html_e('Year', 'lgl-shortcodes'); ?></span>
+                                <?php echo esc_html($year ?: '—'); ?>
+                            </div>
+                            <div class="lgl-wt-col lgl-wt-col--berth">
+                                <span class="lgl-wt-label"><?php esc_html_e('Berth', 'lgl-shortcodes'); ?></span>
+                                <?php echo esc_html($berth ?: '—'); ?>
+                            </div>
+                            <div class="lgl-wt-col lgl-wt-col--remove">
+                                <button class="lgl-remove-btn" data-id="<?php echo esc_attr($post_id); ?>" aria-label="Remove from wishlist">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+            </div>
         </div>
 
     <?php endif; ?>

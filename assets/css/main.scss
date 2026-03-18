@@ -2426,3 +2426,160 @@ $border-radius: 16px;
     align-items: center;
     gap: 5px;
 }
+
+/* =============================================
+   Wishlist Full-Page Grid Table
+   ============================================= */
+
+$wt-cols: 110px 1fr 120px 110px 80px 80px 50px;
+
+.lgl-wishlist-table {
+    width: 100%;
+}
+
+.lgl-wishlist-table__head,
+.lgl-wishlist-item {
+    display: grid;
+    grid-template-columns: $wt-cols;
+    align-items: center;
+    gap: 0 16px;
+}
+
+// Header
+.lgl-wishlist-table__head {
+    border-bottom: 2px solid var(--lgl-color-secondary);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+
+    .lgl-wt-col {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--lgl-color-secondary);
+        padding: 0 8px;
+    }
+}
+
+// Each row
+.lgl-wishlist-item {
+    border-bottom: 1px solid var(--lgl-color-light-gray);
+    transition: background 0.15s ease;
+    padding: 12px 0;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: var(--lgl-color-soft-gray);
+    }
+
+    .lgl-wt-col {
+        padding: 6px 8px;
+        font-size: 15px;
+        color: var(--lgl-color-secondary);
+    }
+
+    // Hide mobile labels on desktop
+    .lgl-wt-label {
+        display: none;
+    }
+}
+
+// Column-specific
+.lgl-wt-col--thumb {
+    img {
+        width: 100px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 8px;
+        display: block;
+    }
+}
+
+.lgl-wt-col--title {
+    a {
+        font-weight: 700;
+        color: var(--lgl-color-secondary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: var(--lgl-color-quaternary);
+        }
+    }
+}
+
+.lgl-wt-col--price {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.lgl-wt-col--condition,
+.lgl-wt-col--year,
+.lgl-wt-col--berth {
+    color: #555;
+}
+
+.lgl-wt-col--remove {
+    display: flex;
+    justify-content: flex-end;
+}
+
+// Responsive — collapses to card style
+@media (max-width: 768px) {
+    .lgl-wishlist-table__head {
+        display: none;
+    }
+
+    .lgl-wishlist-item {
+        grid-template-columns: 90px 1fr auto;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "thumb title  remove"
+            "thumb price  price"
+            "thumb meta   meta";
+        padding: 16px 8px;
+        gap: 4px 12px;
+
+        .lgl-wt-label {
+            display: inline;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #999;
+            margin-right: 4px;
+        }
+    }
+
+    .lgl-wt-col--thumb {
+        grid-area: thumb;
+        align-self: start;
+    }
+    .lgl-wt-col--title {
+        grid-area: title;
+    }
+    .lgl-wt-col--price {
+        grid-area: price;
+        font-size: 14px;
+    }
+    .lgl-wt-col--remove {
+        grid-area: remove;
+        align-self: start;
+    }
+
+    .lgl-wt-col--condition,
+    .lgl-wt-col--year,
+    .lgl-wt-col--berth {
+        grid-area: meta;
+        font-size: 13px;
+        display: inline;
+        padding: 2px 4px;
+    }
+
+    .lgl-wt-col--thumb img {
+        width: 80px;
+        height: 60px;
+    }
+}
