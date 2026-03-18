@@ -2349,3 +2349,51 @@ $border-radius: 16px;
     color: #6b7280;
     font-style: italic;
 }
+
+.lgl-mini-account {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--lgl-color-primary, #003793);
+    border-radius: 6px;
+    padding: 9px 18px;
+    font-family: var(--lgl-font-primary, "DM Sans", sans-serif);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.lgl-mini-account a {
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.18s;
+}
+
+.lgl-mini-account a:hover {
+    opacity: 0.8;
+}
+
+.lgl-mini-account__divider {
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 300;
+    user-select: none;
+}
+
+.lgl-mini-account__logout {
+    opacity: 0.85;
+}
+
+.lgl-mini-account__logout:hover {
+    opacity: 1 !important;
+}
+
+// Logged-out state — icon + text link
+.lgl-mini-account--logged-out {
+    background-color: var(--lgl-color-primary, #003793);
+}
+
+.lgl-mini-account__login {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}

@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '3.3.0'); // Update this version number with each release for cache busting.
+define('LGL_SHORTCODES_VERSION', '3.3.1'); // Update this version number with each release for cache busting.
 
 if (! class_exists('LGL_Shortcodes')) {
 
@@ -866,6 +866,7 @@ if (! class_exists('LGL_Shortcodes')) {
             add_shortcode('lgl_wishlist', array($this, 'render_shortcode'));
             add_shortcode('lgl_finance_specialist', array($this, 'render_shortcode'));
             add_shortcode('lgl_my_account', array($this, 'render_shortcode'));
+            add_shortcode('lgl_mini_account', array($this, 'render_shortcode'));
         }
 
         /**
