@@ -965,29 +965,28 @@
     transform: translateY(0); }
   .lgl-mini-wishlist-dropdown .lgl-wishlist-item {
     display: flex;
-    grid-template-areas: "thumb info remove";
     gap: 0 12px;
     padding: 12px 0;
     border-bottom: 1px solid var(--lgl-color-light-gray); }
     .lgl-mini-wishlist-dropdown .lgl-wishlist-item:last-child {
       border-bottom: none; }
   .lgl-mini-wishlist-dropdown .lgl-wishlist-thumb {
-    grid-area: thumb;
     width: 80px;
     height: 60px;
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
     margin-right: 0;
-    position: relative;
-    height: 100%; }
+    position: relative; }
     .lgl-mini-wishlist-dropdown .lgl-wishlist-thumb img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block; }
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0; }
   .lgl-mini-wishlist-dropdown .lgl-wishlist-info {
-    grid-area: info;
     display: flex;
     flex-direction: column;
     gap: 3px;

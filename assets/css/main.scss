@@ -1245,7 +1245,6 @@
     }
 
     .lgl-wishlist-thumb {
-        grid-area: thumb;
         width: 80px;
         height: 60px;
         border-radius: 8px;
@@ -1253,18 +1252,19 @@
         flex-shrink: 0;
         margin-right: 0;
         position: relative;
-        height: 100%;
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
         }
     }
 
     .lgl-wishlist-info {
-        grid-area: info;
         display: flex;
         flex-direction: column;
         gap: 3px;
