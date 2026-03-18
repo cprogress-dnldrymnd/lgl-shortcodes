@@ -969,6 +969,9 @@ if (! class_exists('LGL_Shortcodes')) {
                 $post = get_post($post_id);
 
                 $price     = get_post_meta($post_id, 'price', true);
+                $condition = get_post_meta($post_id, 'condition', true);
+                $year      = get_post_meta($post_id, 'year', true);
+                $berth     = get_post_meta($post_id, 'berth', true);
                 $formatted_price = esc_html(LGL_Shortcodes::format_price($price));
 
                 echo '<li class="lgl-wishlist-item" data-post-id="' . esc_attr($post_id) . '">';
@@ -976,6 +979,11 @@ if (! class_exists('LGL_Shortcodes')) {
                 echo '  <div class="lgl-wishlist-info">';
                 echo '      <h4 class="lgl-wishlist-title"><a href="' . get_permalink($post_id) . '">' . esc_html($post->post_title) . '</a></h4>';
                 echo '      <span class="lgl-wishlist-price">' . esc_html($formatted_price) . '</span>';
+                echo '      <div class="lgl-wishlist-meta">';
+                if ($condition) echo '          <span class="lgl-wishlist-condition">' . esc_html($condition) . '</span>';
+                if ($year)      echo '          <span class="lgl-wishlist-year">' . esc_html($year) . '</span>';
+                if ($berth)     echo '          <span class="lgl-wishlist-berth">Berth: ' . esc_html($berth) . '</span>';
+                echo '      </div>';
                 echo '  </div>';
             }
 

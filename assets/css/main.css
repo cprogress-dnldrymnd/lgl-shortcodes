@@ -900,26 +900,10 @@
     .lgl-additional-content {
       margin-top: 50px; } }
 
-/**
- * LGL Mini Wishlist Component Styles
- * Structural and aesthetic declarations for the header wishlist UI.
- */
 .lgl-mini-wishlist-wrapper {
   position: relative;
   display: inline-block;
   font-family: var(--lgl-font-primary); }
-
-.lgl-wishlist-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--lgl-color-secondary); }
-  .lgl-wishlist-meta span {
-    background: var(--lgl-color-soft-gray);
-    padding: 2px 6px;
-    border-radius: 4px; }
 
 .lgl-mini-wishlist-toggle {
   display: flex;
@@ -932,14 +916,12 @@
   cursor: pointer;
   position: relative;
   transition: background-color 0.3s ease; }
-
-.lgl-mini-wishlist-toggle:hover {
-  background-color: var(--lgl-color-medium-gray); }
-
-.lgl-mini-wishlist-toggle svg {
-  width: 24px;
-  height: 24px;
-  color: var(--lgl-color-secondary); }
+  .lgl-mini-wishlist-toggle:hover {
+    background-color: var(--lgl-color-medium-gray); }
+  .lgl-mini-wishlist-toggle svg {
+    width: 24px;
+    height: 24px;
+    color: var(--lgl-color-secondary); }
 
 .lgl-wishlist-count {
   position: absolute;
@@ -956,14 +938,12 @@
   align-items: center;
   justify-content: center; }
 
-/* Dropdown Container */
 .lgl-mini-wishlist-dropdown {
   position: absolute;
   top: calc(100% + 15px);
   right: 0;
-  width: 320px;
+  width: 360px;
   background: var(--lgl-color-white);
-  /* Match screenshot dropdown background */
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   opacity: 0;
@@ -979,20 +959,104 @@
       right: 0;
       width: 100%;
       top: 0; } }
-
-.lgl-mini-wishlist-dropdown.is-active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0); }
+  .lgl-mini-wishlist-dropdown.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); }
+  .lgl-mini-wishlist-dropdown .lgl-wishlist-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    grid-template-areas: "thumb info remove";
+    align-items: center;
+    gap: 0 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--lgl-color-light-gray); }
+    .lgl-mini-wishlist-dropdown .lgl-wishlist-item:last-child {
+      border-bottom: none; }
+  .lgl-mini-wishlist-dropdown .lgl-wishlist-thumb {
+    grid-area: thumb;
+    width: 80px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    margin-right: 0; }
+    .lgl-mini-wishlist-dropdown .lgl-wishlist-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block; }
+  .lgl-mini-wishlist-dropdown .lgl-wishlist-info {
+    grid-area: info;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0; }
+  .lgl-mini-wishlist-dropdown .lgl-wishlist-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+    .lgl-mini-wishlist-dropdown .lgl-wishlist-title a {
+      color: var(--lgl-color-secondary);
+      text-decoration: none;
+      transition: color 0.2s ease; }
+      .lgl-mini-wishlist-dropdown .lgl-wishlist-title a:hover {
+        color: var(--lgl-color-quaternary); }
+  .lgl-mini-wishlist-dropdown .lgl-wishlist-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lgl-color-primary); }
+  .lgl-mini-wishlist-dropdown .lgl-wishlist-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 3px; }
+    .lgl-mini-wishlist-dropdown .lgl-wishlist-meta span {
+      font-size: 11px;
+      color: #555;
+      background: var(--lgl-color-soft-gray);
+      border: 1px solid var(--lgl-color-light-gray);
+      padding: 1px 7px;
+      border-radius: 20px;
+      white-space: nowrap; }
+  .lgl-mini-wishlist-dropdown .lgl-wishlist-remove {
+    grid-area: remove;
+    margin-left: 0;
+    align-self: start;
+    padding-top: 2px; }
+  .lgl-mini-wishlist-dropdown .lgl-remove-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--lgl-color-soft-gray) !important;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    padding: 0; }
+    .lgl-mini-wishlist-dropdown .lgl-remove-btn svg {
+      stroke: #aaa;
+      transition: stroke 0.2s ease; }
+    .lgl-mini-wishlist-dropdown .lgl-remove-btn:hover {
+      background: #fdecea !important; }
+      .lgl-mini-wishlist-dropdown .lgl-remove-btn:hover svg {
+        stroke: #d9534f; }
 
 .lgl-mini-wishlist-header {
   display: flex;
   gap: 10px;
   align-items: center;
   justify-content: space-between;
-  padding: 20px; }
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--lgl-color-light-gray); }
   .lgl-mini-wishlist-header h3 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
     color: var(--lgl-color-secondary);
     margin: 0; }
@@ -1012,97 +1076,37 @@
         display: none; } }
 
 .lgl-mini-wishlist-content {
-  max-height: 350px;
+  max-height: 380px;
   overflow-y: auto;
   padding: 0 20px; }
 
 .lgl-wishlist-page .lgl-mini-wishlist-content {
   max-height: unset; }
 
-/* List Items */
 .lgl-mini-wishlist-items {
   list-style: none;
   margin: 0;
   padding: 0; }
 
-.lgl-wishlist-item {
-  display: flex;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid var(--lgl-color-medium-gray); }
-
-.lgl-wishlist-item:last-child {
-  border-bottom: none; }
-
-.lgl-wishlist-thumb {
-  flex-shrink: 0;
-  width: 75px;
-  height: 55px;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-right: 15px; }
-
-.lgl-wishlist-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block; }
-
-.lgl-wishlist-info {
-  flex-grow: 1; }
-
-.lgl-wishlist-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin: 0 0 4px 0;
-  line-height: 1.3; }
-
-.lgl-wishlist-title a {
-  color: var(--lgl-color-secondary);
-  text-decoration: none;
-  transition: color 0.2s ease; }
-
-.lgl-wishlist-title a:hover {
-  color: var(--lgl-color-quaternary); }
-
-.lgl-wishlist-price {
-  font-size: 14px;
-  color: var(--lgl-color-secondary);
-  font-weight: 500; }
-
-/* Actions */
-.lgl-wishlist-remove {
-  flex-shrink: 0;
-  margin-left: 10px; }
-
-.lgl-remove-btn {
-  background: none;
-  border: none;
-  padding: 5px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent !important; }
-
-.lgl-remove-btn:hover svg {
-  stroke: #d9534f; }
-
-.lgl-view-wishlist-link.lgl-view-wishlist-link {
-  display: block;
-  padding: 20px;
-  font-size: 14px;
-  color: var(--lgl-color-secondary);
-  text-decoration: underline;
-  font-weight: 500;
-  text-align: center; }
-
 .lgl-mini-wishlist-footer {
   border-top: 1px solid var(--lgl-color-medium-gray); }
 
-.lgl-view-wishlist-link:hover {
-  color: var(--lgl-color-quaternary); }
+.lgl-view-wishlist-link.lgl-view-wishlist-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lgl-color-primary);
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s ease, color 0.2s ease;
+  border-radius: 0 0 12px 12px; }
+  .lgl-view-wishlist-link.lgl-view-wishlist-link:hover {
+    background: var(--lgl-color-soft-gray);
+    color: var(--lgl-color-quaternary); }
 
 .lgl-wishlist-empty {
   padding: 20px 0;
@@ -1209,7 +1213,6 @@
 .lgl-compare-title a:hover {
   color: var(--lgl-color-accent, var(--lgl-color-primary)); }
 
-/* Interactive remove button styling with transition states */
 /* Feedback states for empty or error payloads injected by LocalStorage logic */
 .lgl-compare-empty,
 .lgl-compare-error {
@@ -1417,12 +1420,7 @@
     padding: 10px 0; } }
 /* ============================================================
    LGL Search Offcanvas
-   Strategy: one form, always inside .lgl-search-offcanvas.
-   On mobile  (< 1025px) → fixed panel sliding from left.
-   On desktop (≥ 1025px) → reset to normal static flow so the
-   existing inline layout is completely unchanged.
    ============================================================ */
-/* --- Toggle button: only rendered on mobile ------------------- */
 .lgl-offcanvas-close {
   padding: 0 !important; }
 
@@ -1443,11 +1441,9 @@
   border-radius: 4px;
   cursor: pointer; }
 
-/* --- Offcanvas header (hidden on desktop) --------------------- */
 .lgl-offcanvas-header {
   display: none; }
 
-/* --- Backdrop (hidden on desktop) ----------------------------- */
 .lgl-search-offcanvas-backdrop {
   display: none;
   position: fixed;
@@ -1460,13 +1456,10 @@
 .lgl-search-mobile-toggle-wrapper {
   display: none; }
 
-/* ---- Mobile overrides ---------------------------------------- */
 @media (max-width: 1024px) {
-  /* Show the trigger button */
   .lgl-search-mobile-toggle-wrapper {
     display: flex; }
 
-  /* Activate the backdrop layer */
   .lgl-search-offcanvas-backdrop {
     display: block;
     pointer-events: none; }
@@ -1475,7 +1468,6 @@
     opacity: 1;
     pointer-events: auto; }
 
-  /* Offcanvas panel */
   .lgl-search-offcanvas {
     position: fixed !important;
     top: 0 !important;
@@ -1491,13 +1483,11 @@
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18) !important;
     display: flex !important;
     flex-direction: column !important;
-    /* Reset any theme/plugin inline widths */
     border-radius: 0 !important; }
 
   .lgl-search-offcanvas.is-open {
     transform: translateX(0) !important; }
 
-  /* Show the header bar inside the panel */
   .lgl-offcanvas-header {
     display: flex;
     align-items: center;
@@ -1516,7 +1506,6 @@
     text-transform: uppercase;
     color: #fff; }
 
-  /* Close (×) button */
   .lgl-offcanvas-close {
     display: flex;
     align-items: center;
@@ -1534,20 +1523,16 @@
   .lgl-offcanvas-close:hover {
     background: rgba(255, 255, 255, 0.3); }
 
-  /* The .lgl-search-container lives inside .lgl-offcanvas-body on mobile */
   .lgl-offcanvas-body {
     padding: 20px;
     flex: 1;
     overflow-y: auto; }
 
-  /* Lock body scroll while panel is open */
   body.lgl-offcanvas-open {
     overflow: hidden; } }
 /* =============================================================================
    LGL MY ACCOUNT — Styles
-   Add to:  assets/css/main.css  (or enqueue as a separate stylesheet)
    ============================================================================= */
-/* ── Shared wrapper ─────────────────────────────────────────────────────────── */
 .lgl-account-wrap.lgl-account-wrap {
   font-family: var(--lgl-font-primary, "DM Sans", sans-serif);
   color: var(--lgl-color-secondary, #001537);
@@ -1558,7 +1543,6 @@
   .lgl-account-wrap.lgl-account-wrap .lgl-mini-wishlist-content {
     padding: 0; }
 
-/* ── Notices ────────────────────────────────────────────────────────────────── */
 .lgl-account-notice {
   padding: 12px 16px;
   border-radius: 6px;
@@ -1576,14 +1560,10 @@
   border-left-color: #ef4444;
   color: #991b1b; }
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   GUEST VIEW — Login / Register
-   ═══════════════════════════════════════════════════════════════════════════════ */
 .lgl-account-guest {
   max-width: 520px;
   margin: 40px auto; }
 
-/* Auth tab buttons */
 .lgl-auth-tabs {
   display: flex;
   gap: 0;
@@ -1607,14 +1587,12 @@
   color: var(--lgl-color-primary, #003793);
   border-bottom-color: var(--lgl-color-primary, #003793); }
 
-/* Auth panels */
 .lgl-auth-panel {
   display: none; }
 
 .lgl-auth-panel.lgl-is-active {
   display: block; }
 
-/* ── Shared form elements ────────────────────────────────────────────────────── */
 .lgl-auth-form,
 .lgl-account-form {
   display: flex;
@@ -1650,7 +1628,6 @@
   border-color: var(--lgl-color-primary, #003793);
   box-shadow: 0 0 0 3px rgba(0, 55, 147, 0.12); }
 
-/* Row: two columns */
 .lgl-form-row-split {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1659,7 +1636,6 @@
 @media (max-width: 540px) {
   .lgl-form-row-split {
     grid-template-columns: 1fr; } }
-/* Row: remember + forgot */
 .lgl-form-row {
   display: flex;
   align-items: center;
@@ -1682,7 +1658,6 @@
 .lgl-forgot-link:hover {
   text-decoration: underline; }
 
-/* Buttons */
 .lgl-btn {
   display: inline-flex;
   align-items: center;
@@ -1710,9 +1685,6 @@
   cursor: not-allowed;
   transform: none; }
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   AUTHENTICATED MEMBER VIEW
-   ═══════════════════════════════════════════════════════════════════════════════ */
 .lgl-account-member {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -1724,7 +1696,6 @@
   .lgl-account-member {
     grid-template-columns: 1fr;
     gap: 24px; } }
-/* ── Sidebar navigation ──────────────────────────────────────────────────────── */
 .lgl-account-nav {
   display: flex;
   flex-direction: column;
@@ -1793,10 +1764,8 @@
 
   .lgl-account-nav__item span {
     display: none; } }
-/* ── Content panels ──────────────────────────────────────────────────────────── */
 .lgl-account-content {
-  min-width: 0;
-  /* prevent overflow in grid */ }
+  min-width: 0; }
 
 .lgl-account-panel__title {
   font-family: var(--lgl-font-secondary, "Poppins", sans-serif);
@@ -1811,7 +1780,6 @@
   font-size: 0.95rem;
   line-height: 1.6; }
 
-/* ── Dashboard cards ─────────────────────────────────────────────────────────── */
 .lgl-dashboard-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1858,7 +1826,6 @@
   color: #6b7280;
   margin: 0; }
 
-/* ── Account Details form ────────────────────────────────────────────────────── */
 .lgl-fieldset {
   border: 1.5px solid #e5e7eb;
   border-radius: 10px;
