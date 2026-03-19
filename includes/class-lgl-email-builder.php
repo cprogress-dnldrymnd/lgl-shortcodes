@@ -387,6 +387,85 @@ class LGL_Email_Builder
                 : $("#lgl-custom-email-row").removeClass("is-visible");
         });
 
+        // ── Shared tag helpers ────────────────────────────────────────────
+
+/**
+ * Retrieves a plain-text value for any known merge tag.
+ * Designed to be safe for injection inside HTML attributes by omitting any markup.
+ * * @author Digitally Disruptive - Donald Raymundo <https://digitallydisruptive.co.uk/>
+ * @param {string} key - The tag identifier (e.g., "first_name").
+ * @param {string} siteName - The dynamic site name to inject.
+ * @param {number|string} currentYear - The current year for copyright/date tags.
+ * @returns {string|null} The resolved tag value or null if the tag is unknown.
+ */
+function getPlainTagValue(key, siteName, currentYear) {
+    var map = {
+        first_name:    "John",
+        last_name:     "Doe",
+        email:         "john@example.com",
+        phone:         "07700 900000",
+        product_title: "Bailey Autograph 75-4i",
+        product_url:   "#",
+        product_price: "£29,995",
+        product_type:  "caravan",
+        site_name:     siteName,
+        site_url:      window.location.origin,
+        admin_email:   "admin@example.com",
+        date:          new Date().toLocaleDateString("en-GB"),
+        time:          new Date().toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"}),
+        year:          String(currentYear)
+    };
+    
+    if (map.hasOwnProperty(key)) return map[key];
+    
+    if (typeof lglContactTagPlaceholders !== "undefined" &&
+        lglContactTagPlaceholders.hasOwnProperty(key)) {
+        return lglContactTagPlaceholders[key];
+    }
+    
+    return null; // unknown tag
+}
+
+/**
+ * Executes a two-pass replacement on HTML strings to resolve merge tags.
+ * Pass 1: Identifies tags inside HTML attribute values and replaces them with plain text (safe for href/src/style).
+ * Pass 2: Identifies remaining tags in text content and wraps them in styled <em> elements for visual distinction.
+ * * @author Digitally Disruptive - Donald Raymundo <https://digitallydisruptive.co.uk/>
+ * @param {string} html - The raw HTML string containing unresolved merge tags.
+ * @param {string} siteName - The site name to pass to the tag resolver.
+ * @param {number|string} currentYear - The current year to pass to the tag resolver.
+ * @returns {string} The fully processed HTML string.
+ */
+function resolveAllTags(html, siteName, currentYear) {
+    // Pass 1: double-quoted attributes
+    html = html.replace(/="([^"]*)"/g, function(match, val) {
+        if (val.indexOf("{{") === -1) return match;
+        return "=\"" + val.replace(/\{\{(\w+)\}\}/g, function(m, key) {
+            var v = getPlainTagValue(key, siteName, currentYear);
+            return v !== null ? v : m;
+        }) + "\"";
+    });
+    
+    // Pass 1: single-quoted attributes (using \x27 to prevent PHP string termination)
+    html = html.replace(/=[\x27]([^\x27]*)[\x27]/g, function(match, val) {
+        if (val.indexOf("{{") === -1) return match;
+        return "=\x27" + val.replace(/\{\{(\w+)\}\}/g, function(m, key) {
+            var v = getPlainTagValue(key, siteName, currentYear);
+            return v !== null ? v : m;
+        }) + "\x27";
+    });
+    
+    // Pass 2: remaining tags in text content
+    html = html.replace(/\{\{(\w+)\}\}/g, function(m, key) {
+        var v = getPlainTagValue(key, siteName, currentYear);
+        return v !== null
+            ? "<em style=\"color:#888\">[" + v + "]</em>"
+            : "<em style=\"color:#c00\">[" + key + "]</em>";
+    });
+    
+    return html;
+}
+
         // ── Live preview ──────────────────────────────────────────────
         function renderPreview() {
             var $activeEditor = $(".lgl-eb-tab-content.active .lgl-eb-textarea");
@@ -403,25 +482,18 @@ class LGL_Email_Builder
             var colorHeaderText = $("#lgl-color-header-text").val() || "#ffffff";
             var colorLink = $("#lgl-color-link").val() || "#003793";
 
-            html = html.replace(/\{\{([^}]+)\}\}/g, function(m, tag){
-                var map = {
-                    first_name: "John", last_name: "Doe", email: "john@example.com",
-                    phone: "07700 900000", product_title: "Bailey Autograph 75-4i",
-                    product_url: "#", product_price: "£29,995", site_name: siteName,
-                    site_url: window.location.origin, date: new Date().toLocaleDateString("en-GB"),
-                    "time": new Date().toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"})
-                };
-                return map[tag.toLowerCase()] || ("<em style=\"color:#c00\">[" + tag + "]</em>");
-            });
-            
+        html       = resolveAllTags(html,      siteName, currentYear);
+var headerHtml = resolveAllTags(rawHeader, siteName, currentYear);
+var footerHtml = resolveAllTags(rawFooter, siteName, currentYear);
+
+
             var $frame = $("#lgl-eb-preview-frame");
             if (!$frame.length) return;
 
             var rawHeader = $("#lgl-global-header-template").val() || \'<div class="eb-header"><h1>{{site_name}}</h1></div>\';
             var rawFooter = $("#lgl-global-footer-template").val() || \'<div class="eb-footer">&copy; {{year}} {{site_name}}. This is an automated notification.</div>\';
             
-            var headerHtml = rawHeader.replace(/\{\{site_name\}\}/g, siteName).replace(/\{\{year\}\}/g, currentYear);
-            var footerHtml = rawFooter.replace(/\{\{site_name\}\}/g, siteName).replace(/\{\{year\}\}/g, currentYear);
+       
             
             var fullHtml = `<!DOCTYPE html>
             <html lang="en">
@@ -558,18 +630,7 @@ function renderGlobalPreview() {
      * @returns {string} The processed HTML with tags replaced by placeholders.
      */
     function resolveTags(html) {
-        return html
-            .replace(/\{\{site_name\}\}/g, siteName)
-            .replace(/\{\{year\}\}/g, currentYear)
-            .replace(/\{\{(\w+)\}\}/g, function(m, key) {
-                if (
-                    typeof lglContactTagPlaceholders !== "undefined" &&
-                    lglContactTagPlaceholders.hasOwnProperty(key)
-                ) {
-                    return "<em style=\"color:#888\">[" + lglContactTagPlaceholders[key] + "]</em>";
-                }
-                return m;
-            });
+        return resolveAllTags(html, siteName, currentYear);
     }
 
 
