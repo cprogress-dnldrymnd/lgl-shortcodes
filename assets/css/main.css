@@ -209,6 +209,16 @@
       .lgl-results-wrapper .lgl-topbar .lgl-sort-block .select2-container--default .select2-selection--single {
         background-color: #f1f1f1;
         border-color: #f1f1f1; }
+    @media (max-width: 480px) {
+      .lgl-results-wrapper .lgl-topbar {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 20px; }
+        .lgl-results-wrapper .lgl-topbar .lgl-col-right {
+          width: 100%; }
+        .lgl-results-wrapper .lgl-topbar .lgl-filter-form-sortview {
+          margin-left: auto;
+          display: -webkit-inline-box; } }
 
 .lgl-grid-layout.lgl-grid-layout {
   display: grid;
