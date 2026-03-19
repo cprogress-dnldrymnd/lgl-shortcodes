@@ -1484,7 +1484,7 @@
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 320px !important;
+    width: 500px !important;
     max-width: 90vw !important;
     height: 100% !important;
     background: #fff !important;
@@ -1495,8 +1495,13 @@
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18) !important;
     display: flex !important;
     flex-direction: column !important;
-    border-radius: 0 !important; }
+    border-radius: 0 !important; } }
+  @media (max-width: 1024px) and (max-width: 575px) {
+    .lgl-search-offcanvas {
+      width: 100%;
+      max-width: 100%; } }
 
+@media (max-width: 1024px) {
   .lgl-search-offcanvas.is-open {
     transform: translateX(0) !important; }
 
