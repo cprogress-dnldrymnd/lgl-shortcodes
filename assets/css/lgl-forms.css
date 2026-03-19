@@ -12,7 +12,9 @@
     z-index: 99990;
     backdrop-filter: blur(3px);
 }
-.lgl-modal-overlay.lgl-overlay-active { display: block; }
+.lgl-modal-overlay.lgl-overlay-active {
+    display: block;
+}
 
 /* ── Modal Shell ── */
 .lgl-modal {
@@ -24,13 +26,15 @@
     z-index: 99999;
     width: 92%;
     max-width: 740px;
-    max-height: 92vh;
+    max-height: 92vh; /* ← already present, keep it */
     background: var(--lgl-color-white);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     opacity: 0;
-    transition: transform 0.22s ease, opacity 0.22s ease;
+    transition:
+        transform 0.22s ease,
+        opacity 0.22s ease;
 }
 .lgl-modal.lgl-modal-active {
     display: flex;
@@ -65,7 +69,7 @@
     line-height: 1.4;
 }
 .lgl-modal-close-btn {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     color: var(--lgl-color-white);
     font-size: 18px;
@@ -80,15 +84,18 @@
     line-height: 1;
     transition: background 0.2s;
 }
-.lgl-modal-close-btn:hover { background: rgba(255,255,255,0.3); }
+.lgl-modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
 
 /* ── Modal Body ── */
 .lgl-modal-body {
     padding: 24px;
     overflow-y: auto;
     flex: 1;
+    min-height: 0; /* ← THIS is the fix */
+    -webkit-overflow-scrolling: touch;
 }
-
 /* ── Finance Calculator ── */
 .lgl-fc-inputs {
     display: grid;
@@ -103,7 +110,11 @@
     margin-bottom: 6px;
     color: var(--lgl-color-secondary);
 }
-.lgl-form-req { color: #e87722; font-size: 12px; font-weight: normal; }
+.lgl-form-req {
+    color: #e87722;
+    font-size: 12px;
+    font-weight: normal;
+}
 .lgl-fc-input-wrap {
     display: flex;
     align-items: center;
@@ -111,7 +122,9 @@
     border-radius: 6px;
     overflow: hidden;
 }
-.lgl-fc-input-wrap:focus-within { border-color: var(--lgl-color-primary); }
+.lgl-fc-input-wrap:focus-within {
+    border-color: var(--lgl-color-primary);
+}
 .lgl-fc-prefix {
     padding: 0 10px;
     background: var(--lgl-color-soft-gray);
@@ -141,7 +154,11 @@
     flex: 1;
     height: 42px;
 }
-.lgl-fc-input:focus { outline: none; border-color: var(--lgl-color-primary); box-shadow: 0 0 0 3px rgba(0,55,147,0.1); }
+.lgl-fc-input:focus {
+    outline: none;
+    border-color: var(--lgl-color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 55, 147, 0.1);
+}
 
 .lgl-fc-calc-btn {
     display: block;
@@ -164,7 +181,9 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 }
-.lgl-fc-output-full { grid-column: 1 / -1; }
+.lgl-fc-output-full {
+    grid-column: 1 / -1;
+}
 .lgl-fc-out-label {
     display: block;
     font-size: 11px;
@@ -242,10 +261,19 @@
     border-color: var(--lgl-color-primary);
     box-shadow: 0 0 0 3px rgba(0, 55, 147, 0.1);
 }
-.lgl-form-field textarea { min-height: 100px; resize: vertical; }
-.lgl-form-field.lgl-form-col-full  { grid-column: 1 / -1; }
-.lgl-form-field.lgl-form-col-half  { grid-column: span 1; }
-.lgl-form-field input.lgl-input-err { border-color: var(--lgl-color-error); }
+.lgl-form-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+.lgl-form-field.lgl-form-col-full {
+    grid-column: 1 / -1;
+}
+.lgl-form-field.lgl-form-col-half {
+    grid-column: span 1;
+}
+.lgl-form-field input.lgl-input-err {
+    border-color: var(--lgl-color-error);
+}
 
 /* ── Time Picker ── */
 .lgl-time-picker {
@@ -254,9 +282,17 @@
     gap: 5px;
 }
 .lgl-time-picker .lgl-time-hh,
-.lgl-time-picker .lgl-time-mm { width: 64px; text-align: center; }
-.lgl-time-picker .lgl-time-ampm { width: 72px; }
-.lgl-time-sep { color: var(--lgl-color-gray); font-weight: 700; }
+.lgl-time-picker .lgl-time-mm {
+    width: 64px;
+    text-align: center;
+}
+.lgl-time-picker .lgl-time-ampm {
+    width: 72px;
+}
+.lgl-time-sep {
+    color: var(--lgl-color-gray);
+    font-weight: 700;
+}
 
 /* ── Form message ── */
 .lgl-form-msg {
@@ -266,23 +302,38 @@
     margin-bottom: 14px;
     line-height: 1.4;
 }
-.lgl-form-msg.lgl-msg-error   { background: #fceaeb; border: 1px solid #f1a4a7; color: #8a1f1f; }
-.lgl-form-msg.lgl-msg-success { background: #edfaef; border: 1px solid #8ddc99; color: #1a4d25; }
+.lgl-form-msg.lgl-msg-error {
+    background: #fceaeb;
+    border: 1px solid #f1a4a7;
+    color: #8a1f1f;
+}
+.lgl-form-msg.lgl-msg-success {
+    background: #edfaef;
+    border: 1px solid #8ddc99;
+    color: #1a4d25;
+}
 
 /* ── Submit spinner ── */
-@keyframes lgl-spin { to { transform: rotate(360deg); } }
+@keyframes lgl-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 .lgl-submit-spin {
     display: inline-block;
     width: 16px;
     height: 16px;
-    border: 2px solid rgba(255,255,255,0.4);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     border-top-color: #fff;
     border-radius: 50%;
     animation: lgl-spin 0.6s linear infinite;
     margin-left: 8px;
     vertical-align: middle;
 }
-.lgl-form-submit-btn { width: 100%; margin-top: 4px; }
+.lgl-form-submit-btn {
+    width: 100%;
+    margin-top: 4px;
+}
 
 /* ── Reserved button ── */
 .lgl-btn-reserved,
@@ -302,7 +353,7 @@
     transform: translate(-50%, -50%);
     background: var(--lgl-color-white);
     border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     padding: 32px;
     max-width: 440px;
     width: 90%;
@@ -315,12 +366,23 @@
     color: var(--lgl-color-secondary);
     font-family: var(--lgl-font-secondary);
 }
-.lgl-confirm-dialog p { margin: 0 0 24px; font-size: 14px; color: var(--lgl-color-gray); line-height: 1.5; }
-.lgl-confirm-actions { display: flex; gap: 10px; justify-content: center; }
-.lgl-confirm-actions .lgl-btn { min-width: 130px; }
+.lgl-confirm-dialog p {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: var(--lgl-color-gray);
+    line-height: 1.5;
+}
+.lgl-confirm-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.lgl-confirm-actions .lgl-btn {
+    min-width: 130px;
+}
 
 /* ── Responsive ── */
-@media (max-width: 600px) {
+@media (max-width: 767px) {
     .lgl-modal {
         width: 100%;
         max-width: 100%;
@@ -330,13 +392,28 @@
         right: 0;
         transform: translateY(20px);
         border-radius: 16px 16px 0 0;
-        max-height: 94vh;
+        max-height: 94vh; /* ← already present */
     }
-    .lgl-modal.lgl-modal-active { transform: translateY(0); }
-    .lgl-fc-inputs { grid-template-columns: 1fr; }
-    .lgl-fc-output-grid { grid-template-columns: 1fr 1fr; }
-    .lgl-form-grid { grid-template-columns: 1fr; }
-    .lgl-form-field.lgl-form-col-half { grid-column: 1 / -1; }
-    .lgl-confirm-dialog { width: 94%; padding: 24px; }
-    .lgl-confirm-actions { flex-direction: column; }
+    .lgl-modal.lgl-modal-active {
+        transform: translateY(0);
+    }
+    .lgl-fc-inputs {
+        grid-template-columns: 1fr;
+    }
+    .lgl-fc-output-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .lgl-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .lgl-form-field.lgl-form-col-half {
+        grid-column: 1 / -1;
+    }
+    .lgl-confirm-dialog {
+        width: 94%;
+        padding: 24px;
+    }
+    .lgl-confirm-actions {
+        flex-direction: column;
+    }
 }
