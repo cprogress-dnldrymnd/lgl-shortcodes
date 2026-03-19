@@ -460,9 +460,7 @@ function resolveAllTags(html, siteName, currentYear) {
     // Pass 2: remaining tags in text content
     html = html.replace(/\{\{(\w+)\}\}/g, function(m, key) {
         var v = getPlainTagValue(key, siteName, currentYear);
-        return v !== null
-            ? "<em style=\"color:#888\">[" + v + "]</em>"
-            : "<em style=\"color:#c00\">[" + key + "]</em>";
+        return v !== null ? v : "";
     });
     
     return html;
