@@ -356,10 +356,11 @@ class LGL_Email_Builder
         // ── Insert merge tag ──────────────────────────────────────────
         $(document).on("click", ".lgl-eb-insert-tag, .lgl-eb-tag-ref code", function(e){
             e.preventDefault();
-            var tag = $(this).data("tag") || $(this).text().trim();
-            if (!$lastFocus || !$lastFocus.length) {
-                $lastFocus = $(".lgl-eb-tab-content.active .lgl-eb-textarea:first");
-            }
+           if ($(this).hasClass("lgl-global-tag")) return;
+    var tag = $(this).data("tag") || $(this).text().trim();
+    if (!$lastFocus || !$lastFocus.length) {
+        $lastFocus = $(".lgl-eb-tab-content.active .lgl-eb-textarea:first");
+    }
             if (!$lastFocus.length) return;
             var el = $lastFocus[0];
             var start = el.selectionStart, end = el.selectionEnd;
