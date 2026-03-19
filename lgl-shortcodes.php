@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '3.7.4');
+define('LGL_SHORTCODES_VERSION', '3.7.5');
 // ── Load the Forms integration ──
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-forms.php';
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-email-builder.php';
@@ -1536,221 +1536,182 @@ if (! class_exists('LGL_Shortcodes')) {
                 parse_str($_POST['form_data'], $form_data);
             }
 
-            $make_id  = !empty($form_data['listing_make'])  ? intval($form_data['listing_make'])  : 0;
-            $model_id = !empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
+            $make_id   = !empty($form_data['listing_make'])  ? intval($form_data['listing_make'])  : 0;
+            $model_id  = !empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
+            $condition = !empty($form_data['condition'])     ? sanitize_text_field($form_data['condition']) : '';
+            $berth     = !empty($form_data['berth'])         ? sanitize_text_field($form_data['berth']) : '';
+            $price_min = !empty($form_data['price_min'])     ? floatval($form_data['price_min']) : 0;
+            $price_max = !empty($form_data['price_max'])     ? floatval($form_data['price_max']) : 0;
 
-            // ------------------------------------------------------------------
-            // Helper: build base meta_query from non-taxonomy filters
-            // ------------------------------------------------------------------
-            $base_meta_query = array('relation' => 'AND');
+    // ------------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------------
 
-            if (!empty($form_data['condition'])) {
-                $base_meta_query[] = array(
-                    'key'     => 'condition',
-                    'value'   => sanitize_text_field($form_data['condition']),
-                    'compare' => '=',
-                );
-            }
+            /**
+             * Build a meta_query applying all active filters EXCEPT the one named
+             * in $exclude. This is the key to faceted filtering — each filter's
+             * available values are derived from posts matching everything else.
+             */
+            $build_meta = function (string $exclude) use ($condition, $berth, $price_min, $price_max): array {
+                $mq = array('relation' => 'AND');
 
-            if (!empty($form_data['berth'])) {
-                $base_meta_query[] = array(
-                    'key'     => 'berth',
-                    'value'   => sanitize_text_field($form_data['berth']),
-                    'compare' => '=',
-                );
-            }
-
-            $price_min = !empty($form_data['price_min']) ? floatval($form_data['price_min']) : 0;
-            $price_max = !empty($form_data['price_max']) ? floatval($form_data['price_max']) : 0;
-            if ($price_min > 0 || $price_max > 0) {
-                $price_query = array('key' => 'price', 'type' => 'NUMERIC');
-                if ($price_min > 0 && $price_max > 0) {
-                    $price_query['value']   = array($price_min, $price_max);
-                    $price_query['compare'] = 'BETWEEN';
-                } elseif ($price_min > 0) {
-                    $price_query['value']   = $price_min;
-                    $price_query['compare'] = '>=';
-                } else {
-                    $price_query['value']   = $price_max;
-                    $price_query['compare'] = '<=';
+                if ($exclude !== 'condition' && $condition) {
+                    $mq[] = array('key' => 'condition', 'value' => $condition, 'compare' => '=');
                 }
-                $base_meta_query[] = $price_query;
-            }
 
-            // ------------------------------------------------------------------
-            // IDs matching the full current filter (for condition/berth/price options)
-            // ------------------------------------------------------------------
-            $full_tax_query = array('relation' => 'AND');
-            if ($model_id > 0) {
-                $full_tax_query[] = array(
-                    'taxonomy' => 'listing-make-model',
-                    'field'    => 'term_id',
-                    'terms'    => $model_id,
-                );
-            } elseif ($make_id > 0) {
-                $full_tax_query[] = array(
-                    'taxonomy'         => 'listing-make-model',
-                    'field'            => 'term_id',
-                    'terms'            => $make_id,
-                    'include_children' => true,
-                );
-            }
+                if ($exclude !== 'berth' && $berth) {
+                    $mq[] = array('key' => 'berth', 'value' => $berth, 'compare' => '=');
+                }
 
-            $matching_ids = get_posts(array(
-                'post_type'      => $post_type,
-                'post_status'    => 'publish',
-                'posts_per_page' => -1,
-                'fields'         => 'ids',
-                'meta_query'     => $base_meta_query,
-                'tax_query'      => $full_tax_query,
-            ));
+                if ($exclude !== 'price' && ($price_min > 0 || $price_max > 0)) {
+                    $pc = array('key' => 'price', 'type' => 'NUMERIC');
+                    if ($price_min > 0 && $price_max > 0) {
+                        $pc['value']   = array($price_min, $price_max);
+                        $pc['compare'] = 'BETWEEN';
+                    } elseif ($price_min > 0) {
+                        $pc['value']   = $price_min;
+                        $pc['compare'] = '>=';
+                    } else {
+                        $pc['value']   = $price_max;
+                        $pc['compare'] = '<=';
+                    }
+                    $mq[] = $pc;
+                }
 
-            // ------------------------------------------------------------------
-            // IDs ignoring the make/model filter (for computing available makes)
-            // ------------------------------------------------------------------
-            $ids_without_taxonomy = get_posts(array(
-                'post_type'      => $post_type,
-                'post_status'    => 'publish',
-                'posts_per_page' => -1,
-                'fields'         => 'ids',
-                'meta_query'     => $base_meta_query,
-            ));
+                return $mq;
+            };
 
-            // ------------------------------------------------------------------
-            // IDs with only make applied, not model (for computing available models)
-            // ------------------------------------------------------------------
-            $ids_with_make_only = array();
-            if ($make_id > 0) {
-                $ids_with_make_only = get_posts(array(
+            /** Build taxonomy query for the current make/model selection. */
+            $build_tax = function (int $make = 0, int $model = 0): array {
+                $tq = array('relation' => 'AND');
+                if ($model > 0) {
+                    $tq[] = array('taxonomy' => 'listing-make-model', 'field' => 'term_id', 'terms' => $model);
+                } elseif ($make > 0) {
+                    $tq[] = array('taxonomy' => 'listing-make-model', 'field' => 'term_id', 'terms' => $make, 'include_children' => true);
+                }
+                return $tq;
+            };
+
+            /** Fetch published post IDs matching the supplied constraints. */
+            $get_ids = function (array $meta_query, array $tax_query) use ($post_type): array {
+                return get_posts(array(
                     'post_type'      => $post_type,
                     'post_status'    => 'publish',
                     'posts_per_page' => -1,
                     'fields'         => 'ids',
-                    'meta_query'     => $base_meta_query,
-                    'tax_query'      => array(
-                        array(
-                            'taxonomy'         => 'listing-make-model',
-                            'field'            => 'term_id',
-                            'terms'            => $make_id,
-                            'include_children' => true,
-                        ),
-                    ),
+                    'meta_query'     => $meta_query,
+                    'tax_query'      => $tax_query,
                 ));
-            }
+            };
 
-            $conditions = array();
-            $berths     = array();
-            $prices     = array();
-            $makes      = array();
-            $models     = array();
-
-            if (!empty($matching_ids)) {
+            /** Return distinct meta values from a set of post IDs. */
+            $distinct_meta = function (array $ids, string $key, bool $numeric = false): array {
+                if (empty($ids)) return array();
                 global $wpdb;
-                $ids_in = implode(',', array_map('intval', $matching_ids));
-
-                $conditions = $wpdb->get_col(
+                $in    = implode(',', array_map('intval', $ids));
+                $order = $numeric ? 'ORDER BY CAST(meta_value AS UNSIGNED) ASC' : 'ORDER BY meta_value ASC';
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                return $wpdb->get_col(
                     "SELECT DISTINCT meta_value FROM {$wpdb->postmeta}
-             WHERE post_id IN ({$ids_in}) AND meta_key = 'condition' AND meta_value != ''
-             ORDER BY meta_value ASC"
+             WHERE post_id IN ({$in}) AND meta_key = '{$key}' AND meta_value != ''
+             {$order}"
                 );
+            };
 
-                $berths = $wpdb->get_col(
-                    "SELECT DISTINCT meta_value FROM {$wpdb->postmeta}
-             WHERE post_id IN ({$ids_in}) AND meta_key = 'berth' AND meta_value != ''
-             ORDER BY CAST(meta_value AS UNSIGNED) ASC"
-                );
+            $current_tax = $build_tax($make_id, $model_id);
 
-                $prices_raw = $wpdb->get_col(
-                    "SELECT DISTINCT meta_value FROM {$wpdb->postmeta}
-             WHERE post_id IN ({$ids_in}) AND meta_key = 'price' AND meta_value != ''
-             ORDER BY CAST(meta_value AS DECIMAL(15,2)) ASC"
-                );
-                foreach ($prices_raw as $p) {
-                    if (is_numeric($p)) {
-                        $prices[] = array(
-                            'value' => (float) $p,
-                            'label' => self::format_price((float) $p),
-                        );
-                    }
+            // ------------------------------------------------------------------
+            // Available CONDITIONS
+            // Apply make/model + berth + price — exclude condition itself
+            // ------------------------------------------------------------------
+            $ids        = $get_ids($build_meta('condition'), $current_tax);
+            $conditions = $distinct_meta($ids, 'condition');
+
+            // ------------------------------------------------------------------
+            // Available BERTHS
+            // Apply make/model + condition + price — exclude berth itself
+            // ------------------------------------------------------------------
+            $ids    = $get_ids($build_meta('berth'), $current_tax);
+            $berths = $distinct_meta($ids, 'berth', true);
+
+            // ------------------------------------------------------------------
+            // Available PRICES
+            // Apply make/model + condition + berth — exclude price itself
+            // ------------------------------------------------------------------
+            $ids        = $get_ids($build_meta('price'), $current_tax);
+            $raw_prices = $distinct_meta($ids, 'price', true);
+            $prices     = array();
+            foreach ($raw_prices as $p) {
+                if (is_numeric($p)) {
+                    $prices[] = array('value' => (float) $p, 'label' => self::format_price((float) $p));
                 }
             }
 
             // ------------------------------------------------------------------
-            // Available makes — based on posts matching meta filters only
+            // Available MAKES
+            // Apply condition + berth + price — no taxonomy filter at all
             // ------------------------------------------------------------------
-            if (!empty($ids_without_taxonomy)) {
-                $assigned_terms = wp_get_object_terms($ids_without_taxonomy, 'listing-make-model', array('fields' => 'all'));
-
-                if (!is_wp_error($assigned_terms) && !empty($assigned_terms)) {
+            $ids_for_makes = $get_ids($build_meta(''), array('relation' => 'AND'));
+            $makes         = array();
+            if (! empty($ids_for_makes)) {
+                $assigned = wp_get_object_terms($ids_for_makes, 'listing-make-model', array('fields' => 'all'));
+                if (! is_wp_error($assigned) && ! empty($assigned)) {
                     $make_ids = array();
-                    foreach ($assigned_terms as $term) {
+                    foreach ($assigned as $term) {
                         $make_ids[] = $term->parent > 0 ? (int) $term->parent : (int) $term->term_id;
                     }
-                    $make_ids = array_unique($make_ids);
-
                     $make_terms = get_terms(array(
                         'taxonomy'   => 'listing-make-model',
-                        'include'    => $make_ids,
+                        'include'    => array_unique($make_ids),
                         'hide_empty' => false,
                         'orderby'    => 'name',
                         'order'      => 'ASC',
                     ));
-
-                    if (!is_wp_error($make_terms)) {
+                    if (! is_wp_error($make_terms)) {
                         foreach ($make_terms as $term) {
-                            $makes[] = array(
-                                'id'   => $term->term_id,
-                                'text' => $term->name,
-                            );
+                            $makes[] = array('id' => $term->term_id, 'text' => $term->name);
                         }
                     }
                 }
             }
 
             // ------------------------------------------------------------------
-            // Available models — based on posts matching meta + make filters
+            // Available MODELS (only when a make is selected)
+            // Apply make taxonomy + condition + berth + price — exclude model
             // ------------------------------------------------------------------
-            if ($make_id > 0 && !empty($ids_with_make_only)) {
-                $assigned_models = wp_get_object_terms($ids_with_make_only, 'listing-make-model', array('fields' => 'all'));
-
-                if (!is_wp_error($assigned_models) && !empty($assigned_models)) {
-                    $model_term_ids = array();
-                    foreach ($assigned_models as $term) {
-                        // Only include child terms (models) belonging to the selected make
-                        if ((int) $term->parent === $make_id) {
-                            $model_term_ids[] = (int) $term->term_id;
+            $models = array();
+            if ($make_id > 0) {
+                $make_only_tax  = $build_tax($make_id, 0);
+                $ids_for_models = $get_ids($build_meta(''), $make_only_tax);
+                if (! empty($ids_for_models)) {
+                    $assigned = wp_get_object_terms($ids_for_models, 'listing-make-model', array('fields' => 'all'));
+                    if (! is_wp_error($assigned)) {
+                        $model_ids = array();
+                        foreach ($assigned as $term) {
+                            if ((int) $term->parent === $make_id) {
+                                $model_ids[] = (int) $term->term_id;
+                            }
                         }
-                    }
-                    $model_term_ids = array_unique($model_term_ids);
-
-                    if (!empty($model_term_ids)) {
-                        $model_terms = get_terms(array(
-                            'taxonomy'   => 'listing-make-model',
-                            'include'    => $model_term_ids,
-                            'hide_empty' => false,
-                            'orderby'    => 'name',
-                            'order'      => 'ASC',
-                        ));
-
-                        if (!is_wp_error($model_terms)) {
-                            foreach ($model_terms as $term) {
-                                $models[] = array(
-                                    'id'   => $term->term_id,
-                                    'text' => $term->name,
-                                );
+                        $model_ids   = array_unique($model_ids);
+                        if (! empty($model_ids)) {
+                            $model_terms = get_terms(array(
+                                'taxonomy'   => 'listing-make-model',
+                                'include'    => $model_ids,
+                                'hide_empty' => false,
+                                'orderby'    => 'name',
+                                'order'      => 'ASC',
+                            ));
+                            if (! is_wp_error($model_terms)) {
+                                foreach ($model_terms as $term) {
+                                    $models[] = array('id' => $term->term_id, 'text' => $term->name);
+                                }
                             }
                         }
                     }
                 }
             }
 
-            wp_send_json_success(array(
-                'conditions' => $conditions,
-                'berths'     => $berths,
-                'prices'     => $prices,
-                'makes'      => $makes,
-                'models'     => $models,
-            ));
+            wp_send_json_success(compact('conditions', 'berths', 'prices', 'makes', 'models'));
         }
 
         /**
