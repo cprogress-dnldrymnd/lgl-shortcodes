@@ -51,6 +51,12 @@
         if (!$m.length) return;
         $('#lgl-modal-overlay').addClass('lgl-overlay-active');
         $m.addClass('lgl-modal-active');
+        
+        // Auto-run calculator on open if native mode is active
+        if (id === 'lgl-modal-finance' && F.financeMode !== 'off' && F.financeMode !== 'custom') {
+            calcFinance();
+        }
+
         setTimeout(function () {
             $m.find('input:visible:first, select:visible:first').trigger('focus');
         }, 120);
@@ -67,9 +73,18 @@
     ──────────────────────────────────────────────────────────── */
 
     function initFinanceCalculator() {
+        // Run explicitly on button click (fallback)
         $(document).on('click', '#lgl-fc-calc-btn', calcFinance);
+        
+        // Auto-recalculate on input changes as per spec
+        $(document).on('input change', '#lgl-fc-deposit, #lgl-fc-duration', calcFinance);
+        
+        // Fallback for enter key
         $(document).on('keypress', '#lgl-modal-finance input, #lgl-modal-finance select', function (e) {
-            if (e.which === 13) calcFinance();
+            if (e.which === 13) {
+                e.preventDefault();
+                calcFinance();
+            }
         });
     }
 
@@ -78,48 +93,72 @@
 
         var cashPrice = parseFloat(F.cashPrice) || 0;
         var deposit = parseFloat($('#lgl-fc-deposit').val()) || 0;
-        var durTxt = $('#lgl-fc-duration').val() || '';
-        var apr = parseFloat(F.apr) || 10.90;
-        var fee = parseFloat(F.purchaseFee) || 10;
-        var months = parseDuration(durTxt);
+        var termMonths = parseInt($('#lgl-fc-duration').val()) || parseInt(F.defaultTerm) || 60;
+        
+        var minDeposit = parseFloat(F.minDeposit) || 0;
+        var aprRate = parseFloat(F.aprRate) || 10.90;
+        var purchaseFee = parseFloat(F.purchaseFee) || 0;
+        var adminFee = parseFloat(F.adminFee) || 0;
+        var calcType = F.calculationType || 'apr'; // 'apr' or 'flat'
 
+        // Validation constraints
         if (cashPrice <= 0) {
             showCalcErr('Cash price is not set for this vehicle.');
             return;
         }
-        if (deposit < 0) {
-            showCalcErr('Please enter a valid deposit amount.');
+        if (deposit < minDeposit) {
+            showCalcErr('Minimum deposit required is ' + fmt(minDeposit) + '.');
             return;
         }
         if (deposit >= cashPrice) {
             showCalcErr('Deposit cannot be equal to or greater than the cash price.');
             return;
         }
+        if (termMonths <= 0) {
+            showCalcErr('Please select a valid duration.');
+            return;
+        }
 
-        /* HP amortisation formula */
-        var credit = cashPrice - deposit;
-        var mRate = (apr / 100) / 12;
-        var monthly = credit * mRate / (1 - Math.pow(1 + mRate, -months));
-        var totalRepay = (monthly * months) + fee;
-        var totalInt = totalRepay - credit - fee;
-        var flatRate = totalInt / credit / (months / 12) * 100;
+        /* ── Core Values ── */
+        var amountFinanced = cashPrice - deposit;
+        var monthlyPayment = 0;
+        var totalInterest = 0;
+        var interestRateDisplay = '';
 
+        /* ── Mathematical Routing ── */
+        if (calcType === 'flat') {
+            // 3.3 Flat Rate Calculation
+            var years = termMonths / 12;
+            totalInterest = amountFinanced * (aprRate / 100) * years;
+            monthlyPayment = (amountFinanced + totalInterest) / termMonths;
+            interestRateDisplay = aprRate.toFixed(2) + '% p.a. (Flat)';
+        } else {
+            // 3.2 APR Calculation (Primary)
+            var monthlyRate = (aprRate / 100) / 12;
+            monthlyPayment = (amountFinanced * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -termMonths));
+            interestRateDisplay = aprRate.toFixed(2) + '% p.a. (Fixed)';
+        }
+
+        /* ── Totals ── */
+        var totalCredit = amountFinanced;
+        var totalRepayable = (monthlyPayment * termMonths) + purchaseFee + adminFee;
+
+        // Dom Output Routing
         $('#lgl-fc-cash-price').text(fmt(cashPrice));
         $('#lgl-fc-deposit-out').text(fmt(deposit));
-        $('#lgl-fc-credit').text(fmt(credit));
-        $('#lgl-fc-dur-out').text(months + ' months (' + durTxt + ')');
-        $('#lgl-fc-monthly').text(fmt(monthly));
-        $('#lgl-fc-total').text(fmt(totalRepay));
-        $('#lgl-fc-fee').text(fmt(fee));
-        $('#lgl-fc-rate').text(flatRate.toFixed(2) + '% p.a. (flat)');
-        $('#lgl-fc-apr').text(apr.toFixed(2) + '% APR');
-        $('#lgl-fc-payment').text(fmt(monthly));
-    }
-
-    function parseDuration(txt) {
-        var n = parseInt(txt) || 1;
-        if (/month/i.test(txt)) return n;
-        return n * 12; // default: years
+        $('#lgl-fc-credit').text(fmt(totalCredit));
+        $('#lgl-fc-dur-out').text(termMonths + ' months');
+        $('#lgl-fc-monthly').text(fmt(monthlyPayment));
+        $('#lgl-fc-total').text(fmt(totalRepayable));
+        
+        // Output compound fee string if admin fee is present, otherwise just purchase fee
+        var feeString = fmt(purchaseFee);
+        if (adminFee > 0) feeString += ' (+ ' + fmt(adminFee) + ' Admin)';
+        $('#lgl-fc-fee').text(feeString);
+        
+        $('#lgl-fc-rate').text(interestRateDisplay);
+        $('#lgl-fc-apr').text(F.representativeApr); // Standardized string output
+        $('#lgl-fc-payment').text(fmt(monthlyPayment));
     }
 
     function fmt(n) {
@@ -127,7 +166,9 @@
     }
 
     function showCalcErr(msg) {
-        $('#lgl-fc-calc-btn').before('<div class="lgl-fc-calc-error">' + msg + '</div>');
+        // Output zero defaults visually when there is an error to prevent hanging math visuals
+        $('.lgl-fc-out-val').not('#lgl-fc-cash-price').text('—'); 
+        $('#lgl-fc-calc-btn').before('<div class="lgl-fc-calc-error" style="color:#d63638;font-size:13px;margin-bottom:12px;">' + msg + '</div>');
     }
 
     /* ────────────────────────────────────────────────────────────
