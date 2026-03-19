@@ -1,0 +1,342 @@
+/* ==========================================================================
+   LGL Forms — Modal, Finance Calculator & Form Styles
+   Append to assets/css/main.css
+   ========================================================================== */
+
+/* ── Overlay ── */
+.lgl-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 99990;
+    backdrop-filter: blur(3px);
+}
+.lgl-modal-overlay.lgl-overlay-active { display: block; }
+
+/* ── Modal Shell ── */
+.lgl-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -48%) scale(0.97);
+    z-index: 99999;
+    width: 92%;
+    max-width: 740px;
+    max-height: 92vh;
+    background: var(--lgl-color-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+}
+.lgl-modal.lgl-modal-active {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ── Modal Header ── */
+.lgl-modal-header {
+    background: var(--lgl-color-secondary);
+    color: var(--lgl-color-white);
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    flex-shrink: 0;
+}
+.lgl-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--lgl-color-white);
+    line-height: 1.2;
+    font-family: var(--lgl-font-secondary);
+}
+.lgl-modal-subtitle {
+    margin: 6px 0 0;
+    font-size: 13px;
+    opacity: 0.85;
+    line-height: 1.4;
+}
+.lgl-modal-close-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: var(--lgl-color-white);
+    font-size: 18px;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: background 0.2s;
+}
+.lgl-modal-close-btn:hover { background: rgba(255,255,255,0.3); }
+
+/* ── Modal Body ── */
+.lgl-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* ── Finance Calculator ── */
+.lgl-fc-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.lgl-fc-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: var(--lgl-color-secondary);
+}
+.lgl-form-req { color: #e87722; font-size: 12px; font-weight: normal; }
+.lgl-fc-input-wrap {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--lgl-color-medium-gray);
+    border-radius: 6px;
+    overflow: hidden;
+}
+.lgl-fc-input-wrap:focus-within { border-color: var(--lgl-color-primary); }
+.lgl-fc-prefix {
+    padding: 0 10px;
+    background: var(--lgl-color-soft-gray);
+    border-right: 1px solid var(--lgl-color-medium-gray);
+    font-weight: 600;
+    color: var(--lgl-color-gray);
+    height: 42px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+.lgl-fc-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--lgl-color-medium-gray);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--lgl-color-secondary);
+    background: var(--lgl-color-white);
+    box-sizing: border-box;
+    font-family: var(--lgl-font-primary);
+    transition: border-color 0.2s;
+}
+.lgl-fc-input-wrap .lgl-fc-input {
+    border: none;
+    border-radius: 0;
+    flex: 1;
+    height: 42px;
+}
+.lgl-fc-input:focus { outline: none; border-color: var(--lgl-color-primary); box-shadow: 0 0 0 3px rgba(0,55,147,0.1); }
+
+.lgl-fc-calc-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* ── FC Output grid ── */
+.lgl-fc-outputs {
+    border: 2px solid var(--lgl-color-light-gray);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: var(--lgl-color-soft-gray);
+}
+.lgl-fc-output-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.lgl-fc-output-full { grid-column: 1 / -1; }
+.lgl-fc-out-label {
+    display: block;
+    font-size: 11px;
+    color: var(--lgl-color-gray);
+    margin-bottom: 4px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+.lgl-fc-out-val {
+    display: flex;
+    align-items: center;
+    background: var(--lgl-color-white);
+    border: 1px solid var(--lgl-color-medium-gray);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--lgl-color-secondary);
+    min-height: 40px;
+}
+.lgl-fc-out-big {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--lgl-color-primary);
+    padding: 12px 16px;
+}
+.lgl-fc-disclaimer {
+    font-size: 11px;
+    color: var(--lgl-color-gray);
+    line-height: 1.5;
+    margin: 0;
+}
+.lgl-fc-calc-error {
+    background: #fceaeb;
+    border: 1px solid #f1a4a7;
+    color: var(--lgl-color-error);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+/* ── Form Grid ── */
+.lgl-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+.lgl-form-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--lgl-color-secondary);
+}
+.lgl-form-field input,
+.lgl-form-field select,
+.lgl-form-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--lgl-color-medium-gray);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--lgl-color-secondary);
+    background: var(--lgl-color-white);
+    box-sizing: border-box;
+    font-family: var(--lgl-font-primary);
+    transition: border-color 0.2s;
+}
+.lgl-form-field input:focus,
+.lgl-form-field select:focus,
+.lgl-form-field textarea:focus {
+    outline: none;
+    border-color: var(--lgl-color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 55, 147, 0.1);
+}
+.lgl-form-field textarea { min-height: 100px; resize: vertical; }
+.lgl-form-field.lgl-form-col-full  { grid-column: 1 / -1; }
+.lgl-form-field.lgl-form-col-half  { grid-column: span 1; }
+.lgl-form-field input.lgl-input-err { border-color: var(--lgl-color-error); }
+
+/* ── Time Picker ── */
+.lgl-time-picker {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.lgl-time-picker .lgl-time-hh,
+.lgl-time-picker .lgl-time-mm { width: 64px; text-align: center; }
+.lgl-time-picker .lgl-time-ampm { width: 72px; }
+.lgl-time-sep { color: var(--lgl-color-gray); font-weight: 700; }
+
+/* ── Form message ── */
+.lgl-form-msg {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+.lgl-form-msg.lgl-msg-error   { background: #fceaeb; border: 1px solid #f1a4a7; color: #8a1f1f; }
+.lgl-form-msg.lgl-msg-success { background: #edfaef; border: 1px solid #8ddc99; color: #1a4d25; }
+
+/* ── Submit spinner ── */
+@keyframes lgl-spin { to { transform: rotate(360deg); } }
+.lgl-submit-spin {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: lgl-spin 0.6s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+.lgl-form-submit-btn { width: 100%; margin-top: 4px; }
+
+/* ── Reserved button ── */
+.lgl-btn-reserved,
+.lgl-btn-reserved:hover {
+    background: var(--lgl-color-gray) !important;
+    border-color: var(--lgl-color-gray) !important;
+    color: var(--lgl-color-white) !important;
+    cursor: default;
+    opacity: 0.8;
+}
+
+/* ── Auto-reserve confirm dialog ── */
+.lgl-confirm-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--lgl-color-white);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 32px;
+    max-width: 440px;
+    width: 90%;
+    z-index: 100001;
+    text-align: center;
+}
+.lgl-confirm-dialog h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    color: var(--lgl-color-secondary);
+    font-family: var(--lgl-font-secondary);
+}
+.lgl-confirm-dialog p { margin: 0 0 24px; font-size: 14px; color: var(--lgl-color-gray); line-height: 1.5; }
+.lgl-confirm-actions { display: flex; gap: 10px; justify-content: center; }
+.lgl-confirm-actions .lgl-btn { min-width: 130px; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .lgl-modal {
+        width: 100%;
+        max-width: 100%;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transform: translateY(20px);
+        border-radius: 16px 16px 0 0;
+        max-height: 94vh;
+    }
+    .lgl-modal.lgl-modal-active { transform: translateY(0); }
+    .lgl-fc-inputs { grid-template-columns: 1fr; }
+    .lgl-fc-output-grid { grid-template-columns: 1fr 1fr; }
+    .lgl-form-grid { grid-template-columns: 1fr; }
+    .lgl-form-field.lgl-form-col-half { grid-column: 1 / -1; }
+    .lgl-confirm-dialog { width: 94%; padding: 24px; }
+    .lgl-confirm-actions { flex-direction: column; }
+}

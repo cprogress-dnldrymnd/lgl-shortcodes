@@ -18,6 +18,8 @@ if (! defined('ABSPATH')) {
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
 define('LGL_SHORTCODES_VERSION', '3.5.0'); // Update this version number with each release for cache busting.
+// ── Load the Forms integration ──
+require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-forms.php';
 
 if (! class_exists('LGL_Shortcodes')) {
 
@@ -110,6 +112,8 @@ if (! class_exists('LGL_Shortcodes')) {
             // Hooks for Single Post Edit Screen Featured Meta Box
             add_action('add_meta_boxes', array($this, 'add_featured_meta_box'));
             add_action('save_post', array($this, 'save_featured_meta_box'));
+
+            new LGL_Forms();
         }
 
         /**
@@ -306,9 +310,6 @@ if (! class_exists('LGL_Shortcodes')) {
 
             $single_page_fields = array(
                 'single_vehicle_content' => array('label' => 'Single Vehicle Additional Content', 'type' => 'textarea', 'default' => ''),
-                'url_finance_calc'       => array('label' => 'Finance Calculator Button URL', 'type' => 'text', 'default' => ''),
-                'url_enquire_now'        => array('label' => 'Enquire Now Button URL', 'type' => 'text', 'default' => ''),
-                'url_reserve_now'        => array('label' => 'Reserve Now Button URL', 'type' => 'text', 'default' => ''),
             );
 
             foreach ($single_page_fields as $id => $field) {
@@ -397,8 +398,6 @@ if (! class_exists('LGL_Shortcodes')) {
                     array('id' => $id, 'type' => $field['type'], 'post_type' => $field['post_type'], 'default' => $field['default'])
                 );
             }
-
-           
         }
 
         /**
@@ -824,6 +823,20 @@ if (! class_exists('LGL_Shortcodes')) {
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce'    => wp_create_nonce('lgl_search_nonce')
             ));
+
+            wp_enqueue_style(
+                'lgl-forms-css',
+                LGL_SHORTCODES_URL . 'assets/css/lgl-forms.css',
+                array('lgl-main-css'),
+                LGL_SHORTCODES_VERSION
+            );
+            wp_enqueue_script(
+                'lgl-forms-js',
+                LGL_SHORTCODES_URL . 'assets/js/lgl-forms.js',
+                array('jquery', 'lgl-main-js'),
+                LGL_SHORTCODES_VERSION,
+                true
+            );
         }
 
         /**
@@ -879,7 +892,7 @@ if (! class_exists('LGL_Shortcodes')) {
                 $attributes_arr['post_id_2'] = 0;
             }
 
-      
+
 
 
 
