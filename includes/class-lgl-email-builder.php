@@ -34,7 +34,6 @@ class LGL_Email_Builder
     /* ═══════════════════════════════════════════════════════════════
        MENU ROUTING
     ═══════════════════════════════════════════════════════════════ */
-
     /**
      * Register the consolidated master submenu page for the Email Builder.
      *
