@@ -1314,7 +1314,7 @@ $(document).ready(function() {
 
         $global_settings = self::get_global_email_settings();
 
-       $lgl_options = get_option('lgl_settings', []);
+        $lgl_options = get_option('lgl_settings', []);
 
         // Build a full search/replace array: site tags + all contact info tags
         $tag_search  = ['{{site_name}}', '{{year}}'];
@@ -1419,34 +1419,20 @@ HTML;
         return $tags;
     }
 
-    /**
-     * Returns a map of contact field settings keys to their display labels.
-     * Reads lgl_settings so any field saved under Contact Information
-     * automatically appears as a {{merge_tag}} in the Site group.
-     *
-     * @return array  [ 'settings_key' => 'Display Label' ]
-     */
-    private static function get_contact_tag_definitions(): array
+    public static function get_contact_tag_definitions(): array
     {
-        $definitions = [
-            'contact_phone'    => 'Phone Number',
-            'contact_whatsapp' => 'WhatsApp Number',
-            'contact_email'    => 'Contact Email Address',
-            'contact_address'  => 'Contact Address',
-        ];
-
-        // Only surface tags whose values are actually saved in settings
-        $options = get_option('lgl_settings', []);
-        $active  = [];
-        foreach ($definitions as $key => $label) {
-            if (!empty($options[$key])) {
-                $active[$key] = $label;
-            }
+        if (! class_exists('LGL_Shortcodes')) {
+            return [];
         }
 
-        // Fall back to the full list on a fresh install before settings are saved
-        return !empty($active) ? $active : $definitions;
+        $tags = [];
+        foreach (LGL_Shortcodes::get_contact_fields_definition() as $key => $field) {
+            $tags[$key] = $field['label'];
+        }
+
+        return $tags;
     }
+
 
     /**
      * Filter structure exclusively returning attributes available for subjects mapping.
