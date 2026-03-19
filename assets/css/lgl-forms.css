@@ -424,4 +424,5 @@
 }
 .lgl-checkbox-label.lgl-checkbox-label input {
     width: auto;
+    margin: 0 !important;
 }
