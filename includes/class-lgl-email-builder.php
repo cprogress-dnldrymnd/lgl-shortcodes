@@ -89,7 +89,6 @@ class LGL_Email_Builder
         wp_add_inline_style('wp-admin', $this->admin_css());
         wp_add_inline_script('jquery', $this->admin_js());
     }
-
     /**
      * Define the inline CSS required for the builder layout.
      *
@@ -102,7 +101,8 @@ class LGL_Email_Builder
         .lgl-eb-wrap { max-width: 1600px; }
         .lgl-eb-master-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 500px;
+            /* Increased right column from 500px to 700px */
+            grid-template-columns: minmax(0, 1fr) 700px; 
             gap: 30px;
             margin-top: 20px;
             align-items: start;
@@ -323,7 +323,8 @@ class LGL_Email_Builder
         .lgl-eb-test-msg.success { color: #00a32a; }
         .lgl-eb-test-msg.error { color: #d63638; }
 
-        @media (max-width: 1300px) { 
+        /* Increased breakpoint to 1400px so it collapses before getting squeezed */
+        @media (max-width: 1400px) { 
             .lgl-eb-master-layout { grid-template-columns: 1fr; }
             #lgl-eb-preview-frame { height: 600px; }
             .lgl-eb-preview-sticky { position: static; }
@@ -597,7 +598,7 @@ class LGL_Email_Builder
                 </form>
             </div>
         </div>
-<?php
+    <?php
     }
 
     /**
@@ -655,12 +656,12 @@ class LGL_Email_Builder
             : __('Reserve Email Builder', 'lgl-shortcodes');
 
         $test_nonce = wp_create_nonce('lgl_email_builder');
-?>
+    ?>
         <div class="wrap lgl-eb-wrap">
             <h1><?php echo esc_html($title); ?></h1>
 
             <div class="lgl-eb-master-layout">
-                
+
                 <div class="lgl-eb-builder-column">
                     <div class="lgl-eb-tabs">
                         <div class="lgl-eb-tab active"><?php _e('📬 Admin Notification', 'lgl-shortcodes'); ?></div>
@@ -672,11 +673,11 @@ class LGL_Email_Builder
                         <input type="hidden" name="action" value="<?php echo esc_attr($action); ?>">
                         <input type="hidden" name="form_type" value="<?php echo esc_attr($type); ?>">
                         <input type="hidden" id="lgl-eb-nonce-value" value="<?php echo esc_attr($test_nonce); ?>">
-                        
+
                         <input type="hidden" id="lgl-global-header-template" value="<?php echo esc_attr($global_settings['header']); ?>">
                         <input type="hidden" id="lgl-global-footer-template" value="<?php echo esc_attr($global_settings['footer']); ?>">
                         <input type="hidden" id="lgl-site-name" value="<?php echo esc_attr(get_option('blogname')); ?>">
-                        
+
                         <input type="hidden" id="lgl-color-bg" value="<?php echo esc_attr($global_settings['color_bg']); ?>">
                         <input type="hidden" id="lgl-color-body-bg" value="<?php echo esc_attr($global_settings['color_body_bg']); ?>">
                         <input type="hidden" id="lgl-color-text" value="<?php echo esc_attr($global_settings['color_text']); ?>">
@@ -804,7 +805,8 @@ class LGL_Email_Builder
                     </div>
                 </div>
 
-            </div></div>
+            </div>
+        </div>
 <?php
     }
 
@@ -1092,7 +1094,7 @@ class LGL_Email_Builder
         }
 
         $global_settings = self::get_global_email_settings();
-        
+
         // Replace base tags in global header and footer
         $header = str_replace(['{{site_name}}', '{{year}}'], [$site, $year], $global_settings['header']);
         $footer = str_replace(['{{site_name}}', '{{year}}'], [$site, $year], $global_settings['footer']);
