@@ -20,10 +20,15 @@ $title = get_the_title();
 $lgl_options = get_option('lgl_settings', array());
 $disable_wishlist = !empty($lgl_options['disable_wishlist']);
 $disable_compare  = !empty($lgl_options['disable_compare']);
+$reserve_settings  = LGL_Forms::get_reserve_settings();
+$is_reserved       = LGL_Forms::is_reserved($post_id);
 ?>
 <article <?php post_class('lgl-post car type-car status-publish has-post-thumbnail hentry ' . $style); ?>>
     <div class="lgl-post--inner">
         <div class="lgl-post--thumbnail">
+            <?php if ($is_reserved) { ?>
+                <div class="reserved-tag"><?= $reserve_settings['reserved_button_text']  ?></div>
+            <?php } ?>
             <div class="lgl-post--featured">
                 <a href="<?php echo esc_url($link); ?>">
                     <div class="lgl-cover-image">

@@ -2585,3 +2585,20 @@ $wt-cols: 110px 1fr 120px 110px 80px 80px 50px;
         }
     }
 }
+
+.reserved-tag {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 20px;
+    background-color: var(--lgl-color-error);
+    color: var(--lgl-color-white);
+    padding: 15px;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 0 10px 10px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.12px;
+    font-family: var(--lgl-font-secondary);
+}
