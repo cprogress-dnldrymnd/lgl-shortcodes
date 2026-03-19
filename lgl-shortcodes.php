@@ -2466,7 +2466,7 @@ if (! class_exists('LGL_Shortcodes')) {
 
         public function ajax_send_test_email()
         {
-            check_ajax_referer(sanitize_key($_POST['nonce'] ?? ''), false);
+            check_ajax_referer('lgl_email_builder', 'nonce');
             if (! current_user_can('manage_options')) wp_send_json_error('Unauthorized');
             $to      = sanitize_email($_POST['email']   ?? '');
             $subject = sanitize_text_field($_POST['subject'] ?? 'LGL Test Email');

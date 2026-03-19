@@ -2,16 +2,6 @@
 
 /**
  * LGL Email Builder — Visual email template editor with merge tag support.
- * Hooks into LGL_Forms to replace the basic notify_admin() with rich HTML emails.
- *
- * Registers two admin pages:
- *   - LGL Settings → Enquiry Email
- *   - LGL Settings → Reserve Email
- *
- * Each page provides:
- *   - Admin notification email (subject + HTML body + recipient config)
- *   - Auto-reply to submitter (subject + HTML body, toggled on/off)
- *   - Merge tag reference panel with one-click insertion
  */
 if (! defined('ABSPATH')) exit;
 
@@ -19,8 +9,8 @@ class LGL_Email_Builder
 {
 
     /* ═══════════════════════════════════════════════════════════════
-	   BOOT
-	═══════════════════════════════════════════════════════════════ */
+       BOOT
+    ═══════════════════════════════════════════════════════════════ */
 
     public function __construct()
     {
@@ -31,8 +21,8 @@ class LGL_Email_Builder
     }
 
     /* ═══════════════════════════════════════════════════════════════
-	   MENU
-	═══════════════════════════════════════════════════════════════ */
+       MENU
+    ═══════════════════════════════════════════════════════════════ */
 
     public function add_submenu_pages()
     {
@@ -55,8 +45,8 @@ class LGL_Email_Builder
     }
 
     /* ═══════════════════════════════════════════════════════════════
-	   ASSETS
-	═══════════════════════════════════════════════════════════════ */
+       ASSETS
+    ═══════════════════════════════════════════════════════════════ */
 
     public function admin_assets($hook)
     {
@@ -73,206 +63,218 @@ class LGL_Email_Builder
     private function admin_css(): string
     {
         return '
-		/* ── Email Builder Layout ── */
-		.lgl-eb-wrap { max-width: 1200px; }
-		.lgl-eb-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; margin-top: 20px; }
-		.lgl-eb-main {}
-		.lgl-eb-sidebar {}
+        /* ── Email Builder Layout ── */
+        .lgl-eb-wrap { max-width: 1200px; }
+        .lgl-eb-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; margin-top: 20px; }
 
-		/* ── Section cards ── */
-		.lgl-eb-section {
-			background: #fff;
-			border: 1px solid #c3c4c7;
-			border-radius: 4px;
-			padding: 20px 24px;
-			margin-bottom: 20px;
-		}
-		.lgl-eb-section h3 {
-			margin: 0 0 16px;
-			font-size: 14px;
-			font-weight: 700;
-			color: #1d2327;
-			border-bottom: 1px solid #f0f0f1;
-			padding-bottom: 10px;
-		}
-		.lgl-eb-section h4 {
-			font-size: 13px;
-			font-weight: 600;
-			color: #3c434a;
-			margin: 16px 0 8px;
-		}
+        /* ── Section cards ── */
+        .lgl-eb-section {
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            border-radius: 4px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+        .lgl-eb-section h3 {
+            margin: 0 0 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1d2327;
+            border-bottom: 1px solid #f0f0f1;
+            padding-bottom: 10px;
+        }
+        .lgl-eb-section h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #3c434a;
+            margin: 16px 0 8px;
+        }
 
-		/* ── Form rows ── */
-		.lgl-eb-row { margin-bottom: 14px; }
-		.lgl-eb-row label {
-			display: block;
-			font-weight: 600;
-			font-size: 12px;
-			text-transform: uppercase;
-			letter-spacing: .4px;
-			color: #646970;
-			margin-bottom: 5px;
-		}
-		.lgl-eb-row input[type="text"],
-		.lgl-eb-row input[type="email"],
-		.lgl-eb-row select {
-			width: 100%;
-			padding: 8px 10px;
-			border: 1px solid #c3c4c7;
-			border-radius: 3px;
-			font-size: 13px;
-		}
+        /* ── Form rows ── */
+        .lgl-eb-row { margin-bottom: 14px; }
+        .lgl-eb-row label {
+            display: block;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #646970;
+            margin-bottom: 5px;
+        }
+        .lgl-eb-row input[type="text"],
+        .lgl-eb-row input[type="email"],
+        .lgl-eb-row select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #c3c4c7;
+            border-radius: 3px;
+            font-size: 13px;
+        }
 
-		/* ── Textarea editor area ── */
-		.lgl-eb-editor-wrap { position: relative; }
-		.lgl-eb-tag-toolbar {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 5px;
-			padding: 8px 10px;
-			background: #f6f7f7;
-			border: 1px solid #c3c4c7;
-			border-bottom: none;
-			border-radius: 3px 3px 0 0;
-		}
-		.lgl-eb-tag-toolbar .lgl-tag-group-label {
-			width: 100%;
-			font-size: 11px;
-			font-weight: 700;
-			text-transform: uppercase;
-			letter-spacing: .4px;
-			color: #8c8f94;
-			margin-bottom: 2px;
-		}
-		.lgl-eb-insert-tag {
-			font-size: 11px;
-			padding: 3px 8px;
-			background: #fff;
-			border: 1px solid #c3c4c7;
-			border-radius: 2px;
-			cursor: pointer;
-			color: #1d2327;
-			font-family: monospace;
-			line-height: 1.4;
-			transition: background .15s, border-color .15s;
-		}
-		.lgl-eb-insert-tag:hover {
-			background: #2271b1;
-			color: #fff;
-			border-color: #2271b1;
-		}
-		.lgl-eb-textarea {
-			width: 100%;
-			min-height: 280px;
-			font-family: monospace;
-			font-size: 13px;
-			padding: 12px;
-			border: 1px solid #c3c4c7;
-			border-radius: 0 0 3px 3px;
-			resize: vertical;
-			box-sizing: border-box;
-			line-height: 1.6;
-		}
-		.lgl-eb-subject-wrap { position: relative; }
-		.lgl-eb-subject-tags {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 4px;
-			margin-bottom: 6px;
-		}
+        /* ── Tag toolbar ── */
+        .lgl-eb-tag-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 8px 10px;
+            background: #f6f7f7;
+            border: 1px solid #c3c4c7;
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
+        }
+        .lgl-eb-tag-toolbar .lgl-tag-group-label {
+            width: 100%;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #8c8f94;
+            margin-bottom: 2px;
+        }
+        .lgl-eb-insert-tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            border-radius: 2px;
+            cursor: pointer;
+            color: #1d2327;
+            font-family: monospace;
+            line-height: 1.4;
+            transition: background .15s, border-color .15s;
+        }
+        .lgl-eb-insert-tag:hover {
+            background: #2271b1;
+            color: #fff;
+            border-color: #2271b1;
+        }
+        .lgl-eb-textarea {
+            width: 100%;
+            min-height: 280px;
+            font-family: monospace;
+            font-size: 13px;
+            padding: 12px;
+            border: 1px solid #c3c4c7;
+            border-radius: 0 0 3px 3px;
+            resize: vertical;
+            box-sizing: border-box;
+            line-height: 1.6;
+        }
+        .lgl-eb-subject-wrap { position: relative; }
+        .lgl-eb-subject-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
 
-		/* ── Preview panel ── */
-		.lgl-eb-preview-btn {
-			display: inline-block;
-			margin-top: 10px;
-		}
-		#lgl-eb-preview-frame {
-			width: 100%;
-			height: 460px;
-			border: 1px solid #c3c4c7;
-			border-radius: 3px;
-			background: #fff;
-			margin-top: 10px;
-		}
+        /* ── Preview panel ── */
+        .lgl-eb-preview-btn { display: inline-block; margin-top: 10px; }
+        #lgl-eb-preview-frame {
+            width: 100%;
+            height: 460px;
+            border: 1px solid #c3c4c7;
+            border-radius: 3px;
+            background: #fff;
+            margin-top: 10px;
+        }
 
-		/* ── Merge tag reference ── */
-		.lgl-eb-tag-ref { list-style: none; margin: 0; padding: 0; }
-		.lgl-eb-tag-ref li {
-			display: flex;
-			justify-content: space-between;
-			align-items: baseline;
-			padding: 5px 0;
-			border-bottom: 1px solid #f0f0f1;
-			font-size: 12px;
-		}
-		.lgl-eb-tag-ref li:last-child { border-bottom: none; }
-		.lgl-eb-tag-ref code {
-			background: #f6f7f7;
-			padding: 2px 5px;
-			border: 1px solid #e0e0e0;
-			border-radius: 2px;
-			font-size: 11px;
-			cursor: pointer;
-			color: #2271b1;
-		}
-		.lgl-eb-tag-ref code:hover { background: #2271b1; color: #fff; border-color: #2271b1; }
-		.lgl-eb-tag-ref .lgl-tag-desc { color: #8c8f94; font-size: 11px; }
+        /* ── Merge tag reference ── */
+        .lgl-eb-tag-ref { list-style: none; margin: 0; padding: 0; }
+        .lgl-eb-tag-ref li {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f1;
+            font-size: 12px;
+        }
+        .lgl-eb-tag-ref li:last-child { border-bottom: none; }
+        .lgl-eb-tag-ref code {
+            background: #f6f7f7;
+            padding: 2px 5px;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            font-size: 11px;
+            cursor: pointer;
+            color: #2271b1;
+        }
+        .lgl-eb-tag-ref code:hover { background: #2271b1; color: #fff; border-color: #2271b1; }
+        .lgl-eb-tag-ref .lgl-tag-desc { color: #8c8f94; font-size: 11px; }
 
-		/* ── Toggle for auto-reply ── */
-		.lgl-eb-toggle-row {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			padding: 10px 0;
-		}
-		.lgl-eb-toggle-row input[type="checkbox"] { width: 16px; height: 16px; }
-		.lgl-eb-collapsible { display: none; }
-		.lgl-eb-collapsible.is-open { display: block; }
+        /* ── Toggle for auto-reply ── */
+        .lgl-eb-toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .lgl-eb-toggle-row input[type="checkbox"] { width: 16px; height: 16px; }
+        .lgl-eb-collapsible { display: none; }
+        .lgl-eb-collapsible.is-open { display: block; }
 
-		/* ── Recipient type ── */
-		.lgl-eb-recipient-opts { display: flex; flex-direction: column; gap: 8px; }
-		.lgl-eb-recipient-opts label { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 13px; display: flex; align-items: center; gap: 7px; cursor: pointer; }
-		.lgl-eb-recipient-opts input[type="radio"] { width: 14px; height: 14px; }
-		#lgl-custom-email-row { display: none; padding-left: 22px; }
-		#lgl-custom-email-row.is-visible { display: block; margin-top: 8px; }
+        /* ── Recipient type ── */
+        .lgl-eb-recipient-opts { display: flex; flex-direction: column; gap: 8px; }
+        .lgl-eb-recipient-opts label { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 13px; display: flex; align-items: center; gap: 7px; cursor: pointer; }
+        .lgl-eb-recipient-opts input[type="radio"] { width: 14px; height: 14px; }
+        #lgl-custom-email-row { display: none; padding-left: 22px; }
+        #lgl-custom-email-row.is-visible { display: block; margin-top: 8px; }
 
-		/* ── Tabs ── */
-		.lgl-eb-tabs { display: flex; gap: 0; border-bottom: 2px solid #c3c4c7; margin-bottom: 20px; }
-		.lgl-eb-tab {
-			padding: 10px 20px;
-			cursor: pointer;
-			font-weight: 600;
-			font-size: 13px;
-			color: #50575e;
-			border-bottom: 3px solid transparent;
-			margin-bottom: -2px;
-			user-select: none;
-		}
-		.lgl-eb-tab.active { color: #2271b1; border-bottom-color: #2271b1; }
-		.lgl-eb-tab-content { display: none; }
-		.lgl-eb-tab-content.active { display: block; }
+        /* ── Tabs ── */
+        .lgl-eb-tabs { display: flex; gap: 0; border-bottom: 2px solid #c3c4c7; margin-bottom: 20px; }
+        .lgl-eb-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            color: #50575e;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            user-select: none;
+        }
+        .lgl-eb-tab.active { color: #2271b1; border-bottom-color: #2271b1; }
+        .lgl-eb-tab-content { display: none; }
+        .lgl-eb-tab-content.active { display: block; }
 
-		/* ── Send test button ── */
-		.lgl-eb-test-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
-		.lgl-eb-test-row input { flex: 1; max-width: 280px; }
-		.lgl-eb-test-msg { font-size: 12px; margin-left: 8px; }
-		.lgl-eb-test-msg.success { color: #00a32a; }
-		.lgl-eb-test-msg.error { color: #d63638; }
+        /* ── Send test button ── */
+        .lgl-eb-test-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+        .lgl-eb-test-row input { flex: 1; max-width: 280px; }
+        .lgl-eb-test-msg { font-size: 12px; margin-left: 8px; }
+        .lgl-eb-test-msg.success { color: #00a32a; }
+        .lgl-eb-test-msg.error { color: #d63638; }
 
-		@media (max-width: 1024px) { .lgl-eb-layout { grid-template-columns: 1fr; } }
-		';
+        @media (max-width: 1024px) { .lgl-eb-layout { grid-template-columns: 1fr; } }
+        ';
     }
 
     private function admin_js(): string
     {
+        // FIX 1: Tab switching uses document.find() instead of .next() so it works
+        //         even though .lgl-eb-tab-panels is inside a <form> sibling.
+        // FIX 2: Nonce value is read from #lgl-eb-nonce-value (a dedicated hidden input).
         return '
     (function($){
-        // ── Insert merge tag into the focused textarea ──
+
+        // ── Tab switching ─────────────────────────────────────────────
+        // IMPORTANT: .lgl-eb-tab-panels lives inside a <form> that is the
+        // NEXT sibling of .lgl-eb-tabs, so .next() never finds it.
+        // We search the whole page wrapper instead.
+        $(document).on("click", ".lgl-eb-tab", function(){
+            var idx = $(this).index();
+            $(this).addClass("active").siblings().removeClass("active");
+
+            // Walk up to the .wrap container and find the panels from there
+            var $panels = $(this).closest(".lgl-eb-wrap").find(".lgl-eb-tab-panels");
+            $panels.find(".lgl-eb-tab-content").removeClass("active").eq(idx).addClass("active");
+        });
+
+        // ── Track last focused editor ─────────────────────────────────
         var $lastFocus = null;
         $(document).on("focus", ".lgl-eb-textarea, .lgl-eb-subject-input", function(){
             $lastFocus = $(this);
         });
 
+        // ── Insert merge tag ──────────────────────────────────────────
         $(document).on("click", ".lgl-eb-insert-tag, .lgl-eb-tag-ref code", function(e){
             e.preventDefault();
             var tag = $(this).data("tag") || $(this).text().trim();
@@ -287,20 +289,14 @@ class LGL_Email_Builder
             el.focus();
         });
 
-        // ── Tab switching ──
-        $(document).on("click", ".lgl-eb-tab", function(){
-            var $tabs = $(this).closest(".lgl-eb-tabs").next(".lgl-eb-tab-panels");
-            var idx = $(this).index();
-            $(this).addClass("active").siblings().removeClass("active");
-            $tabs.find(".lgl-eb-tab-content").eq(idx).addClass("active").siblings().removeClass("active");
-        });
-
-        // ── Auto-reply toggle ──
+        // ── Auto-reply toggle ─────────────────────────────────────────
         $(document).on("change", "#lgl-eb-auto-reply-toggle", function(){
-            $(this).is(":checked") ? $("#lgl-eb-autoreply-section").addClass("is-open") : $("#lgl-eb-autoreply-section").removeClass("is-open");
+            $(this).is(":checked")
+                ? $("#lgl-eb-autoreply-section").addClass("is-open")
+                : $("#lgl-eb-autoreply-section").removeClass("is-open");
         });
 
-        // ── Recipient type ──
+        // ── Recipient type ────────────────────────────────────────────
         $(document).on("change", "[name=\'recipient_type\']", function(){
             var val = $(this).val();
             (val === "custom" || val === "both")
@@ -308,7 +304,7 @@ class LGL_Email_Builder
                 : $("#lgl-custom-email-row").removeClass("is-visible");
         });
 
-        // ── Live preview ──
+        // ── Live preview ──────────────────────────────────────────────
         $(document).on("click", "#lgl-eb-preview-btn", function(e){
             e.preventDefault();
             var html = $("#lgl-eb-body").val();
@@ -332,7 +328,9 @@ class LGL_Email_Builder
             doc.open(); doc.write(html); doc.close();
         });
 
-        // ── Send test email ──
+        // ── Send test email ───────────────────────────────────────────
+        // FIX 2: Read from #lgl-eb-nonce-value (set to wp_create_nonce("lgl_email_builder"))
+        //         and POST action "lgl_send_test_email".
         $(document).on("click", "#lgl-eb-send-test", function(e){
             e.preventDefault();
             var email = $("#lgl-eb-test-email").val().trim();
@@ -343,41 +341,48 @@ class LGL_Email_Builder
                 url: ajaxurl, type: "POST",
                 data: {
                     action: "lgl_send_test_email",
-                    nonce: $("#lgl_eb_nonce").val(),
+                    nonce: $("#lgl-eb-nonce-value").val(),
                     email: email,
                     subject: $("#lgl-eb-subject").val(),
                     body: $("#lgl-eb-body").val()
                 },
                 success: function(r){
-                    if (r.success) $msg.text("Test sent!").addClass("success");
-                    else $msg.text("Failed: " + r.data).addClass("error");
+                    if (r.success) {
+                        $msg.text("Test email sent successfully!").addClass("success");
+                    } else {
+                        $msg.text("Failed: " + (r.data || "Unknown error")).addClass("error");
+                    }
+                },
+                error: function(xhr) {
+                    $msg.text("Request failed (" + xhr.status + "). Check server logs.").addClass("error");
                 }
             });
         });
 
-        // Trigger initial states on page load
+        // ── Trigger initial states on page load ───────────────────────
         $("[name=\'recipient_type\']:checked").trigger("change");
         if ($("#lgl-eb-auto-reply-toggle").is(":checked")) {
             $("#lgl-eb-autoreply-section").addClass("is-open");
         }
+
     })(jQuery);
     ';
     }
 
     /* ═══════════════════════════════════════════════════════════════
-	   PAGE RENDERERS
-	═══════════════════════════════════════════════════════════════ */
+       PAGE RENDERERS
+    ═══════════════════════════════════════════════════════════════ */
 
     public function render_enquiry_email_page()
     {
-        $form_settings = get_option('lgl_enquiry_form', []);
+        $form_settings  = get_option('lgl_enquiry_form', []);
         $email_settings = get_option('lgl_enquiry_email', $this->default_email('enquiry'));
         $this->render_page('enquiry', $form_settings, $email_settings);
     }
 
     public function render_reserve_email_page()
     {
-        $form_settings = get_option('lgl_reserve_form', []);
+        $form_settings  = get_option('lgl_reserve_form', []);
         $email_settings = get_option('lgl_reserve_email', $this->default_email('reserve'));
         $this->render_page('reserve', $form_settings, $email_settings);
     }
@@ -390,20 +395,26 @@ class LGL_Email_Builder
             echo '<div class="notice notice-success is-dismissible"><p>' . __('Email settings saved.', 'lgl-shortcodes') . '</p></div>';
         }
 
-        $action     = "lgl_save_{$type}_email";
-        $all_tags   = $this->get_merge_tags($form_settings['fields'] ?? []);
-        $subject    = $email_settings['subject']           ?? '';
-        $body       = $email_settings['body']              ?? '';
-        $rec_type   = $email_settings['recipient_type']    ?? 'admin';
-        $custom_email = $email_settings['custom_email']   ?? '';
+        $action       = "lgl_save_{$type}_email";
+        $all_tags     = $this->get_merge_tags($form_settings['fields'] ?? []);
+        $subject      = $email_settings['subject']          ?? '';
+        $body         = $email_settings['body']             ?? '';
+        $rec_type     = $email_settings['recipient_type']   ?? 'admin';
+        $custom_email = $email_settings['custom_email']     ?? '';
         $auto_reply   = ! empty($email_settings['auto_reply_enabled']);
         $ar_subject   = $email_settings['auto_reply_subject'] ?? '';
         $ar_body      = $email_settings['auto_reply_body']    ?? '';
-        $title        = $type === 'enquiry' ? __('Enquiry Email Builder', 'lgl-shortcodes') : __('Reserve Email Builder', 'lgl-shortcodes');
+        $title        = $type === 'enquiry'
+            ? __('Enquiry Email Builder', 'lgl-shortcodes')
+            : __('Reserve Email Builder', 'lgl-shortcodes');
+
+        // FIX 2: Dedicated nonce for the AJAX test-email endpoint
+        $test_nonce = wp_create_nonce('lgl_email_builder');
 ?>
         <div class="wrap lgl-eb-wrap">
             <h1><?php echo esc_html($title); ?></h1>
 
+            <!-- Tabs sit OUTSIDE the form so .closest(".lgl-eb-wrap").find() works correctly -->
             <div class="lgl-eb-tabs">
                 <div class="lgl-eb-tab active"><?php _e('📬 Admin Notification', 'lgl-shortcodes'); ?></div>
                 <div class="lgl-eb-tab"><?php _e('↩️ Auto-Reply to Submitter', 'lgl-shortcodes'); ?></div>
@@ -411,10 +422,12 @@ class LGL_Email_Builder
             </div>
 
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                <?php wp_nonce_field("lgl_save_{$type}_email", 'lgl_eb_nonce'); ?>
-                <input type="hidden" id="lgl_eb_nonce" value="<?php echo esc_attr(wp_create_nonce("lgl_save_{$type}_email")); ?>">
+                <?php wp_nonce_field("lgl_save_{$type}_email", 'lgl_eb_form_nonce'); ?>
                 <input type="hidden" name="action" value="<?php echo esc_attr($action); ?>">
                 <input type="hidden" name="form_type" value="<?php echo esc_attr($type); ?>">
+
+                <!-- Dedicated hidden input for the test-email AJAX nonce -->
+                <input type="hidden" id="lgl-eb-nonce-value" value="<?php echo esc_attr($test_nonce); ?>">
 
                 <div class="lgl-eb-tab-panels">
 
@@ -423,7 +436,7 @@ class LGL_Email_Builder
                         <div class="lgl-eb-layout">
                             <div class="lgl-eb-main">
 
-                                <!-- Recipient settings -->
+                                <!-- Recipients -->
                                 <div class="lgl-eb-section">
                                     <h3><?php _e('Recipients', 'lgl-shortcodes'); ?></h3>
                                     <div class="lgl-eb-recipient-opts">
@@ -449,7 +462,7 @@ class LGL_Email_Builder
                                     </div>
                                 </div>
 
-                                <!-- Subject line -->
+                                <!-- Subject -->
                                 <div class="lgl-eb-section">
                                     <h3><?php _e('Subject Line', 'lgl-shortcodes'); ?></h3>
                                     <div class="lgl-eb-subject-tags">
@@ -499,7 +512,7 @@ class LGL_Email_Builder
                                         <input type="checkbox" id="lgl-eb-auto-reply-toggle" name="auto_reply_enabled" value="1" <?php checked($auto_reply); ?>>
                                         <label for="lgl-eb-auto-reply-toggle" style="font-weight:600;font-size:13px;cursor:pointer;"><?php _e('Send an automatic reply to the person who submitted this form', 'lgl-shortcodes'); ?></label>
                                     </div>
-                                    <p class="description"><?php _e('Requires the form to have an <code>email</code> field. Merge tag: <code>{{email}}</code>', 'lgl-shortcodes'); ?></p>
+                                    <p class="description"><?php _e('Requires the form to have an <code>email</code> field.', 'lgl-shortcodes'); ?></p>
                                 </div>
 
                                 <div id="lgl-eb-autoreply-section" class="lgl-eb-collapsible <?php echo $auto_reply ? 'is-open' : ''; ?>">
@@ -548,8 +561,8 @@ class LGL_Email_Builder
     }
 
     /* ═══════════════════════════════════════════════════════════════
-	   TAG TOOLBAR (inserted above a textarea)
-	═══════════════════════════════════════════════════════════════ */
+       TAG TOOLBAR
+    ═══════════════════════════════════════════════════════════════ */
 
     private function render_tag_toolbar(array $all_tags, string $textarea_id)
     {
@@ -570,8 +583,8 @@ class LGL_Email_Builder
     }
 
     /* ═══════════════════════════════════════════════════════════════
-	   TAG REFERENCE SIDEBAR
-	═══════════════════════════════════════════════════════════════ */
+       TAG REFERENCE SIDEBAR
+    ═══════════════════════════════════════════════════════════════ */
 
     private function render_tag_reference(array $all_tags)
     {
@@ -597,13 +610,13 @@ class LGL_Email_Builder
     }
 
     /* ═══════════════════════════════════════════════════════════════
-	   SAVE
-	═══════════════════════════════════════════════════════════════ */
+       SAVE
+    ═══════════════════════════════════════════════════════════════ */
 
     public function save_email_settings()
     {
         $form_type = sanitize_key($_POST['form_type'] ?? '');
-        check_admin_referer("lgl_save_{$form_type}_email", 'lgl_eb_nonce');
+        check_admin_referer("lgl_save_{$form_type}_email", 'lgl_eb_form_nonce');
         if (! current_user_can('manage_options')) wp_die('Unauthorized');
 
         $allowed_recipients = ['admin', 'custom', 'both'];
@@ -623,26 +636,19 @@ class LGL_Email_Builder
         exit;
     }
 
-	/* ═══════════════════════════════════════════════════════════════
-	   STATIC: PROCESS & SEND EMAILS
-	   Called from LGL_Forms::ajax_submit_enquiry / ajax_submit_reserve
-	═══════════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════════
+       STATIC: PROCESS & SEND EMAILS
+    ═══════════════════════════════════════════════════════════════ */
 
-    /**
-     * Build all merge tag values from form data + product context.
-     */
     public static function build_tag_values(array $form_data, int $product_id): array
     {
         $price = $product_id ? get_post_meta($product_id, 'price', true) : '';
 
         return array_merge($form_data, [
-            // Product context
             'product_title'   => $product_id ? html_entity_decode(get_the_title($product_id), ENT_QUOTES) : '',
             'product_url'     => $product_id ? get_permalink($product_id) : '',
             'product_price'   => $price ? LGL_Shortcodes::format_price($price) : '',
             'product_type'    => $product_id ? get_post_type($product_id) : '',
-
-            // System
             'site_name'       => get_bloginfo('name'),
             'site_url'        => home_url(),
             'admin_email'     => get_option('admin_email'),
@@ -651,38 +657,27 @@ class LGL_Email_Builder
         ]);
     }
 
-    /**
-     * Replace {{tag}} placeholders in a string with their resolved values.
-     */
     public static function process_tags(string $template, array $values): string
     {
         foreach ($values as $key => $value) {
             if (is_array($value)) continue;
             $template = str_replace('{{' . $key . '}}', esc_html((string) $value), $template);
         }
-        // Strip any unreplaced tags
         $template = preg_replace('/\{\{[^}]+\}\}/', '', $template);
         return $template;
     }
 
-    /**
-     * Send the admin notification + optional auto-reply for a form submission.
-     *
-     * @param string $form_type   'enquiry' | 'reserve'
-     * @param array  $form_data   Sanitized form field values keyed by field ID
-     * @param int    $product_id  Product post ID (0 if none)
-     */
     public static function send(string $form_type, array $form_data, int $product_id): void
     {
-        $email_cfg = get_option("lgl_{$form_type}_email", []);
+        $email_cfg  = get_option("lgl_{$form_type}_email", []);
         $tag_values = self::build_tag_values($form_data, $product_id);
 
         // ── Admin notification ──────────────────────────────────────
-        $subject  = self::process_tags($email_cfg['subject'] ?? '', $tag_values);
-        $body     = self::process_tags($email_cfg['body']    ?? '', $tag_values);
+        $subject = self::process_tags($email_cfg['subject'] ?? '', $tag_values);
+        $body    = self::process_tags($email_cfg['body']    ?? '', $tag_values);
 
         if (empty($subject)) {
-            $name = trim(($form_data['first_name'] ?? '') . ' ' . ($form_data['last_name'] ?? ''));
+            $name    = trim(($form_data['first_name'] ?? '') . ' ' . ($form_data['last_name'] ?? ''));
             $product = $tag_values['product_title'] ?: 'Unknown Product';
             $subject = $form_type === 'enquiry'
                 ? "New Enquiry: {$name} — {$product}"
@@ -690,8 +685,7 @@ class LGL_Email_Builder
         }
 
         if (empty($body)) {
-            // Plain text fallback
-            $body  = "<p><strong>Product:</strong> {$tag_values['product_title']}</p><ul>";
+            $body = '<p><strong>Product:</strong> ' . esc_html($tag_values['product_title']) . '</p><ul>';
             foreach ($form_data as $k => $v) {
                 $body .= '<li><strong>' . esc_html(ucwords(str_replace('_', ' ', $k))) . ':</strong> ' . esc_html($v) . '</li>';
             }
@@ -716,7 +710,7 @@ class LGL_Email_Builder
                     $ar_subject = 'Thank you for your ' . $form_type . ', ' . ($form_data['first_name'] ?? '');
                 }
                 if (empty($ar_body)) {
-                    $ar_body = '<p>Hi ' . esc_html($form_data['first_name'] ?? 'there') . ',</p><p>Thank you for getting in touch. We will be in contact with you shortly.</p><p>— ' . esc_html(get_bloginfo('name')) . '</p>';
+                    $ar_body = '<p>Hi ' . esc_html($form_data['first_name'] ?? 'there') . ',</p><p>Thank you for getting in touch. We will be in contact with you shortly.</p>';
                 }
 
                 wp_mail($submitter_email, $ar_subject, self::wrap_html($ar_subject, $ar_body), $headers);
@@ -724,16 +718,13 @@ class LGL_Email_Builder
         }
     }
 
-	/* ═══════════════════════════════════════════════════════════════
-	   HELPERS
-	═══════════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════════
+       HELPERS
+    ═══════════════════════════════════════════════════════════════ */
 
-    /**
-     * Resolve the recipient list from email config.
-     */
     private static function resolve_recipients(array $cfg): array
     {
-        $admin = get_option('admin_email');
+        $admin  = get_option('admin_email');
         $custom = sanitize_email($cfg['custom_email'] ?? '');
         switch ($cfg['recipient_type'] ?? 'admin') {
             case 'custom':
@@ -745,17 +736,15 @@ class LGL_Email_Builder
         }
     }
 
-    /**
-     * Wrap a body fragment in a basic responsive HTML email shell.
-     */
     public static function wrap_html(string $subject, string $body): string
     {
         $site = esc_html(get_bloginfo('name'));
         $year = date('Y');
-        // If the body already looks like a full HTML document, return as-is
+
         if (stripos($body, '<html') !== false || stripos($body, '<!DOCTYPE') !== false) {
             return $body;
         }
+
         return <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -791,21 +780,16 @@ class LGL_Email_Builder
 HTML;
     }
 
-	/* ═══════════════════════════════════════════════════════════════
-	   MERGE TAG DEFINITIONS
-	═══════════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════════
+       MERGE TAG DEFINITIONS
+    ═══════════════════════════════════════════════════════════════ */
 
-    /**
-     * Build the full tag map combining system tags + dynamic form field tags.
-     */
     private function get_merge_tags(array $form_fields): array
     {
         $tags = $this->system_tags();
         foreach ($form_fields as $field) {
             $id = $field['id'] ?? '';
-            if (! $id) continue;
-            // Skip if it's already in system tags
-            if (isset($tags["{{$id}}"])) continue;
+            if (! $id || isset($tags['{{' . $id . '}}'])) continue;
             $tags['{{' . $id . '}}'] = $field['label'] ?? ucwords(str_replace('_', ' ', $id));
         }
         return $tags;
@@ -814,17 +798,14 @@ HTML;
     private function system_tags(): array
     {
         return [
-            // Submitter
             '{{first_name}}'    => 'First name',
             '{{last_name}}'     => 'Last name',
             '{{email}}'         => 'Email address',
             '{{phone}}'         => 'Phone number',
-            // Vehicle
             '{{product_title}}' => 'Vehicle name',
             '{{product_url}}'   => 'Vehicle page URL',
             '{{product_price}}' => 'Vehicle price',
-            '{{product_type}}'  => 'Vehicle type (caravan, motorhome…)',
-            // Site
+            '{{product_type}}'  => 'Vehicle type',
             '{{site_name}}'     => 'Website name',
             '{{site_url}}'      => 'Website URL',
             '{{admin_email}}'   => 'Admin email address',
@@ -835,29 +816,15 @@ HTML;
 
     private function subject_tags(array $all_tags): array
     {
-        $common = [
-            '{{first_name}}',
-            '{{last_name}}',
-            '{{product_title}}',
-            '{{product_price}}',
-            '{{site_name}}',
-            '{{date}}',
-        ];
+        $common = ['{{first_name}}', '{{last_name}}', '{{product_title}}', '{{product_price}}', '{{site_name}}', '{{date}}'];
         return array_filter($all_tags, fn($k) => in_array($k, $common, true), ARRAY_FILTER_USE_KEY);
     }
 
-    /**
-     * Group merge tags for the toolbar and reference panel.
-     */
     private function grouped_tags(array $all_tags): array
     {
         $system_keys = array_keys($this->system_tags());
-        $groups = [
-            'Submitter' => [],
-            'Vehicle'   => [],
-            'Site'      => [],
-            'Form Fields' => [],
-        ];
+        $groups = ['Submitter' => [], 'Vehicle' => [], 'Site' => [], 'Form Fields' => []];
+
         foreach ($all_tags as $tag => $label) {
             if (in_array($tag, ['{{first_name}}', '{{last_name}}', '{{email}}', '{{phone}}'], true)) {
                 $groups['Submitter'][$tag] = $label;
@@ -869,12 +836,13 @@ HTML;
                 $groups['Form Fields'][$tag] = $label;
             }
         }
+
         return array_filter($groups);
     }
 
     /* ═══════════════════════════════════════════════════════════════
-	   DEFAULT EMAIL TEMPLATES
-	═══════════════════════════════════════════════════════════════ */
+       DEFAULT EMAIL TEMPLATES
+    ═══════════════════════════════════════════════════════════════ */
 
     private function default_email(string $type): array
     {
@@ -882,9 +850,7 @@ HTML;
             'subject'            => $type === 'enquiry'
                 ? 'New Enquiry: {{first_name}} {{last_name}} — {{product_title}}'
                 : 'New Reservation: {{first_name}} {{last_name}} — {{product_title}}',
-            'body'               => $type === 'enquiry'
-                ? $this->default_admin_body('enquiry')
-                : $this->default_admin_body('reserve'),
+            'body'               => $this->default_admin_body($type),
             'recipient_type'     => 'admin',
             'custom_email'       => '',
             'auto_reply_enabled' => false,
@@ -900,7 +866,6 @@ HTML;
         $noun = $type === 'enquiry' ? 'Enquiry' : 'Reservation';
         return <<<HTML
 <h2>New {$noun} Received</h2>
-
 <p>A new {$noun} has been submitted on <a href="{{site_url}}">{{site_name}}</a>.</p>
 
 <h3>Vehicle</h3>
@@ -930,27 +895,22 @@ HTML;
         $noun    = $type === 'enquiry' ? 'enquiry' : 'reservation request';
         $promise = $type === 'enquiry'
             ? 'A member of our team will be in touch with you shortly.'
-            : 'We will hold the vehicle for you and a member of our team will be in touch within 24 hours to confirm your visit.';
+            : 'We will hold the vehicle and contact you within 24 hours to confirm your visit.';
+
         return <<<HTML
 <h2>Thank you, {{first_name}}!</h2>
-
-<p>We have received your {$noun} for the <strong>{{product_title}}</strong> and we appreciate your interest.</p>
-
+<p>We have received your {$noun} for the <strong>{{product_title}}</strong>.</p>
 <p>{$promise}</p>
 
-<h3>Your Submission Details</h3>
 <table>
   <tr><th>Vehicle</th><td><a href="{{product_url}}">{{product_title}}</a></td></tr>
   <tr><th>Price</th><td>{{product_price}}</td></tr>
   <tr><th>Name</th><td>{{first_name}} {{last_name}}</td></tr>
   <tr><th>Email</th><td>{{email}}</td></tr>
-  <tr><th>Phone</th><td>{{phone}}</td></tr>
   <tr><th>Submitted</th><td>{{date}} at {{time}}</td></tr>
 </table>
 
-<p>If you have any questions in the meantime, please don't hesitate to contact us.</p>
-
-<p>Kind regards,<br><strong>{{site_name}}</strong><br><a href="{{site_url}}">{{site_url}}</a></p>
+<p>Kind regards,<br><strong>{{site_name}}</strong></p>
 HTML;
     }
 }
