@@ -155,6 +155,26 @@ class LGL_Email_Builder
             font-size: 13px;
         }
 
+        /* ── Color Pickers ── */
+        .lgl-eb-color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .lgl-eb-color-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .lgl-eb-color-row input[type="color"] {
+            width: 100%;
+            height: 36px;
+            padding: 0;
+            border: 1px solid #c3c4c7;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
         /* ── Tag toolbar ── */
         .lgl-eb-tag-toolbar {
             display: flex;
@@ -381,8 +401,14 @@ class LGL_Email_Builder
             var html = $activeEditor.val();
             var currentYear = new Date().getFullYear();
             
-            // Read the clean site name pushed from PHP, strict fallback if empty
+            // Read state mappings
             var siteName = $("#lgl-site-name").val() || "Website";
+            var colorBg = $("#lgl-color-bg").val() || "#f5f5f5";
+            var colorBodyBg = $("#lgl-color-body-bg").val() || "#ffffff";
+            var colorText = $("#lgl-color-text").val() || "#1d2327";
+            var colorHeaderBg = $("#lgl-color-header-bg").val() || "#001537";
+            var colorHeaderText = $("#lgl-color-header-text").val() || "#ffffff";
+            var colorLink = $("#lgl-color-link").val() || "#003793";
 
             // Inject body merge tags
             html = html.replace(/\{\{([^}]+)\}\}/g, function(m, tag){
@@ -413,20 +439,21 @@ class LGL_Email_Builder
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Preview</title>
             <style>
-              body { margin:0; padding:0; background:#f5f5f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color:#1d2327; }
-              .eb-wrapper { max-width:640px; margin:30px auto; background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.08); }
-              .eb-header { background:#001537; padding:24px 32px; }
-              .eb-header h1 { margin:0; font-size:20px; color:#fff; }
+              body { margin:0; padding:0; background:${colorBg}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color:${colorText}; }
+              .eb-wrapper { max-width:640px; margin:30px auto; background:${colorBodyBg}; border-radius:6px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+              .eb-header { background:${colorHeaderBg}; padding:24px 32px; }
+              .eb-header h1, .eb-header h2, .eb-header h3 { margin:0; font-size:20px; color:${colorHeaderText}; }
               .eb-body { padding:32px; line-height:1.65; }
-              .eb-body h2 { font-size:18px; color:#001537; margin:0 0 16px; }
+              .eb-body h2 { font-size:18px; color:${colorHeaderBg}; margin:0 0 16px; }
               .eb-body p { margin:0 0 14px; font-size:14px; }
-              .eb-body a { color:#003793; }
+              .eb-body a { color:${colorLink}; }
+              .eb-button { display:inline-block; padding:12px 24px; background:${colorLink}; color:#fff; border-radius:5px; text-decoration:none; font-weight:600; }
               .eb-body ul { padding-left:20px; margin:0 0 14px; }
               .eb-body li { font-size:14px; margin-bottom:6px; }
               .eb-body table { width:100%; border-collapse:collapse; margin-bottom:16px; }
               .eb-body table td, .eb-body table th { padding:10px 12px; border:1px solid #e0e0e0; font-size:13px; text-align:left; }
-              .eb-body table th { background:#f6f7f7; font-weight:600; }
-              .eb-footer { background:#f6f7f7; padding:16px 32px; font-size:11px; color:#8c8f94; text-align:center; }
+              .eb-body table th { background:${colorBg}; font-weight:600; }
+              .eb-footer { background:${colorBg}; padding:16px 32px; font-size:11px; color:#8c8f94; text-align:center; }
             </style>
             </head>
             <body>
@@ -501,7 +528,7 @@ class LGL_Email_Builder
     ═══════════════════════════════════════════════════════════════ */
 
     /**
-     * Renders the UI for managing the global email template (Header & Footer).
+     * Renders the UI for managing the global email template (Header, Footer, Colors).
      *
      * @return void
      */
@@ -517,12 +544,42 @@ class LGL_Email_Builder
 ?>
         <div class="wrap lgl-eb-wrap">
             <h1><?php _e('Global Email Template', 'lgl-shortcodes'); ?></h1>
-            <p class="description"><?php _e('Define the wrapper HTML that will encapsulate all transactional emails. Do not include `<html>` or `<body>` tags.', 'lgl-shortcodes'); ?></p>
+            <p class="description"><?php _e('Define the wrapper HTML and core branding colors that encapsulate all transactional emails.', 'lgl-shortcodes'); ?></p>
 
             <div class="lgl-eb-master-layout" style="grid-template-columns: 1fr; max-width: 800px;">
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field("lgl_save_global_email", 'lgl_eb_form_nonce'); ?>
                     <input type="hidden" name="action" value="lgl_save_global_email">
+
+                    <div class="lgl-eb-section">
+                        <h3><?php _e('Theme Colors', 'lgl-shortcodes'); ?></h3>
+                        <div class="lgl-eb-color-grid">
+                            <div class="lgl-eb-color-row">
+                                <label><?php _e('Outer Background', 'lgl-shortcodes'); ?></label>
+                                <input type="color" name="color_bg" value="<?php echo esc_attr($global_settings['color_bg']); ?>">
+                            </div>
+                            <div class="lgl-eb-color-row">
+                                <label><?php _e('Inner Background', 'lgl-shortcodes'); ?></label>
+                                <input type="color" name="color_body_bg" value="<?php echo esc_attr($global_settings['color_body_bg']); ?>">
+                            </div>
+                            <div class="lgl-eb-color-row">
+                                <label><?php _e('Text Color', 'lgl-shortcodes'); ?></label>
+                                <input type="color" name="color_text" value="<?php echo esc_attr($global_settings['color_text']); ?>">
+                            </div>
+                            <div class="lgl-eb-color-row">
+                                <label><?php _e('Header Background', 'lgl-shortcodes'); ?></label>
+                                <input type="color" name="color_header_bg" value="<?php echo esc_attr($global_settings['color_header_bg']); ?>">
+                            </div>
+                            <div class="lgl-eb-color-row">
+                                <label><?php _e('Header Text', 'lgl-shortcodes'); ?></label>
+                                <input type="color" name="color_header_text" value="<?php echo esc_attr($global_settings['color_header_text']); ?>">
+                            </div>
+                            <div class="lgl-eb-color-row">
+                                <label><?php _e('Link & Accent', 'lgl-shortcodes'); ?></label>
+                                <input type="color" name="color_link" value="<?php echo esc_attr($global_settings['color_link']); ?>">
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="lgl-eb-section">
                         <h3><?php _e('Global Header (HTML)', 'lgl-shortcodes'); ?></h3>
@@ -540,7 +597,7 @@ class LGL_Email_Builder
                 </form>
             </div>
         </div>
-    <?php
+<?php
     }
 
     /**
@@ -598,12 +655,12 @@ class LGL_Email_Builder
             : __('Reserve Email Builder', 'lgl-shortcodes');
 
         $test_nonce = wp_create_nonce('lgl_email_builder');
-    ?>
+?>
         <div class="wrap lgl-eb-wrap">
             <h1><?php echo esc_html($title); ?></h1>
 
             <div class="lgl-eb-master-layout">
-
+                
                 <div class="lgl-eb-builder-column">
                     <div class="lgl-eb-tabs">
                         <div class="lgl-eb-tab active"><?php _e('📬 Admin Notification', 'lgl-shortcodes'); ?></div>
@@ -615,10 +672,17 @@ class LGL_Email_Builder
                         <input type="hidden" name="action" value="<?php echo esc_attr($action); ?>">
                         <input type="hidden" name="form_type" value="<?php echo esc_attr($type); ?>">
                         <input type="hidden" id="lgl-eb-nonce-value" value="<?php echo esc_attr($test_nonce); ?>">
-
+                        
                         <input type="hidden" id="lgl-global-header-template" value="<?php echo esc_attr($global_settings['header']); ?>">
                         <input type="hidden" id="lgl-global-footer-template" value="<?php echo esc_attr($global_settings['footer']); ?>">
                         <input type="hidden" id="lgl-site-name" value="<?php echo esc_attr(get_option('blogname')); ?>">
+                        
+                        <input type="hidden" id="lgl-color-bg" value="<?php echo esc_attr($global_settings['color_bg']); ?>">
+                        <input type="hidden" id="lgl-color-body-bg" value="<?php echo esc_attr($global_settings['color_body_bg']); ?>">
+                        <input type="hidden" id="lgl-color-text" value="<?php echo esc_attr($global_settings['color_text']); ?>">
+                        <input type="hidden" id="lgl-color-header-bg" value="<?php echo esc_attr($global_settings['color_header_bg']); ?>">
+                        <input type="hidden" id="lgl-color-header-text" value="<?php echo esc_attr($global_settings['color_header_text']); ?>">
+                        <input type="hidden" id="lgl-color-link" value="<?php echo esc_attr($global_settings['color_link']); ?>">
 
                         <div class="lgl-eb-tab-panels">
 
@@ -740,8 +804,7 @@ class LGL_Email_Builder
                     </div>
                 </div>
 
-            </div>
-        </div>
+            </div></div>
 <?php
     }
 
@@ -850,8 +913,14 @@ class LGL_Email_Builder
         if (! current_user_can('manage_options')) wp_die('Unauthorized');
 
         update_option('lgl_global_email_settings', [
-            'header' => wp_kses_post($_POST['header'] ?? ''),
-            'footer' => wp_kses_post($_POST['footer'] ?? ''),
+            'header'            => wp_kses_post($_POST['header'] ?? ''),
+            'footer'            => wp_kses_post($_POST['footer'] ?? ''),
+            'color_bg'          => sanitize_hex_color($_POST['color_bg'] ?? '#f5f5f5'),
+            'color_body_bg'     => sanitize_hex_color($_POST['color_body_bg'] ?? '#ffffff'),
+            'color_text'        => sanitize_hex_color($_POST['color_text'] ?? '#1d2327'),
+            'color_header_bg'   => sanitize_hex_color($_POST['color_header_bg'] ?? '#001537'),
+            'color_header_text' => sanitize_hex_color($_POST['color_header_text'] ?? '#ffffff'),
+            'color_link'        => sanitize_hex_color($_POST['color_link'] ?? '#003793'),
         ]);
 
         wp_redirect(admin_url('admin.php?page=lgl-global-email&saved=1'));
@@ -878,7 +947,7 @@ class LGL_Email_Builder
             'product_url'     => $product_id ? get_permalink($product_id) : '',
             'product_price'   => $price ? LGL_Shortcodes::format_price($price) : '',
             'product_type'    => $product_id ? get_post_type($product_id) : '',
-            'site_name'       => get_option('blogname'), // Clean DB output
+            'site_name'       => get_option('blogname'),
             'site_url'        => home_url(),
             'admin_email'     => get_option('admin_email'),
             'date'            => wp_date(get_option('date_format')),
@@ -989,13 +1058,19 @@ class LGL_Email_Builder
     /**
      * Retrieves the Global Template settings structure with required fallback defaults.
      *
-     * @return array Data object map dictating header and footer properties.
+     * @return array Data object map dictating header, footer, and branding color properties.
      */
     private static function get_global_email_settings(): array
     {
         $defaults = [
-            'header' => '<div class="eb-header"><h1>{{site_name}}</h1></div>',
-            'footer' => '<div class="eb-footer">&copy; {{year}} {{site_name}}. This is an automated notification.</div>',
+            'header'            => '<div class="eb-header"><h1>{{site_name}}</h1></div>',
+            'footer'            => '<div class="eb-footer">&copy; {{year}} {{site_name}}. This is an automated notification.</div>',
+            'color_bg'          => '#f5f5f5',
+            'color_body_bg'     => '#ffffff',
+            'color_text'        => '#1d2327',
+            'color_header_bg'   => '#001537',
+            'color_header_text' => '#ffffff',
+            'color_link'        => '#003793',
         ];
         return wp_parse_args(get_option('lgl_global_email_settings', []), $defaults);
     }
@@ -1009,7 +1084,7 @@ class LGL_Email_Builder
      */
     public static function wrap_html(string $subject, string $body): string
     {
-        $site = esc_html(get_option('blogname')); // Clean DB Output
+        $site = esc_html(get_option('blogname'));
         $year = date('Y');
 
         if (stripos($body, '<html') !== false || stripos($body, '<!DOCTYPE') !== false) {
@@ -1017,10 +1092,18 @@ class LGL_Email_Builder
         }
 
         $global_settings = self::get_global_email_settings();
-
+        
         // Replace base tags in global header and footer
         $header = str_replace(['{{site_name}}', '{{year}}'], [$site, $year], $global_settings['header']);
         $footer = str_replace(['{{site_name}}', '{{year}}'], [$site, $year], $global_settings['footer']);
+
+        // Load colors
+        $bg         = esc_attr($global_settings['color_bg']);
+        $body_bg    = esc_attr($global_settings['color_body_bg']);
+        $text       = esc_attr($global_settings['color_text']);
+        $header_bg  = esc_attr($global_settings['color_header_bg']);
+        $header_txt = esc_attr($global_settings['color_header_text']);
+        $link       = esc_attr($global_settings['color_link']);
 
         return <<<HTML
 <!DOCTYPE html>
@@ -1030,20 +1113,21 @@ class LGL_Email_Builder
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{$subject}</title>
 <style>
-  body { margin:0; padding:0; background:#f5f5f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color:#1d2327; }
-  .eb-wrapper { max-width:640px; margin:30px auto; background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.08); }
-  .eb-header { background:#001537; padding:24px 32px; }
-  .eb-header h1 { margin:0; font-size:20px; color:#fff; }
+  body { margin:0; padding:0; background:{$bg}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color:{$text}; }
+  .eb-wrapper { max-width:640px; margin:30px auto; background:{$body_bg}; border-radius:6px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  .eb-header { background:{$header_bg}; padding:24px 32px; }
+  .eb-header h1, .eb-header h2, .eb-header h3 { margin:0; font-size:20px; color:{$header_txt}; }
   .eb-body { padding:32px; line-height:1.65; }
-  .eb-body h2 { font-size:18px; color:#001537; margin:0 0 16px; }
+  .eb-body h2 { font-size:18px; color:{$header_bg}; margin:0 0 16px; }
   .eb-body p { margin:0 0 14px; font-size:14px; }
-  .eb-body a { color:#003793; }
+  .eb-body a { color:{$link}; }
+  .eb-button { display:inline-block; padding:12px 24px; background:{$link}; color:#fff; border-radius:5px; text-decoration:none; font-weight:600; }
   .eb-body ul { padding-left:20px; margin:0 0 14px; }
   .eb-body li { font-size:14px; margin-bottom:6px; }
   .eb-body table { width:100%; border-collapse:collapse; margin-bottom:16px; }
   .eb-body table td, .eb-body table th { padding:10px 12px; border:1px solid #e0e0e0; font-size:13px; text-align:left; }
-  .eb-body table th { background:#f6f7f7; font-weight:600; }
-  .eb-footer { background:#f6f7f7; padding:16px 32px; font-size:11px; color:#8c8f94; text-align:center; }
+  .eb-body table th { background:{$bg}; font-weight:600; }
+  .eb-footer { background:{$bg}; padding:16px 32px; font-size:11px; color:#8c8f94; text-align:center; }
 </style>
 </head>
 <body>
@@ -1198,7 +1282,7 @@ HTML;
   <tr><th>Date</th><td>{{date}} at {{time}}</td></tr>
 </table>
 
-<p><a href="{{product_url}}" style="display:inline-block;padding:12px 24px;background:#003793;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;">View Vehicle →</a></p>
+<p><a class="eb-button" href="{{product_url}}">View Vehicle →</a></p>
 HTML;
     }
 
