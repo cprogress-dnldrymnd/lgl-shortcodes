@@ -25,11 +25,11 @@
     }
 
     /**
-     * Initializes the search form features.
-     * Binds Select2, handles dependent make/model dropdowns, and manages the AJAX submission and pagination UI.
-     *
-     * @return void
-     */
+      * Initializes the search form features.
+      * Binds Select2, handles dependent make/model dropdowns, and manages the AJAX submission and pagination UI.
+      *
+      * @return void
+      */
     function search_form() {
         let currentPage = 1;
         let isUpdatingFilters = false;
@@ -73,23 +73,16 @@
             window.location.href = redirectUrl;
         });
 
-        // Dependent Dropdown Logic (Make -> Model)
+        // Dependent Dropdown Logic (Make -> Model) for global search or initial load
         $('#lgl_make').on('change', function () {
+            if (isUpdatingFilters) return; // Prevent conflicts with update_filter_options
+
             let make_id = $(this).val();
             let $model_select = $('#lgl_model');
+            let postType = $('#lgl_target_post_type').val() || $('#lgl_post_type').find('option:selected').data('post-type') || '';
 
-            // Resolve current post_type: prefer the hidden input (type-specific search form),
-            // fall back to the vehicle type select (global search form).
-            let postType = $('#lgl_target_post_type').val() || '';
-            if (!postType) {
-                postType = $('#lgl_post_type').find('option:selected').data('post-type') || '';
-            }
-
-            // Reset model dropdown
-            $model_select.empty()
-                .append('<option value="">Select Model</option>')
-                .prop('disabled', true)
-                .trigger('change');
+            // Soft reset model dropdown
+            $model_select.empty().append('<option value="">Select Model</option>').prop('disabled', true).trigger('change.select2');
 
             if (make_id) {
                 $.ajax({
@@ -107,7 +100,7 @@
                             $.each(response.data, function (index, item) {
                                 $model_select.append(new Option(item.text, item.id, false, false));
                             });
-                            $model_select.prop('disabled', false).trigger('change');
+                            $model_select.prop('disabled', false).trigger('change.select2');
                         }
                     }
                 });
@@ -115,36 +108,18 @@
         });
 
         // Vehicle Type change → load Makes for the selected type (global search form only)
-        // Fires when the user picks Caravan / Motorhome / Campervan from #lgl_post_type.
         $('#lgl_post_type').on('change', function () {
             const $selected = $(this).find('option:selected');
-            const postTypeSlug = $selected.data('post-type'); // e.g. "motorhome"
+            const postTypeSlug = $selected.data('post-type');
             const $makeSelect = $('#lgl_make');
             const $modelSelect = $('#lgl_model');
 
-            // Always reset both dependent dropdowns first
-            $makeSelect
-                .empty()
-                .append('<option value="">Select Vehicle Type First</option>')
-                .prop('disabled', true)
-                .trigger('change'); // refresh Select2 display
+            $makeSelect.empty().append('<option value="">Select Vehicle Type First</option>').prop('disabled', true).trigger('change.select2');
+            $modelSelect.empty().append('<option value="">Select Make First</option>').prop('disabled', true).trigger('change.select2');
 
-            $modelSelect
-                .empty()
-                .append('<option value="">Select Make First</option>')
-                .prop('disabled', true)
-                .trigger('change');
+            if (!postTypeSlug) return;
 
-            // Nothing selected — stop here
-            if (!postTypeSlug) {
-                return;
-            }
-
-            // Show a loading hint while the AJAX request is in flight
-            $makeSelect
-                .empty()
-                .append('<option value="">Loading makes…</option>')
-                .trigger('change');
+            $makeSelect.empty().append('<option value="">Loading makes…</option>').trigger('change.select2');
 
             $.ajax({
                 url: lgl_ajax_obj.ajax_url,
@@ -156,61 +131,50 @@
                 },
                 success: function (response) {
                     $makeSelect.empty().append('<option value="">All Makes</option>');
-
                     if (response.success && response.data.length > 0) {
                         $.each(response.data, function (i, item) {
                             $makeSelect.append(new Option(item.text, item.id, false, false));
                         });
-                        $makeSelect.prop('disabled', false).trigger('change');
+                        $makeSelect.prop('disabled', false).trigger('change.select2');
                     } else {
-                        // No makes available for this type
-                        $makeSelect
-                            .empty()
-                            .append('<option value="">No makes available</option>')
-                            .trigger('change');
+                        $makeSelect.empty().append('<option value="">No makes available</option>').trigger('change.select2');
                     }
                 },
                 error: function () {
-                    $makeSelect
-                        .empty()
-                        .append('<option value="">Error loading makes</option>')
-                        .trigger('change');
+                    $makeSelect.empty().append('<option value="">Error loading makes</option>').trigger('change.select2');
                 },
             });
         });
 
-        // Single handler — isUpdatingFilters guard prevents execute_search() from
-        // firing while _repopulate_select() programmatically updates dropdowns,
-        // which is what was causing 0-result combinations.
+        // Single handler — captures form data BEFORE execute_search disables the inputs!
         $('#lgl-search-form.lgl-filter-form-ajax, #lgl-sort-order').on('submit change', function (e) {
             if (e.type === 'submit') e.preventDefault();
             if (isUpdatingFilters) return;
-            currentPage = 1;
-            execute_search();
-            update_filter_options();
-        });
 
+            currentPage = 1;
+
+            // Capture the serialized data immediately before the fields are disabled
+            const currentFormData = $('#lgl-search-form').serialize();
+
+            execute_search(currentFormData);
+            update_filter_options(currentFormData);
+        });
 
         // Intercept standard WordPress pagination clicks for AJAX handling
         $(document).on('click', '.lgl-pagination-wrap a.page-numbers', function (e) {
             e.preventDefault();
 
             let href = $(this).attr('href');
-
-            // Extract the page number using regex
             let match = href.match(/paged=(\d+)/);
 
-            // If match is found, parse it. If null (WordPress stripped it for Page 1), default to 1.
             if (match) {
                 currentPage = parseInt(match[1], 10);
             } else {
                 currentPage = 1;
             }
 
-            // Execute the AJAX fetch with the updated page state
-            execute_search();
+            execute_search(); // Falls back to standard serialization
 
-            // UX: Scroll back to top of results when paginating
             $('html, body').animate({
                 scrollTop: $('.lgl-results-wrapper').offset().top - 40
             }, 400);
@@ -218,13 +182,14 @@
 
         /**
          * Fetches valid filter options for the current filter state and repopulates
-         * condition, berth, and price dropdowns so impossible combinations are impossible.
+         * the dropdowns so impossible combinations are completely hidden.
+         * * @param {string} providedFormData Pre-captured string to bypass disabled state limits
          */
-        function update_filter_options() {
+        function update_filter_options(providedFormData) {
             const postType = $('#lgl_target_post_type').val();
-            if (!postType) return; // Global search form — no post_type locked in yet
+            if (!postType) return; // Global search form bypass
 
-            const formData = $('#lgl-search-form').serialize();
+            const formData = (typeof providedFormData === 'string') ? providedFormData : $('#lgl-search-form').serialize();
 
             $.ajax({
                 url: lgl_ajax_obj.ajax_url,
@@ -241,10 +206,23 @@
 
                     isUpdatingFilters = true;
 
+                    // Standard text value dropdowns
                     _repopulate_select('#lgl_condition', d.conditions, 'Any Condition');
                     _repopulate_select('#lgl_berth', d.berths, 'Any Berth');
+
+                    // Complex object dropdowns
                     _repopulate_price_select('#lgl_price_min', d.prices, 'Min Price');
                     _repopulate_price_select('#lgl_price_max', d.prices, 'Max Price');
+
+                    // Add Makes and Models to dynamic repopulation
+                    _repopulate_object_select('#lgl_make', d.makes, 'All Makes');
+
+                    if ($('#lgl_make').val()) {
+                        _repopulate_object_select('#lgl_model', d.models, 'All Models');
+                        $('#lgl_model').prop('disabled', false).trigger('change.select2');
+                    } else {
+                        $('#lgl_model').empty().append(new Option('Select Make First', '')).prop('disabled', true).trigger('change.select2');
+                    }
 
                     isUpdatingFilters = false;
                 }
@@ -253,7 +231,6 @@
 
         /**
          * Rebuilds a plain-value select (condition, berth) with only the provided values.
-         * Preserves the current selection if it is still valid; resets to "" otherwise.
          */
         function _repopulate_select(selector, values, placeholder) {
             const $el = $(selector);
@@ -267,16 +244,12 @@
                 $el.append(new Option(val, val, false, String(val) === String(current)));
             });
 
-            if (current && !stillValid) {
-                $el.val('');
-            }
-
-            $el.trigger('change'); // Refresh Select2 display
+            if (current && !stillValid) $el.val('');
+            $el.trigger('change.select2');
         }
 
         /**
          * Rebuilds a price select with {value, label} objects.
-         * Preserves the current selection if it is still in the new price list.
          */
         function _repopulate_price_select(selector, prices, placeholder) {
             const $el = $(selector);
@@ -290,17 +263,34 @@
                 $el.append(new Option(item.label, item.value, false, item.value === current));
             });
 
-            if (current && !stillValid) {
-                $el.val('');
-            }
-
-            $el.trigger('change'); // Refresh Select2 display
+            if (current && !stillValid) $el.val('');
+            $el.trigger('change.select2');
         }
 
         /**
- * Enables or disables all filter selects in the search form during a loading state.
- * Skips fields that are intentionally disabled (e.g. model when no make is selected).
- */
+         * Rebuilds a select with {id, text} object arrays (specifically Make & Model taxonomies).
+         */
+        function _repopulate_object_select(selector, items, placeholder) {
+            const $el = $(selector);
+            const current = String($el.val() || '');
+
+            $el.empty().append(new Option(placeholder, ''));
+
+            let stillValid = false;
+            if (items && items.length > 0) {
+                $.each(items, function (i, item) {
+                    if (String(item.id) === current) stillValid = true;
+                    $el.append(new Option(item.text, item.id, false, String(item.id) === current));
+                });
+            }
+
+            if (current && !stillValid) $el.val('');
+            $el.trigger('change.select2');
+        }
+
+        /**
+         * Enables or disables all filter selects in the search form during a loading state.
+         */
         function _set_filters_disabled(disabled) {
             const $selects = $('#lgl-search-form select.lgl-select2');
 
@@ -309,31 +299,30 @@
                     if ($(this).prop('disabled')) {
                         $(this).data('lgl-was-disabled', true);
                     }
-                    $(this).prop('disabled', true).trigger('change.select2'); // ← change.select2 only
+                    $(this).prop('disabled', true).trigger('change.select2');
                 });
             } else {
                 $selects.each(function () {
                     if (!$(this).data('lgl-was-disabled')) {
-                        $(this).prop('disabled', false).trigger('change.select2'); // ← change.select2 only
+                        $(this).prop('disabled', false).trigger('change.select2');
                     }
                     $(this).removeData('lgl-was-disabled');
                 });
             }
         }
+
         /**
          * Compiles form parameters and dispatches the AJAX search payload.
-         *
-         * @return void
+         * * @param {string} providedFormData Pre-captured string to bypass disabled state limits
          */
-        function execute_search() {
-            // Abort any in-flight search — prevents double-loading when dependent
-            // dropdowns (e.g. model) fire a second change event after being repopulated
+        function execute_search(providedFormData) {
             if (activeSearchXhr) {
                 activeSearchXhr.abort();
                 activeSearchXhr = null;
             }
 
-            let formData = $('#lgl-search-form').serialize() + '&sort_order=' + $('#lgl-sort-order').val();
+            let formDataStr = (typeof providedFormData === 'string') ? providedFormData : $('#lgl-search-form').serialize();
+            let formData = formDataStr + '&sort_order=' + ($('#lgl-sort-order').val() || '');
             let postType = $('#lgl_target_post_type').val();
             let limit = parseInt($('#lgl-results-grid').data('limit'), 10) || 9;
 
@@ -367,7 +356,6 @@
                     }
                 },
                 error: function (xhr) {
-                    // Silently ignore aborted requests; alert on genuine errors
                     if (xhr.statusText !== 'abort') {
                         alert('A server error occurred. Please try again.');
                     }
@@ -382,11 +370,11 @@
             });
         }
 
-
         // Trigger initial search to populate grid on load
         if ($('#lgl-search-form').length) {
-            execute_search();
-            update_filter_options();
+            const initialData = $('#lgl-search-form').serialize();
+            execute_search(initialData);
+            update_filter_options(initialData);
         }
     }
 
