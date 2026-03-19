@@ -461,7 +461,7 @@ function resolveAllTags(html, siteName, currentYear) {
     html = html.replace(/\{\{(\w+)\}\}/g, function(m, key) {
         var v = getPlainTagValue(key, siteName, currentYear);
         return v !== null
-            ? "<em style=\"color:#888\">[" + v + "]</em>"
+            ? v
             : "<em style=\"color:#c00\">[" + key + "]</em>";
     });
     
