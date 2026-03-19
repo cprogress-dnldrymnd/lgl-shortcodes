@@ -630,7 +630,7 @@ function renderGlobalPreview() {
      * @returns {string} The processed HTML with tags replaced by placeholders.
      */
     function resolveTags(html) {
-        return resolveAllTags(html, siteName, currentYear);
+      return resolveAllTags(html, siteName, currentYear);
     }
 
 
