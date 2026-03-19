@@ -437,8 +437,10 @@ function getPlainTagValue(key, siteName, currentYear) {
  * @returns {string} The fully processed HTML string.
  */
 function resolveAllTags(html, siteName, currentYear) {
+    if (!html) return html || "";
     // Pass 1: double-quoted attributes
     html = html.replace(/="([^"]*)"/g, function(match, val) {
+
         if (val.indexOf("{{") === -1) return match;
         return "=\"" + val.replace(/\{\{(\w+)\}\}/g, function(m, key) {
             var v = getPlainTagValue(key, siteName, currentYear);
@@ -471,7 +473,8 @@ function resolveAllTags(html, siteName, currentYear) {
             var $activeEditor = $(".lgl-eb-tab-content.active .lgl-eb-textarea");
             if (!$activeEditor.length) return;
             
-            var html = $activeEditor.val();
+   var html = $activeEditor.val() || "";
+
             var currentYear = new Date().getFullYear();
             
             var siteName = $("#lgl-site-name").val() || "Website";
