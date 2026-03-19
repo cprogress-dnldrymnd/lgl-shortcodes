@@ -646,7 +646,7 @@ function renderGlobalPreview() {
     var sampleBody = "<h2>Sample Email Content</h2>"
         + "<p>This is how your email body will appear inside the global template. "
         + "Headers and footers defined here wrap every transactional email sent by the plugin.</p>"
-        + "<p><a class=\"eb-button\" href=\"#\">Example Button</a></p>"
+        + "<p><a class=\"eb-button\" style=\"color: #fff\" href=\"#\">Example Button</a></p>"
         + "<table><tr><th>Field</th><th>Value</th></tr>"
         + "<tr><td>Vehicle</td><td>Bailey Autograph 75-4i</td></tr>"
         + "<tr><td>Price</td><td>£29,995</td></tr></table>";
