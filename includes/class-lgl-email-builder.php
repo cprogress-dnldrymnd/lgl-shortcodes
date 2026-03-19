@@ -616,6 +616,7 @@ class LGL_Email_Builder
 
                         <input type="hidden" id="lgl-global-header-template" value="<?php echo esc_attr($global_settings['header']); ?>">
                         <input type="hidden" id="lgl-global-footer-template" value="<?php echo esc_attr($global_settings['footer']); ?>">
+                        <input type="hidden" id="lgl-site-name" value="<?php echo esc_attr(get_bloginfo('name')); ?>">
 
                         <div class="lgl-eb-tab-panels">
 
