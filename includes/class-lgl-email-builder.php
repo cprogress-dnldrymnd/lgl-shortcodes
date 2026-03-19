@@ -280,7 +280,7 @@ class LGL_Email_Builder
         ';
     }
 
-    private function admin_js(): string
+private function admin_js(): string
     {
         return '
     (function($){
@@ -341,21 +341,58 @@ class LGL_Email_Builder
             if (!$activeEditor.length) return;
             
             var html = $activeEditor.val();
+            var siteName = document.title.split("-")[0].trim() || "Website Name";
+            var currentYear = new Date().getFullYear();
+
             html = html.replace(/\{\{([^}]+)\}\}/g, function(m, tag){
                 var map = {
                     first_name: "John", last_name: "Doe", email: "john@example.com",
                     phone: "07700 900000", product_title: "Bailey Autograph 75-4i",
-                    product_url: "#", product_price: "£29,995", site_name: document.title,
+                    product_url: "#", product_price: "£29,995", site_name: siteName,
                     site_url: window.location.origin, date: new Date().toLocaleDateString("en-GB"),
                     "time": new Date().toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"})
                 };
                 return map[tag.toLowerCase()] || ("<em style=\"color:#c00\">[" + tag + "]</em>");
             });
+            
             var $frame = $("#lgl-eb-preview-frame");
             if (!$frame.length) return;
             
+            // Replicate the PHP wrap_html() styling for the JS live preview
+            var fullHtml = `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Preview</title>
+            <style>
+              body { margin:0; padding:0; background:#f5f5f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color:#1d2327; }
+              .eb-wrapper { max-width:640px; margin:30px auto; background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+              .eb-header { background:#001537; padding:24px 32px; }
+              .eb-header h1 { margin:0; font-size:20px; color:#fff; }
+              .eb-body { padding:32px; line-height:1.65; }
+              .eb-body h2 { font-size:18px; color:#001537; margin:0 0 16px; }
+              .eb-body p { margin:0 0 14px; font-size:14px; }
+              .eb-body a { color:#003793; }
+              .eb-body ul { padding-left:20px; margin:0 0 14px; }
+              .eb-body li { font-size:14px; margin-bottom:6px; }
+              .eb-body table { width:100%; border-collapse:collapse; margin-bottom:16px; }
+              .eb-body table td, .eb-body table th { padding:10px 12px; border:1px solid #e0e0e0; font-size:13px; text-align:left; }
+              .eb-body table th { background:#f6f7f7; font-weight:600; }
+              .eb-footer { background:#f6f7f7; padding:16px 32px; font-size:11px; color:#8c8f94; text-align:center; }
+            </style>
+            </head>
+            <body>
+              <div class="eb-wrapper">
+                <div class="eb-header"><h1>${siteName}</h1></div>
+                <div class="eb-body">${html}</div>
+                <div class="eb-footer">&copy; ${currentYear} ${siteName}. This is an automated notification.</div>
+              </div>
+            </body>
+            </html>`;
+
             var doc = $frame[0].contentDocument || $frame[0].contentWindow.document;
-            doc.open(); doc.write(html); doc.close();
+            doc.open(); doc.write(fullHtml); doc.close();
         }
 
         $(document).on("click", "#lgl-eb-preview-btn", function(e){
