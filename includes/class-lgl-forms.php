@@ -376,6 +376,7 @@ class LGL_Forms
                         </div>
                         <div class="lgl-fbl-section">
                             <h3><?php _e('Popup Labels', 'lgl-shortcodes'); ?></h3>
+                            <p class="description"><?php _e('You can use <code>{{make}}</code> and <code>{{model}}</code> dynamically here.', 'lgl-shortcodes'); ?></p>
                             <table class="form-table" style="margin:0">
                                 <tr>
                                     <th><label for="fc_button_text"><?php _e('Button Text', 'lgl-shortcodes'); ?></label></th>
@@ -524,6 +525,7 @@ class LGL_Forms
                     <div>
                         <div class="lgl-fbl-section">
                             <h3><?php _e('General Settings', 'lgl-shortcodes'); ?></h3>
+                            <p class="description"><?php _e('You can use <code>{{make}}</code> and <code>{{model}}</code> dynamically here.', 'lgl-shortcodes'); ?></p>
                             <table class="form-table" style="margin:0">
                                 <tr>
                                     <th><label><?php _e('Button Text', 'lgl-shortcodes'); ?></label></th>
@@ -1180,6 +1182,53 @@ class LGL_Forms
     /* ═══════════════════════════════════════════════════════════════
        PUBLIC HELPERS (used by lgl-modals.php and single-lgl.php)
     ═══════════════════════════════════════════════════════════════ */
+
+    /**
+     * Extracts parent Make and child Model from the custom taxonomy list.
+     * @param int $post_id Evaluated current Post ID.
+     * @return array ['make' => string, 'model' => string]
+     */
+    public static function get_vehicle_make_model($post_id)
+    {
+        $terms = wp_get_post_terms($post_id, 'listing-make-model');
+        $make  = '';
+        $model = '';
+
+        if (! is_wp_error($terms) && ! empty($terms)) {
+            foreach ($terms as $term) {
+                if ($term->parent == 0) {
+                    $make = $term->name;
+                } else {
+                    $model = $term->name;
+                }
+            }
+        }
+        return ['make' => $make, 'model' => $model];
+    }
+
+    /**
+     * Parses dynamic template tags ({{make}}, {{model}}) out of modal strings.
+     * @param string $string Raw admin configuration string.
+     * @param int $post_id Target product ID for evaluation.
+     * @return string Parsed output.
+     */
+    public static function parse_modal_string($string, $post_id)
+    {
+        if (empty($string)) return $string;
+
+        $make_model = self::get_vehicle_make_model($post_id);
+        
+        $replacements = [
+            '{{make}}'  => $make_model['make'],
+            '{{model}}' => $make_model['model'],
+        ];
+
+        // Process replacements
+        $parsed = str_replace(array_keys($replacements), array_values($replacements), $string);
+        
+        // Strip out resulting double spaces if a parameter wasn't available
+        return trim(preg_replace('/\s+/', ' ', $parsed));
+    }
 
     /**
      * Retrieves stored data for Finance Calculator configs.
