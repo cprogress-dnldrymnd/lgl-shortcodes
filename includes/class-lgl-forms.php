@@ -736,7 +736,7 @@ class LGL_Forms
         <script>
             (function($) {
                 var descs = {
-                    auto_reserve: "One click reserves immediately. No form shown. Button label changes to 'Reserved'.",
+                    auto_reserve: "Opens the reservation form popup. Submission saved to database and disable the reserve popup.",
                     form_only: "Opens the reservation form popup. Submission saved to the database.",
                     no_reserve: "Reserve button is completely hidden on this product."
                 };
