@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '3.7.2'); 
+define('LGL_SHORTCODES_VERSION', '3.7.2');
 // ── Load the Forms integration ──
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-forms.php';
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-email-builder.php';
@@ -240,6 +240,26 @@ if (! class_exists('LGL_Shortcodes')) {
             );
         }
 
+        /**
+         * Single source of truth for Contact Information fields.
+         * Add new contact fields here — they automatically appear in:
+         *   - Settings → Contact Information tab
+         *   - Email Builder merge tag toolbar as {{key}}
+         *
+         * @return array  [ 'settings_key' => [ 'label' => string, 'type' => string, 'default' => string ] ]
+         */
+        public static function get_contact_fields_definition(): array
+        {
+            return array(
+                'contact_phone'    => array('label' => 'Phone Number',    'type' => 'text',     'default' => ''),
+                'contact_whatsapp' => array('label' => 'WhatsApp Number', 'type' => 'text',     'default' => ''),
+                'contact_email'    => array('label' => 'Email Address',   'type' => 'text',     'default' => ''),
+                'contact_address'  => array('label' => 'Address',         'type' => 'textarea', 'default' => ''),
+                'contact_test'  => array('label' => 'Test',         'type' => 'textarea', 'default' => ''),
+                // Add new contact fields here e.g.:
+                // 'contact_facebook' => array( 'label' => 'Facebook URL', 'type' => 'text', 'default' => '' ),
+            );
+        }
 
         /**
          * Registers settings, sections, and fields via the WordPress Settings API.
@@ -331,13 +351,7 @@ if (! class_exists('LGL_Shortcodes')) {
             // --- TAB 4: Contact Information ---
             add_settings_section('lgl_contact_section', 'Contact Information', null, 'lgl-settings-contact');
 
-            $contact_fields = array(
-                'contact_phone'    => array('label' => 'Phone Number', 'type' => 'text', 'default' => ''),
-                'contact_whatsapp' => array('label' => 'Whatsapp Number', 'type' => 'text', 'default' => ''),
-                'contact_email'    => array('label' => 'Email Address', 'type' => 'text', 'default' => ''),
-                'contact_address'  => array('label' => 'Address', 'type' => 'textarea', 'default' => ''),
-                'contact_test'  => array('label' => 'Test', 'type' => 'textarea', 'default' => ''),
-            );
+            $contact_fields = self::get_contact_fields_definition();
 
             foreach ($contact_fields as $id => $field) {
                 add_settings_field(
