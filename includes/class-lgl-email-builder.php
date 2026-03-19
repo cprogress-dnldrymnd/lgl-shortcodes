@@ -1,8 +1,12 @@
 <?php
 
 /**
- * LGL Email Builder — Visual email template editor with merge tag support.
+ * Plugin Name: LGL Email Builder
+ * Author: Digitally Disruptive - Donald Raymundo
+ * Author URI: https://digitallydisruptive.co.uk/
+ * Description: Visual email template editor with merge tag support.
  */
+
 if (! defined('ABSPATH')) exit;
 
 class LGL_Email_Builder
@@ -63,9 +67,18 @@ class LGL_Email_Builder
     private function admin_css(): string
     {
         return '
+        /* ── Master Layout ── */
+        .lgl-eb-wrap { max-width: 1600px; }
+        .lgl-eb-master-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 500px;
+            gap: 30px;
+            margin-top: 20px;
+            align-items: start;
+        }
+
         /* ── Email Builder Layout ── */
-        .lgl-eb-wrap { max-width: 1200px; }
-        .lgl-eb-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; margin-top: 20px; }
+        .lgl-eb-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
 
         /* ── Section cards ── */
         .lgl-eb-section {
@@ -150,7 +163,7 @@ class LGL_Email_Builder
         }
         .lgl-eb-textarea {
             width: 100%;
-            min-height: 280px;
+            min-height: 380px;
             font-family: monospace;
             font-size: 13px;
             padding: 12px;
@@ -168,15 +181,30 @@ class LGL_Email_Builder
             margin-bottom: 6px;
         }
 
-        /* ── Preview panel ── */
-        .lgl-eb-preview-btn { display: inline-block; margin-top: 10px; }
+        /* ── Sticky Preview Panel ── */
+        .lgl-eb-preview-sticky {
+            position: sticky;
+            top: 40px;
+        }
+        .lgl-eb-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .lgl-eb-preview-header h3 {
+            margin: 0;
+            border: none;
+            padding: 0;
+        }
         #lgl-eb-preview-frame {
             width: 100%;
-            height: 460px;
+            height: calc(100vh - 120px);
+            min-height: 600px;
             border: 1px solid #c3c4c7;
             border-radius: 3px;
             background: #fff;
-            margin-top: 10px;
+            display: block;
         }
 
         /* ── Merge tag reference ── */
@@ -243,29 +271,29 @@ class LGL_Email_Builder
         .lgl-eb-test-msg.success { color: #00a32a; }
         .lgl-eb-test-msg.error { color: #d63638; }
 
+        @media (max-width: 1300px) { 
+            .lgl-eb-master-layout { grid-template-columns: 1fr; }
+            #lgl-eb-preview-frame { height: 600px; }
+            .lgl-eb-preview-sticky { position: static; }
+        }
         @media (max-width: 1024px) { .lgl-eb-layout { grid-template-columns: 1fr; } }
         ';
     }
 
     private function admin_js(): string
     {
-        // FIX 1: Tab switching uses document.find() instead of .next() so it works
-        //         even though .lgl-eb-tab-panels is inside a <form> sibling.
-        // FIX 2: Nonce value is read from #lgl-eb-nonce-value (a dedicated hidden input).
         return '
     (function($){
 
         // ── Tab switching ─────────────────────────────────────────────
-        // IMPORTANT: .lgl-eb-tab-panels lives inside a <form> that is the
-        // NEXT sibling of .lgl-eb-tabs, so .next() never finds it.
-        // We search the whole page wrapper instead.
         $(document).on("click", ".lgl-eb-tab", function(){
             var idx = $(this).index();
             $(this).addClass("active").siblings().removeClass("active");
-
-            // Walk up to the .wrap container and find the panels from there
-            var $panels = $(this).closest(".lgl-eb-wrap").find(".lgl-eb-tab-panels");
+            var $panels = $(this).closest(".lgl-eb-builder-column").find(".lgl-eb-tab-panels");
             $panels.find(".lgl-eb-tab-content").removeClass("active").eq(idx).addClass("active");
+            
+            // Re-render preview for newly active tab
+            setTimeout(function(){ $("#lgl-eb-preview-btn").trigger("click"); }, 50);
         });
 
         // ── Track last focused editor ─────────────────────────────────
@@ -279,7 +307,7 @@ class LGL_Email_Builder
             e.preventDefault();
             var tag = $(this).data("tag") || $(this).text().trim();
             if (!$lastFocus || !$lastFocus.length) {
-                $lastFocus = $(".lgl-eb-textarea:first");
+                $lastFocus = $(".lgl-eb-tab-content.active .lgl-eb-textarea:first");
             }
             var el = $lastFocus[0];
             var start = el.selectionStart, end = el.selectionEnd;
@@ -287,6 +315,9 @@ class LGL_Email_Builder
             el.value = val.substring(0, start) + tag + val.substring(end);
             el.selectionStart = el.selectionEnd = start + tag.length;
             el.focus();
+            
+            // Trigger preview update
+            $("#lgl-eb-preview-btn").trigger("click");
         });
 
         // ── Auto-reply toggle ─────────────────────────────────────────
@@ -305,9 +336,11 @@ class LGL_Email_Builder
         });
 
         // ── Live preview ──────────────────────────────────────────────
-        $(document).on("click", "#lgl-eb-preview-btn", function(e){
-            e.preventDefault();
-            var html = $("#lgl-eb-body").val();
+        function renderPreview() {
+            var $activeEditor = $(".lgl-eb-tab-content.active .lgl-eb-textarea");
+            if (!$activeEditor.length) return;
+            
+            var html = $activeEditor.val();
             html = html.replace(/\{\{([^}]+)\}\}/g, function(m, tag){
                 var map = {
                     first_name: "John", last_name: "Doe", email: "john@example.com",
@@ -319,18 +352,25 @@ class LGL_Email_Builder
                 return map[tag.toLowerCase()] || ("<em style=\"color:#c00\">[" + tag + "]</em>");
             });
             var $frame = $("#lgl-eb-preview-frame");
-            if (!$frame.length) {
-                $frame = $("<iframe id=\"lgl-eb-preview-frame\"></iframe>");
-                $(this).after($frame);
-            }
-            $frame.show();
+            if (!$frame.length) return;
+            
             var doc = $frame[0].contentDocument || $frame[0].contentWindow.document;
             doc.open(); doc.write(html); doc.close();
+        }
+
+        $(document).on("click", "#lgl-eb-preview-btn", function(e){
+            if(e) e.preventDefault();
+            renderPreview();
+        });
+
+        // Debounced Live Preview on Keyup
+        var previewTimeout;
+        $(document).on("input", ".lgl-eb-textarea", function(){
+            clearTimeout(previewTimeout);
+            previewTimeout = setTimeout(renderPreview, 400);
         });
 
         // ── Send test email ───────────────────────────────────────────
-        // FIX 2: Read from #lgl-eb-nonce-value (set to wp_create_nonce("lgl_email_builder"))
-        //         and POST action "lgl_send_test_email".
         $(document).on("click", "#lgl-eb-send-test", function(e){
             e.preventDefault();
             var email = $("#lgl-eb-test-email").val().trim();
@@ -360,10 +400,13 @@ class LGL_Email_Builder
         });
 
         // ── Trigger initial states on page load ───────────────────────
-        $("[name=\'recipient_type\']:checked").trigger("change");
-        if ($("#lgl-eb-auto-reply-toggle").is(":checked")) {
-            $("#lgl-eb-autoreply-section").addClass("is-open");
-        }
+        $(document).ready(function() {
+            $("[name=\'recipient_type\']:checked").trigger("change");
+            if ($("#lgl-eb-auto-reply-toggle").is(":checked")) {
+                $("#lgl-eb-autoreply-section").addClass("is-open");
+            }
+            renderPreview();
+        });
 
     })(jQuery);
     ';
@@ -408,154 +451,146 @@ class LGL_Email_Builder
             ? __('Enquiry Email Builder', 'lgl-shortcodes')
             : __('Reserve Email Builder', 'lgl-shortcodes');
 
-        // FIX 2: Dedicated nonce for the AJAX test-email endpoint
         $test_nonce = wp_create_nonce('lgl_email_builder');
 ?>
         <div class="wrap lgl-eb-wrap">
             <h1><?php echo esc_html($title); ?></h1>
 
-            <!-- Tabs sit OUTSIDE the form so .closest(".lgl-eb-wrap").find() works correctly -->
-            <div class="lgl-eb-tabs">
-                <div class="lgl-eb-tab active"><?php _e('📬 Admin Notification', 'lgl-shortcodes'); ?></div>
-                <div class="lgl-eb-tab"><?php _e('↩️ Auto-Reply to Submitter', 'lgl-shortcodes'); ?></div>
-                <div class="lgl-eb-tab"><?php _e('🔍 Preview', 'lgl-shortcodes'); ?></div>
+            <div class="lgl-eb-master-layout">
+
+                <div class="lgl-eb-builder-column">
+                    <div class="lgl-eb-tabs">
+                        <div class="lgl-eb-tab active"><?php _e('📬 Admin Notification', 'lgl-shortcodes'); ?></div>
+                        <div class="lgl-eb-tab"><?php _e('↩️ Auto-Reply to Submitter', 'lgl-shortcodes'); ?></div>
+                    </div>
+
+                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                        <?php wp_nonce_field("lgl_save_{$type}_email", 'lgl_eb_form_nonce'); ?>
+                        <input type="hidden" name="action" value="<?php echo esc_attr($action); ?>">
+                        <input type="hidden" name="form_type" value="<?php echo esc_attr($type); ?>">
+                        <input type="hidden" id="lgl-eb-nonce-value" value="<?php echo esc_attr($test_nonce); ?>">
+
+                        <div class="lgl-eb-tab-panels">
+
+                            <div class="lgl-eb-tab-content active">
+                                <div class="lgl-eb-layout">
+                                    <div class="lgl-eb-main">
+
+                                        <div class="lgl-eb-section">
+                                            <h3><?php _e('Recipients', 'lgl-shortcodes'); ?></h3>
+                                            <div class="lgl-eb-recipient-opts">
+                                                <label>
+                                                    <input type="radio" name="recipient_type" value="admin" <?php checked($rec_type, 'admin'); ?>>
+                                                    <?php _e('Site admin email', 'lgl-shortcodes'); ?>
+                                                    <code style="font-size:11px;background:#f6f7f7;padding:1px 6px;border-radius:2px;border:1px solid #e0e0e0;"><?php echo esc_html(get_option('admin_email')); ?></code>
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="recipient_type" value="custom" <?php checked($rec_type, 'custom'); ?>>
+                                                    <?php _e('Custom email address', 'lgl-shortcodes'); ?>
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="recipient_type" value="both" <?php checked($rec_type, 'both'); ?>>
+                                                    <?php _e('Both (admin + custom)', 'lgl-shortcodes'); ?>
+                                                </label>
+                                            </div>
+                                            <div id="lgl-custom-email-row" <?php echo in_array($rec_type, ['custom', 'both'], true) ? 'class="is-visible"' : ''; ?>>
+                                                <div class="lgl-eb-row">
+                                                    <label><?php _e('Custom email address', 'lgl-shortcodes'); ?></label>
+                                                    <input type="email" name="custom_email" value="<?php echo esc_attr($custom_email); ?>" placeholder="sales@example.com">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="lgl-eb-section">
+                                            <h3><?php _e('Subject Line', 'lgl-shortcodes'); ?></h3>
+                                            <div class="lgl-eb-subject-tags">
+                                                <?php foreach ($this->subject_tags($all_tags) as $tag => $label) : ?>
+                                                    <button type="button" class="lgl-eb-insert-tag" data-tag="<?php echo esc_attr($tag); ?>" title="<?php echo esc_attr($label); ?>"><?php echo esc_html($tag); ?></button>
+                                                <?php endforeach; ?>
+                                            </div>
+                                            <div class="lgl-eb-row">
+                                                <input type="text" name="subject" id="lgl-eb-subject" class="lgl-eb-subject-input" value="<?php echo esc_attr($subject); ?>" placeholder="<?php echo esc_attr($type === 'enquiry' ? 'New Enquiry: {{first_name}} {{last_name}} — {{product_title}}' : 'New Reservation: {{first_name}} {{last_name}} — {{product_title}}'); ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="lgl-eb-section">
+                                            <h3><?php _e('Email Body', 'lgl-shortcodes'); ?> <span style="font-size:11px;font-weight:400;color:#8c8f94;">(HTML supported)</span></h3>
+                                            <?php $this->render_tag_toolbar($all_tags, 'lgl-eb-body'); ?>
+                                            <textarea name="body" id="lgl-eb-body" class="lgl-eb-textarea"><?php echo esc_textarea($body ?: $this->default_admin_body($type)); ?></textarea>
+                                        </div>
+
+                                        <div class="lgl-eb-section">
+                                            <h3><?php _e('Send Test Email', 'lgl-shortcodes'); ?></h3>
+                                            <p class="description"><?php _e('Sends a preview with placeholder values substituted for merge tags.', 'lgl-shortcodes'); ?></p>
+                                            <div class="lgl-eb-test-row">
+                                                <input type="email" id="lgl-eb-test-email" placeholder="your@email.com" value="<?php echo esc_attr(get_option('admin_email')); ?>">
+                                                <button type="button" id="lgl-eb-send-test" class="button"><?php _e('Send Test', 'lgl-shortcodes'); ?></button>
+                                                <span class="lgl-eb-test-msg" id="lgl-eb-test-msg"></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="lgl-eb-sidebar">
+                                        <?php $this->render_tag_reference($all_tags); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lgl-eb-tab-content">
+                                <div class="lgl-eb-layout">
+                                    <div class="lgl-eb-main">
+                                        <div class="lgl-eb-section">
+                                            <h3><?php _e('Auto-Reply Settings', 'lgl-shortcodes'); ?></h3>
+                                            <div class="lgl-eb-toggle-row">
+                                                <input type="checkbox" id="lgl-eb-auto-reply-toggle" name="auto_reply_enabled" value="1" <?php checked($auto_reply); ?>>
+                                                <label for="lgl-eb-auto-reply-toggle" style="font-weight:600;font-size:13px;cursor:pointer;"><?php _e('Send an automatic reply to the person who submitted this form', 'lgl-shortcodes'); ?></label>
+                                            </div>
+                                            <p class="description"><?php _e('Requires the form to have an <code>email</code> field.', 'lgl-shortcodes'); ?></p>
+                                        </div>
+
+                                        <div id="lgl-eb-autoreply-section" class="lgl-eb-collapsible <?php echo $auto_reply ? 'is-open' : ''; ?>">
+                                            <div class="lgl-eb-section">
+                                                <h3><?php _e('Auto-Reply Subject', 'lgl-shortcodes'); ?></h3>
+                                                <div class="lgl-eb-subject-tags">
+                                                    <?php foreach ($this->subject_tags($all_tags) as $tag => $label) : ?>
+                                                        <button type="button" class="lgl-eb-insert-tag" data-tag="<?php echo esc_attr($tag); ?>"><?php echo esc_html($tag); ?></button>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                                <div class="lgl-eb-row">
+                                                    <input type="text" name="auto_reply_subject" class="lgl-eb-subject-input" value="<?php echo esc_attr($ar_subject); ?>" placeholder="<?php esc_attr_e('Thank you for your enquiry, {{first_name}}', 'lgl-shortcodes'); ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="lgl-eb-section">
+                                                <h3><?php _e('Auto-Reply Body', 'lgl-shortcodes'); ?></h3>
+                                                <?php $this->render_tag_toolbar($all_tags, 'lgl-eb-ar-body'); ?>
+                                                <textarea name="auto_reply_body" id="lgl-eb-ar-body" class="lgl-eb-textarea"><?php echo esc_textarea($ar_body ?: $this->default_autoreply_body($type)); ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="lgl-eb-sidebar">
+                                        <?php $this->render_tag_reference($all_tags); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><?php submit_button(__('Save Email Settings', 'lgl-shortcodes')); ?>
+                    </form>
+                </div>
+
+                <div class="lgl-eb-preview-column">
+                    <div class="lgl-eb-section lgl-eb-preview-sticky">
+                        <div class="lgl-eb-preview-header">
+                            <h3><?php _e('Live HTML Preview', 'lgl-shortcodes'); ?></h3>
+                            <button type="button" id="lgl-eb-preview-btn" class="button button-secondary button-small"><?php _e('⟳ Refresh', 'lgl-shortcodes'); ?></button>
+                        </div>
+                        <iframe id="lgl-eb-preview-frame" title="Email Preview"></iframe>
+                    </div>
+                </div>
+
             </div>
-
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                <?php wp_nonce_field("lgl_save_{$type}_email", 'lgl_eb_form_nonce'); ?>
-                <input type="hidden" name="action" value="<?php echo esc_attr($action); ?>">
-                <input type="hidden" name="form_type" value="<?php echo esc_attr($type); ?>">
-
-                <!-- Dedicated hidden input for the test-email AJAX nonce -->
-                <input type="hidden" id="lgl-eb-nonce-value" value="<?php echo esc_attr($test_nonce); ?>">
-
-                <div class="lgl-eb-tab-panels">
-
-                    <!-- ── TAB 1: Admin notification ── -->
-                    <div class="lgl-eb-tab-content active">
-                        <div class="lgl-eb-layout">
-                            <div class="lgl-eb-main">
-
-                                <!-- Recipients -->
-                                <div class="lgl-eb-section">
-                                    <h3><?php _e('Recipients', 'lgl-shortcodes'); ?></h3>
-                                    <div class="lgl-eb-recipient-opts">
-                                        <label>
-                                            <input type="radio" name="recipient_type" value="admin" <?php checked($rec_type, 'admin'); ?>>
-                                            <?php _e('Site admin email', 'lgl-shortcodes'); ?>
-                                            <code style="font-size:11px;background:#f6f7f7;padding:1px 6px;border-radius:2px;border:1px solid #e0e0e0;"><?php echo esc_html(get_option('admin_email')); ?></code>
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="recipient_type" value="custom" <?php checked($rec_type, 'custom'); ?>>
-                                            <?php _e('Custom email address', 'lgl-shortcodes'); ?>
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="recipient_type" value="both" <?php checked($rec_type, 'both'); ?>>
-                                            <?php _e('Both (admin + custom)', 'lgl-shortcodes'); ?>
-                                        </label>
-                                    </div>
-                                    <div id="lgl-custom-email-row" <?php echo in_array($rec_type, ['custom', 'both'], true) ? 'class="is-visible"' : ''; ?>>
-                                        <div class="lgl-eb-row">
-                                            <label><?php _e('Custom email address', 'lgl-shortcodes'); ?></label>
-                                            <input type="email" name="custom_email" value="<?php echo esc_attr($custom_email); ?>" placeholder="sales@example.com">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Subject -->
-                                <div class="lgl-eb-section">
-                                    <h3><?php _e('Subject Line', 'lgl-shortcodes'); ?></h3>
-                                    <div class="lgl-eb-subject-tags">
-                                        <?php foreach ($this->subject_tags($all_tags) as $tag => $label) : ?>
-                                            <button type="button" class="lgl-eb-insert-tag" data-tag="<?php echo esc_attr($tag); ?>" title="<?php echo esc_attr($label); ?>"><?php echo esc_html($tag); ?></button>
-                                        <?php endforeach; ?>
-                                    </div>
-                                    <div class="lgl-eb-row">
-                                        <input type="text" name="subject" id="lgl-eb-subject" class="lgl-eb-subject-input" value="<?php echo esc_attr($subject); ?>" placeholder="<?php echo esc_attr($type === 'enquiry' ? 'New Enquiry: {{first_name}} {{last_name}} — {{product_title}}' : 'New Reservation: {{first_name}} {{last_name}} — {{product_title}}'); ?>">
-                                    </div>
-                                </div>
-
-                                <!-- Body -->
-                                <div class="lgl-eb-section">
-                                    <h3><?php _e('Email Body', 'lgl-shortcodes'); ?> <span style="font-size:11px;font-weight:400;color:#8c8f94;">(HTML supported)</span></h3>
-                                    <?php $this->render_tag_toolbar($all_tags, 'lgl-eb-body'); ?>
-                                    <textarea name="body" id="lgl-eb-body" class="lgl-eb-textarea"><?php echo esc_textarea($body ?: $this->default_admin_body($type)); ?></textarea>
-                                </div>
-
-                                <!-- Test send -->
-                                <div class="lgl-eb-section">
-                                    <h3><?php _e('Send Test Email', 'lgl-shortcodes'); ?></h3>
-                                    <p class="description"><?php _e('Sends a preview with placeholder values substituted for merge tags.', 'lgl-shortcodes'); ?></p>
-                                    <div class="lgl-eb-test-row">
-                                        <input type="email" id="lgl-eb-test-email" placeholder="your@email.com" value="<?php echo esc_attr(get_option('admin_email')); ?>">
-                                        <button type="button" id="lgl-eb-send-test" class="button"><?php _e('Send Test', 'lgl-shortcodes'); ?></button>
-                                        <span class="lgl-eb-test-msg" id="lgl-eb-test-msg"></span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- Sidebar -->
-                            <div class="lgl-eb-sidebar">
-                                <?php $this->render_tag_reference($all_tags); ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── TAB 2: Auto-reply ── -->
-                    <div class="lgl-eb-tab-content">
-                        <div class="lgl-eb-layout">
-                            <div class="lgl-eb-main">
-                                <div class="lgl-eb-section">
-                                    <h3><?php _e('Auto-Reply Settings', 'lgl-shortcodes'); ?></h3>
-                                    <div class="lgl-eb-toggle-row">
-                                        <input type="checkbox" id="lgl-eb-auto-reply-toggle" name="auto_reply_enabled" value="1" <?php checked($auto_reply); ?>>
-                                        <label for="lgl-eb-auto-reply-toggle" style="font-weight:600;font-size:13px;cursor:pointer;"><?php _e('Send an automatic reply to the person who submitted this form', 'lgl-shortcodes'); ?></label>
-                                    </div>
-                                    <p class="description"><?php _e('Requires the form to have an <code>email</code> field.', 'lgl-shortcodes'); ?></p>
-                                </div>
-
-                                <div id="lgl-eb-autoreply-section" class="lgl-eb-collapsible <?php echo $auto_reply ? 'is-open' : ''; ?>">
-                                    <div class="lgl-eb-section">
-                                        <h3><?php _e('Auto-Reply Subject', 'lgl-shortcodes'); ?></h3>
-                                        <div class="lgl-eb-subject-tags">
-                                            <?php foreach ($this->subject_tags($all_tags) as $tag => $label) : ?>
-                                                <button type="button" class="lgl-eb-insert-tag" data-tag="<?php echo esc_attr($tag); ?>"><?php echo esc_html($tag); ?></button>
-                                            <?php endforeach; ?>
-                                        </div>
-                                        <div class="lgl-eb-row">
-                                            <input type="text" name="auto_reply_subject" class="lgl-eb-subject-input" value="<?php echo esc_attr($ar_subject); ?>" placeholder="<?php esc_attr_e('Thank you for your enquiry, {{first_name}}', 'lgl-shortcodes'); ?>">
-                                        </div>
-                                    </div>
-
-                                    <div class="lgl-eb-section">
-                                        <h3><?php _e('Auto-Reply Body', 'lgl-shortcodes'); ?></h3>
-                                        <?php $this->render_tag_toolbar($all_tags, 'lgl-eb-ar-body'); ?>
-                                        <textarea name="auto_reply_body" id="lgl-eb-ar-body" class="lgl-eb-textarea"><?php echo esc_textarea($ar_body ?: $this->default_autoreply_body($type)); ?></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="lgl-eb-sidebar">
-                                <?php $this->render_tag_reference($all_tags); ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── TAB 3: Preview ── -->
-                    <div class="lgl-eb-tab-content">
-                        <div class="lgl-eb-section">
-                            <h3><?php _e('Admin Email Preview', 'lgl-shortcodes'); ?></h3>
-                            <p class="description"><?php _e('Preview uses placeholder values for merge tags. Click the button to refresh.', 'lgl-shortcodes'); ?></p>
-                            <button type="button" id="lgl-eb-preview-btn" class="button button-secondary lgl-eb-preview-btn"><?php _e('⟳ Refresh Preview', 'lgl-shortcodes'); ?></button>
-                            <iframe id="lgl-eb-preview-frame" title="Email Preview" style="display:none;"></iframe>
-                        </div>
-                    </div>
-
-                </div><!-- /.lgl-eb-tab-panels -->
-
-                <?php submit_button(__('Save Email Settings', 'lgl-shortcodes')); ?>
-            </form>
         </div>
 <?php
     }
@@ -591,7 +626,7 @@ class LGL_Email_Builder
         $groups = $this->grouped_tags($all_tags);
         echo '<div class="lgl-eb-section">';
         echo '<h3>' . __('Merge Tag Reference', 'lgl-shortcodes') . '</h3>';
-        echo '<p class="description" style="margin-bottom:12px;font-size:11px;">' . __('Click a tag to insert it into the last active editor.', 'lgl-shortcodes') . '</p>';
+        echo '<p class="description" style="margin-bottom:12px;font-size:11px;">' . __('Click a tag to insert it into the active editor.', 'lgl-shortcodes') . '</p>';
 
         foreach ($groups as $group_label => $tags) {
             echo '<h4 style="margin:14px 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#8c8f94;">' . esc_html($group_label) . '</h4>';
@@ -623,13 +658,13 @@ class LGL_Email_Builder
         $rec_type = sanitize_text_field($_POST['recipient_type'] ?? 'admin');
 
         update_option("lgl_{$form_type}_email", [
-            'subject'             => sanitize_text_field($_POST['subject']             ?? ''),
-            'body'                => wp_kses_post($_POST['body']                       ?? ''),
-            'recipient_type'      => in_array($rec_type, $allowed_recipients, true) ? $rec_type : 'admin',
-            'custom_email'        => sanitize_email($_POST['custom_email']             ?? ''),
-            'auto_reply_enabled'  => ! empty($_POST['auto_reply_enabled']),
-            'auto_reply_subject'  => sanitize_text_field($_POST['auto_reply_subject']  ?? ''),
-            'auto_reply_body'     => wp_kses_post($_POST['auto_reply_body']            ?? ''),
+            'subject'            => sanitize_text_field($_POST['subject']            ?? ''),
+            'body'               => wp_kses_post($_POST['body']                      ?? ''),
+            'recipient_type'     => in_array($rec_type, $allowed_recipients, true) ? $rec_type : 'admin',
+            'custom_email'       => sanitize_email($_POST['custom_email']            ?? ''),
+            'auto_reply_enabled' => ! empty($_POST['auto_reply_enabled']),
+            'auto_reply_subject' => sanitize_text_field($_POST['auto_reply_subject'] ?? ''),
+            'auto_reply_body'    => wp_kses_post($_POST['auto_reply_body']           ?? ''),
         ]);
 
         wp_redirect(admin_url("admin.php?page=lgl-{$form_type}-email&saved=1"));
