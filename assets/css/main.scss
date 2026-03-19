@@ -986,6 +986,7 @@
     &.lgl-btn-outline {
         color: var(--lgl-color-secondary);
         border-color: var(--lgl-color-secondary);
+        background-color: transparent;
         &:hover {
             background-color: var(--lgl-color-secondary);
             color: var(--lgl-color-tertiary);

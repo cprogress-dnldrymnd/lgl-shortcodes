@@ -762,7 +762,8 @@
       color: var(--lgl-color-accent); }
   .lgl-btn.lgl-btn.lgl-btn-outline {
     color: var(--lgl-color-secondary);
-    border-color: var(--lgl-color-secondary); }
+    border-color: var(--lgl-color-secondary);
+    background-color: transparent; }
     .lgl-btn.lgl-btn.lgl-btn-outline:hover {
       background-color: var(--lgl-color-secondary);
       color: var(--lgl-color-tertiary); }
