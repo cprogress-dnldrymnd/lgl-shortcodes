@@ -592,6 +592,20 @@
   @media (max-width: 575px) {
     .single-lgl.single-lgl.single-lgl .lgl-current-page {
       display: none; } }
+  .single-lgl.single-lgl.single-lgl h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 0;
+    margin-top: 20px; }
+    @media (max-width: 767px) {
+      .single-lgl.single-lgl.single-lgl h1 {
+        font-size: 1.75rem; } }
+    @media (max-width: 575px) {
+      .single-lgl.single-lgl.single-lgl h1 {
+        font-size: 1.5rem; } }
+    @media (max-width: 480px) {
+      .single-lgl.single-lgl.single-lgl h1 {
+        font-size: 1.25rem; } }
 
 .lgl-post--wrap {
   position: relative;

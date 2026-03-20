@@ -785,6 +785,21 @@
             display: none;
         }
     }
+    h1 {
+        font-size: 2rem;
+        line-height: 1.2;
+        margin-bottom: 0;
+        margin-top: 20px;
+        @media (max-width: 767px) {
+            font-size: 1.75rem;
+        }
+        @media (max-width: 575px) {
+            font-size: 1.5rem;
+        }
+        @media (max-width: 480px) {
+            font-size: 1.25rem;
+        }
+    }
 }
 
 .lgl-post--wrap {
