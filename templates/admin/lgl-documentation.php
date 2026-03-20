@@ -508,7 +508,7 @@ if (!current_user_can('manage_options')) {
             'description' => 'Configures the Reserve modal form and the vehicle reservation system. Supports three modes that can be set globally here and overridden per vehicle via the Vehicle Form Settings meta box on each post edit screen.',
             'fields'      => array(
                 array('name' => 'Button Text',             'type' => 'Text',     'default' => 'RESERVE NOW',   'description' => 'Label on the Reserve button on the single vehicle page.'),
-                array('Reserved Button Text',            'type' => 'Text',     'default' => 'Reserved',      'description' => 'Label shown on the button after the vehicle has been reserved. The button is disabled at this point.'),
+                array('name' => '"Reserved" Button Text', 'type' => 'Text',     'default' => 'Reserved',      'description' => 'Label shown on the button after the vehicle has been reserved. The button is disabled at this point.'),
                 array('name' => 'Modal Title',             'type' => 'Text',     'default' => 'Reserve this Leisure Vehicle for free', 'description' => 'Heading inside the modal.'),
                 array('name' => 'Submit Button Text',      'type' => 'Text',     'default' => 'RESERVE YOUR LEISURE VEHICLE', 'description' => 'Label on the form submit button.'),
                 array('name' => 'Success Message',         'type' => 'Textarea', 'default' => '(confirmation text)', 'description' => 'Message displayed inside the modal after a successful submission.'),
