@@ -1,139 +1,76 @@
 <?php
+
 /**
- * Template for rendering the LGL Breadcrumbs shortcode.
- * Dynamically includes Make and Model filters and provides links to clear them.
- * * Available variables:
- * @var string $style Accepts 'dark' or 'light'.
+ * Breadcrumbs and Back to Results Template
+ * Shortcode: [lgl_breadcrumbs]
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
+$post_type = get_post_type();
+$home_url = home_url();
 $options = get_option('lgl_settings', array());
+$current_id = get_queried_object_id();
+
+// Determine the CSS class based on the shortcode attribute. Defaults to 'dark'.
 $style_class = (isset($style) && $style === 'light') ? 'lgl-breadcrumbs-light' : 'lgl-breadcrumbs-dark';
 
-// 1. Determine the current context (Single Post vs. Archive/Search Page)
-$is_single = is_singular(array('caravan', 'motorhome', 'campervan'));
-$post_type = '';
+echo '<div class="lgl-breadcrumbs-wrapper ' . esc_attr($style_class) . '">';
 
-if ($is_single) {
-    $post_type = get_post_type();
-} else {
-    // Map current page ID to LGL Settings to determine active vehicle type
-    $current_page_id = get_queried_object_id();
-    if ($current_page_id == ($options['caravan_page'] ?? 0)) $post_type = 'caravan';
-    elseif ($current_page_id == ($options['motorhome_page'] ?? 0)) $post_type = 'motorhome';
-    elseif ($current_page_id == ($options['campervan_page'] ?? 0)) $post_type = 'campervan';
-    
-    // Fallback for native post type archives
-    if (empty($post_type) && is_post_type_archive(array('caravan', 'motorhome', 'campervan'))) {
-        $post_type = get_query_var('post_type');
-    }
-}
+echo '<div class="lgl-breadcrumbs">';
+echo '<a href="' . esc_url($home_url) . '">Home</a> <span class="lgl-separator">|</span> ';
 
-// Abort rendering if we aren't on a recognized LGL page
-if (empty($post_type)) {
-    return;
-}
+// 1. Single Vehicle Page View
+if (is_singular(array('caravan', 'motorhome', 'campervan'))) {
+    $archive_url = '';
+    $archive_label = '';
 
-// 2. Establish Base URLs and Labels
-$page_key = $post_type . '_page';
-$base_url = !empty($options[$page_key]) ? get_permalink($options[$page_key]) : get_post_type_archive_link($post_type);
-$base_url = rtrim($base_url, '/') . '/'; // Enforce trailing slash
-$vehicle_label = ucfirst($post_type) . 's';
-
-// 3. Extract Make and Model Slugs/Names
-$make_slug  = '';
-$model_slug = '';
-$make_name  = '';
-$model_name = '';
-
-if ($is_single) {
-    // Retrieve terms directly from the post if on a single vehicle page
-    $terms = wp_get_post_terms(get_the_ID(), 'listing-make-model');
-    if (!is_wp_error($terms) && !empty($terms)) {
-        foreach ($terms as $term) {
-            if ($term->parent == 0) {
-                $make_slug = $term->slug;
-                $make_name = $term->name;
-            } else {
-                $model_slug = $term->slug;
-                $model_name = $term->name;
+    // Helper function to strictly cast page IDs and ensure valid URLs
+    $get_archive_url = function ($setting_key, $cpt_slug) use ($options, $home_url) {
+        // Check if setting exists and is not empty
+        if (!empty($options[$setting_key])) {
+            $permalink = get_permalink((int)$options[$setting_key]);
+            if ($permalink) {
+                return $permalink;
             }
         }
-        // Self-heal: If model is found but make is missing, trace the parent
-        if (empty($make_slug) && !empty($model_slug)) {
-            foreach ($terms as $term) {
-                if ($term->slug === $model_slug && $term->parent > 0) {
-                    $parent_term = get_term($term->parent, 'listing-make-model');
-                    if (!is_wp_error($parent_term)) {
-                        $make_slug = $parent_term->slug;
-                        $make_name = $parent_term->name;
-                    }
-                }
-            }
-        }
+        // Fallback to native post type archive if settings fail
+        $link = get_post_type_archive_link($cpt_slug);
+        return $link ? $link : rtrim($home_url, '/') . '/' . $cpt_slug . '/';
+    };
+
+    // Resolve the proper archive base URL and Label
+    if ($post_type === 'caravan') {
+        $archive_url = $get_archive_url('caravan_page', 'caravan');
+        $archive_label = 'Caravans';
+    } elseif ($post_type === 'motorhome') {
+        $archive_url = $get_archive_url('motorhome_page', 'motorhome');
+        $archive_label = 'Motorhomes';
+    } elseif ($post_type === 'campervan') {
+        $archive_url = $get_archive_url('campervan_page', 'campervan');
+        $archive_label = 'Campervans';
     }
-} else {
-    // Read directly from the URL query vars on search/archive pages
-    $make_slug  = get_query_var('listing_make') ? sanitize_text_field(get_query_var('listing_make')) : '';
-    $model_slug = get_query_var('listing_model') ? sanitize_text_field(get_query_var('listing_model')) : '';
-    
-    if ($make_slug) {
-        $make_term = get_term_by('slug', $make_slug, 'listing-make-model');
-        if ($make_term) $make_name = $make_term->name;
-    }
-    if ($model_slug) {
-        $model_term = get_term_by('slug', $model_slug, 'listing-make-model');
-        if ($model_term) $model_name = $model_term->name;
-    }
+
+    // Output middle breadcrumb (Archive Link)
+    echo '<a href="' . esc_url($archive_url) . '" class="lgl-br-archive">' . esc_html($archive_label) . '</a> <span class="lgl-separator">|</span> ';
+    // Output current vehicle title
+    echo '<span class="lgl-current-page">' . esc_html(get_the_title()) . '</span>';
+    echo '</div>'; // End breadcrumbs left side
+
+    // Output Back to Results Button (Right side)
+    echo '<div class="lgl-br-back lgl-back-to-results-wrapper" style="display: none;">';
+    echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results" style="text-decoration: none;">&laquo; Back to Results</a>';
+    echo '</div>';
+}
+// 2. Custom Archive Pages or Standard Pages View
+else {
+    // Fetch the actual title of the current page
+    $page_title = get_the_title($current_id);
+
+    echo '<span class="lgl-current-page">' . esc_html($page_title) . '</span>';
+    echo '</div>'; // End breadcrumbs left side
 }
 
-// 4. Render the Breadcrumbs DOM
-echo '<nav class="lgl-breadcrumbs ' . esc_attr($style_class) . '" aria-label="Breadcrumb">';
-echo '<ol>';
-
-// Home Node
-echo '<li><a href="' . esc_url(home_url()) . '">Home</a></li>';
-
-// Vehicle Type Node (e.g., Motorhomes)
-if ($make_slug || $is_single) {
-    // If a Make exists (or we're on a single page), make this clickable to return to the unfiltered base URL
-    echo '<li><a href="' . esc_url($base_url) . '" class="lgl-br-archive">' . esc_html($vehicle_label) . '</a></li>';
-} else {
-    // If no deeper filters exist, this is the current active page
-    echo '<li aria-current="page">' . esc_html($vehicle_label) . '</li>';
-}
-
-// Make Node
-if ($make_slug && $make_name) {
-    if ($model_slug || $is_single) {
-        // If a Model exists (or single page), make this clickable to return to the Make-only URL
-        $make_url = $base_url . $make_slug . '/';
-        echo '<li><a href="' . esc_url($make_url) . '">' . esc_html($make_name) . '</a></li>';
-    } else {
-        // If Model does not exist, Make is the current active filter
-        echo '<li aria-current="page">' . esc_html($make_name) . '</li>';
-    }
-}
-
-// Model Node
-if ($model_slug && $model_name) {
-    if ($is_single) {
-        // If on a single page, make this clickable to return to the Make+Model archive
-        $model_url = $base_url . $make_slug . '/' . $model_slug . '/';
-        echo '<li><a href="' . esc_url($model_url) . '">' . esc_html($model_name) . '</a></li>';
-    } else {
-        // If on the archive, Model is the current active filter
-        echo '<li aria-current="page">' . esc_html($model_name) . '</li>';
-    }
-}
-
-// Single Vehicle Title Node
-if ($is_single) {
-    echo '<li aria-current="page">' . esc_html(get_the_title()) . '</li>';
-}
-
-echo '</ol>';
-echo '</nav>';
+echo '</div>';
