@@ -192,12 +192,16 @@
             if (isUpdatingFilters) return;
 
             currentPage = 1;
+
+            // Capture the serialized data immediately before the fields are disabled
             const currentFormData = $('#lgl-search-form').serialize();
 
-            execute_search(currentFormData, false); // Pass false here
+            execute_search(currentFormData, false);
             update_filter_options(currentFormData);
-        });
 
+            // Inject visibility evaluation here
+            evaluateResetButtonVisibility();
+        });
         // Intercept standard WordPress pagination clicks for AJAX handling
         $(document).on('click', '.lgl-pagination-wrap a.page-numbers', function (e) {
             e.preventDefault();
@@ -263,6 +267,33 @@
                 $form.trigger('submit');
             }
         });
+
+
+        /**
+         * Evaluates all core Select2 filter fields to determine if any active filters exist.
+         * Toggles the visibility of the Reset Filters button accordingly.
+         * Excludes the post_type selector as it dictates the archive context, not the filter state.
+         *
+         * @return void
+         */
+        function evaluateResetButtonVisibility() {
+            let hasActiveFilters = false;
+
+            // Iterate over all active filter fields
+            $('#lgl_make, #lgl_model, #lgl_condition, #lgl_berth, #lgl_price_min, #lgl_price_max').each(function () {
+                if ($(this).val()) {
+                    hasActiveFilters = true;
+                    return false; // Break the $.each loop early for performance
+                }
+            });
+
+            if (hasActiveFilters) {
+                $('.lgl-reset-filters-btn').show();
+            } else {
+                $('.lgl-reset-filters-btn').hide();
+            }
+        }
+
 
         /**
          * Fetches valid filter options for the current filter state and repopulates

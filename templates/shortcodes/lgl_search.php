@@ -334,8 +334,13 @@ if ($post_type) {
                         </button>
                     </div>
                 </div>
-                <?php if ($post_type != false) { ?>
-                    <button type="button" class="lgl-reset-filters-btn" aria-label="Reset all search filters">
+                <?php
+                if ($post_type != false) {
+                    // Evaluate if any core filter parameter is currently active
+                    $has_active_filters = (!empty($active_make) || !empty($active_model) || !empty($active_condition) || !empty($active_berth) || !empty($active_price_min) || !empty($active_price_max));
+                    $reset_display_style = $has_active_filters ? '' : 'display: none;';
+                ?>
+                    <button type="button" class="lgl-reset-filters-btn" aria-label="Reset all search filters" style="background: transparent; border: none; text-decoration: underline; color: inherit; cursor: pointer; padding: 4px; font-size: 0.9em; align-self: center; <?php echo $reset_display_style; ?>">
                         Reset Filters
                     </button>
                 <?php } ?>
