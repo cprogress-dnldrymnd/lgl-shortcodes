@@ -2033,4 +2033,23 @@
   letter-spacing: 0.12px;
   font-family: var(--lgl-font-secondary); }
 
+/* Dark Style (Default - Dark Text for Light Backgrounds) */
+.lgl-breadcrumbs-dark,
+.lgl-breadcrumbs-dark a,
+.lgl-breadcrumbs-dark .lgl-separator,
+.lgl-breadcrumbs-dark .lgl-current-page {
+  color: var(--lgl-color-secondary, #001537); }
+
+/* Light Style (Light Text for Dark Backgrounds) */
+.lgl-breadcrumbs-light,
+.lgl-breadcrumbs-light a,
+.lgl-breadcrumbs-light .lgl-separator,
+.lgl-breadcrumbs-light .lgl-current-page {
+  color: #ffffff; }
+
+/* Maintain button styling overrides */
+.lgl-breadcrumbs-wrapper .lgl-back-to-results {
+  color: inherit;
+  /* Or force a specific button color here if needed */ }
+
 /*# sourceMappingURL=main.css.map */

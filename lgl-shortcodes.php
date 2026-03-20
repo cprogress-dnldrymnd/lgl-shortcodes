@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '3.8.3');
+define('LGL_SHORTCODES_VERSION', '3.8.4');
 // ── Load the Forms integration ──
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-forms.php';
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-email-builder.php';
@@ -910,9 +910,9 @@ if (! class_exists('LGL_Shortcodes')) {
                 $attributes_arr['post_id_2'] = 0;
             }
 
-
-
-
+            if ($shortcode_tag == 'lgl_breadcrumbs') {
+                $attributes_arr['style'] = 'dark'; // Accepts 'dark' or 'light'
+            }
 
             $attributes = shortcode_atts($attributes_arr, $atts, $shortcode_tag);
 
