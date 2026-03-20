@@ -848,14 +848,21 @@
             object-fit: cover;
             margin: 0;
         }
+        @media (max-width: 767px) {
+            border-radius: 10px;
+        }
     }
     .lgl-slider-nav {
-        margin-left: -10px;
-        margin-right: -10px;
+        --spacing: 10px;
+        margin-left: calc(var(--spacing) - var(--spacing) - var(--spacing));
+        margin-right: calc(var(--spacing) - var(--spacing) - var(--spacing));
         .lgl-slider-item {
-            padding-left: 10px;
-            padding-right: 10px;
+            padding-left: var(--spacing);
+            padding-right: var(--spacing);
             display: block;
+            @media (max-width: 767px) {
+                --spacing: 5px;
+            }
         }
     }
 }
