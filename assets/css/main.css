@@ -2051,7 +2051,7 @@
   color: var(--lgl-color-accent); }
 
 .lgl-breadcrumbs-wrapper {
-  font-size: 18px;
+  font-size: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2061,7 +2061,7 @@
   .lgl-breadcrumbs-wrapper .lgl-breadcrumbs {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(5px, 1.5vw, 20px); }
+    gap: 10px; }
     .lgl-breadcrumbs-wrapper .lgl-breadcrumbs a {
       text-decoration: none; }
 
