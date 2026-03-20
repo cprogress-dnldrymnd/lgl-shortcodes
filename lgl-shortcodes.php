@@ -1415,7 +1415,7 @@ if (! class_exists('LGL_Shortcodes')) {
             if (!is_wp_error($makes) && !empty($makes)) {
                 foreach ($makes as $make) {
                     $results[] = array(
-                        'id'   => $make->term_id,
+                        'id'   => $make->slug,
                         'text' => $make->name,
                     );
                 }
@@ -1436,7 +1436,10 @@ if (! class_exists('LGL_Shortcodes')) {
         {
             check_ajax_referer('lgl_search_nonce', 'nonce');
 
-            $parent_id = isset($_POST['make_id'])   ? intval($_POST['make_id'])              : 0;
+            $parent_slug = isset($_POST['make_id']) ? sanitize_text_field($_POST['make_id']) : '';
+            $parent_term = get_term_by('slug', $parent_slug, 'listing-make-model');
+            $parent_id   = $parent_term ? $parent_term->term_id : 0;
+
             $post_type = isset($_POST['post_type']) ? sanitize_text_field($_POST['post_type']) : '';
 
             if ($parent_id <= 0) {
@@ -1491,7 +1494,7 @@ if (! class_exists('LGL_Shortcodes')) {
                         foreach ($all_models as $term) {
                             if (in_array((int) $term->term_id, $assigned_term_ids, true)) {
                                 $results[] = array(
-                                    'id'   => $term->term_id,
+                                    'id'   => $term->slug,
                                     'text' => $term->name,
                                 );
                             }
@@ -1500,7 +1503,7 @@ if (! class_exists('LGL_Shortcodes')) {
                         // No post_type filter — return all child models (original behaviour)
                         foreach ($all_models as $term) {
                             $results[] = array(
-                                'id'   => $term->term_id,
+                                'id'   => $term->slug,
                                 'text' => $term->name,
                             );
                         }
@@ -1536,8 +1539,20 @@ if (! class_exists('LGL_Shortcodes')) {
                 parse_str($_POST['form_data'], $form_data);
             }
 
-            $make_id  = !empty($form_data['listing_make'])  ? intval($form_data['listing_make'])  : 0;
-            $model_id = !empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
+            $make_slug  = !empty($form_data['listing_make'])  ? sanitize_text_field($form_data['listing_make'])  : '';
+            $model_slug = !empty($form_data['listing_model']) ? sanitize_text_field($form_data['listing_model']) : '';
+
+            $make_id  = 0;
+            $model_id = 0;
+
+            if ($make_slug) {
+                $term = get_term_by('slug', $make_slug, 'listing-make-model');
+                if ($term) $make_id = $term->term_id;
+            }
+            if ($model_slug) {
+                $term = get_term_by('slug', $model_slug, 'listing-make-model');
+                if ($term) $model_id = $term->term_id;
+            }
 
             // ------------------------------------------------------------------
             // Helper: build base meta_query from non-taxonomy filters
@@ -1699,7 +1714,7 @@ if (! class_exists('LGL_Shortcodes')) {
                     if (!is_wp_error($make_terms)) {
                         foreach ($make_terms as $term) {
                             $makes[] = array(
-                                'id'   => $term->term_id,
+                                'id'   => $term->slug,
                                 'text' => $term->name,
                             );
                         }
@@ -1735,7 +1750,7 @@ if (! class_exists('LGL_Shortcodes')) {
                         if (!is_wp_error($model_terms)) {
                             foreach ($model_terms as $term) {
                                 $models[] = array(
-                                    'id'   => $term->term_id,
+                                    'id'   => $term->slug,
                                     'text' => $term->name,
                                 );
                             }
@@ -1902,21 +1917,20 @@ if (! class_exists('LGL_Shortcodes')) {
                 $args['meta_query'][] = $price_query;
             }
 
-            // Tax Queries
-            $make_id  = ! empty($form_data['listing_make'])  ? intval($form_data['listing_make'])  : 0;
-            $model_id = ! empty($form_data['listing_model']) ? intval($form_data['listing_model']) : 0;
+            $make_slug  = ! empty($form_data['listing_make'])  ? sanitize_text_field($form_data['listing_make'])  : '';
+            $model_slug = ! empty($form_data['listing_model']) ? sanitize_text_field($form_data['listing_model']) : '';
 
-            if ($model_id > 0) {
+            if ($model_slug) {
                 $args['tax_query'][] = array(
                     'taxonomy' => 'listing-make-model',
-                    'field'    => 'term_id',
-                    'terms'    => $model_id,
+                    'field'    => 'slug',
+                    'terms'    => $model_slug,
                 );
-            } elseif ($make_id > 0) {
+            } elseif ($make_slug) {
                 $args['tax_query'][] = array(
                     'taxonomy' => 'listing-make-model',
-                    'field'    => 'term_id',
-                    'terms'    => $make_id,
+                    'field'    => 'slug',
+                    'terms'    => $make_slug,
                 );
             }
 

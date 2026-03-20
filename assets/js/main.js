@@ -12,7 +12,23 @@
         tabs();
         initLGLMiniWishlist();
         sharevehicle();
+        initBreadcrumbs();
     });
+
+    /**
+     * Retrieves the last search URL from session storage and updates 
+     * the "Back to Results" and Breadcrumb archive links.
+     */
+    function initBreadcrumbs() {
+        const lastUrl = sessionStorage.getItem('lgl_last_search_url');
+        if (lastUrl && $('.lgl-back-to-results').length) {
+            // Ensure the referrer is from the same domain to prevent injection issues
+            if (lastUrl.indexOf(window.location.host) !== -1) {
+                $('.lgl-back-to-results').attr('href', lastUrl);
+                $('.lgl-br-archive').attr('href', lastUrl);
+            }
+        }
+    }
 
     function tabs() {
         if ($('.lgl-tabs-js').length > 0) {
@@ -332,6 +348,33 @@
             $('#lgl-loader').show();
             $('#lgl-results-grid').css('opacity', '0.5');
             $('.lgl-pagination-wrap').css('opacity', '0.5');
+
+            // --- ADD THIS BLOCK: Live URL Update & State Persistence ---
+            if (window.history.replaceState) {
+                const urlParams = new URLSearchParams(formDataStr);
+
+                // Clean empty or internal parameters
+                const keysForDel = [];
+                urlParams.forEach((value, key) => {
+                    if (!value || key === 'post_type' || key === 'action' || key === 'nonce') {
+                        keysForDel.push(key);
+                    }
+                });
+                keysForDel.forEach(key => urlParams.delete(key));
+
+                // Add pagination and sorting
+                const sortVal = $('#lgl-sort-order').val();
+                if (sortVal) urlParams.set('sort_order', sortVal);
+                if (currentPage > 1) urlParams.set('paged', currentPage);
+
+                const newQueryString = urlParams.toString();
+                const newUrl = window.location.pathname + (newQueryString ? '?' + newQueryString : '');
+
+                window.history.replaceState(null, '', newUrl);
+
+                // Persist the exact filtered URL for the single page "Back" button
+                sessionStorage.setItem('lgl_last_search_url', window.location.href);
+            }
 
             activeSearchXhr = $.ajax({
                 url: lgl_ajax_obj.ajax_url,
@@ -771,93 +814,3 @@
     });
 
 })(jQuery);
-
-/**
- * Initializes the Finance Specialist range slider module.
- * Operates in index-mode: maps the linear slider integer to a discrete array of real database prices.
- * * @return {void}
- */
-const initFinanceSlider = () => {
-    const slider = document.querySelector('.lgl-budget-slider');
-    const output = document.querySelector('.lgl-slider-output');
-    const actionButtons = document.querySelectorAll('.lgl-btn-finance');
-
-    if (!slider || !output) return;
-
-    // Parse the injected array of exact database prices
-    let priceData = [];
-    try {
-        priceData = JSON.parse(slider.getAttribute('data-prices') || '[]');
-    } catch (e) {
-        console.error('LGL Finance Slider: Failed to parse price data.', e);
-        return;
-    }
-
-    if (priceData.length === 0) return;
-
-    /**
-     * Formats a raw numeric value into a localized string with comma separators.
-     */
-    const formatCurrency = (value) => {
-        return new Intl.NumberFormat('en-GB').format(value);
-    };
-
-    /**
-     * Calculates the active percentage of the track for dynamic linear-gradient painting.
-     */
-    const updateSliderFill = (sliderElement) => {
-        const min = parseInt(sliderElement.min, 10);
-        const max = parseInt(sliderElement.max, 10);
-        const val = parseInt(sliderElement.value, 10);
-
-        const percentage = ((val - min) / (max - min)) * 100;
-        sliderElement.style.setProperty('--lgl-slider-fill', `${percentage}%`);
-    };
-
-    /**
-     * Appends or updates the 'price_max' query parameter on all target action buttons.
-     */
-    const updateActionLinks = (actualPrice) => {
-        if (!actionButtons.length) return;
-
-        actionButtons.forEach(button => {
-            try {
-                // Ignore hash links if a page isn't set in backend
-                if (button.getAttribute('href') === '#') return;
-
-                const url = new URL(button.href);
-                url.searchParams.set('price_max', actualPrice);
-                button.href = url.toString();
-            } catch (error) {
-                console.error('LGL Finance Slider: Invalid URL encountered.', error);
-            }
-        });
-    };
-
-    /**
-     * Event handler for the slider 'input' event.
-     */
-    const handleSliderInput = (e) => {
-        // e.target.value is the array index, not the actual price
-        const index = parseInt(e.target.value, 10);
-        const actualPrice = priceData[index];
-
-        output.textContent = formatCurrency(actualPrice);
-        updateSliderFill(e.target);
-        updateActionLinks(actualPrice);
-    };
-
-    // Attach listener
-    slider.addEventListener('input', handleSliderInput);
-
-    // Bootstrap initial DOM state
-    const initialIndex = parseInt(slider.value, 10);
-    const initialPrice = priceData[initialIndex];
-
-    output.textContent = formatCurrency(initialPrice);
-    updateSliderFill(slider);
-    updateActionLinks(initialPrice);
-};
-
-// Defer execution
-document.addEventListener('DOMContentLoaded', initFinanceSlider);

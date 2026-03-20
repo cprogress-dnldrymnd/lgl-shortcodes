@@ -94,8 +94,8 @@ if ($post_type && $active_make) {
 // -------------------------------------------------------------------
 // Read active URL parameters to pre-populate the filter fields
 // -------------------------------------------------------------------
-$active_make      = isset($_GET['listing_make'])  ? intval($_GET['listing_make'])              : 0;
-$active_model     = isset($_GET['listing_model']) ? intval($_GET['listing_model'])              : 0;
+$active_make      = isset($_GET['listing_make'])  ? sanitize_text_field($_GET['listing_make'])  : '';
+$active_model     = isset($_GET['listing_model']) ? sanitize_text_field($_GET['listing_model']) : '';
 $active_condition = isset($_GET['condition'])     ? sanitize_text_field($_GET['condition'])     : '';
 $active_berth     = isset($_GET['berth'])         ? sanitize_text_field($_GET['berth'])         : '';
 $active_price_min = isset($_GET['price_min'])     ? sanitize_text_field($_GET['price_min'])     : '';
@@ -104,11 +104,27 @@ $active_price_max = isset($_GET['price_max'])     ? sanitize_text_field($_GET['p
 // If a make is active, fetch its child models so the Model dropdown can be pre-populated
 $active_make_models = array();
 if ($active_make) {
-    $active_make_models = get_terms(array(
-        'taxonomy'   => 'listing-make-model',
-        'parent'     => $active_make,
-        'hide_empty' => false,
-    ));
+    $make_term = get_term_by('slug', $active_make, 'listing-make-model');
+    if ($make_term) {
+        $active_make_models = get_terms(array(
+            'taxonomy'   => 'listing-make-model',
+            'parent'     => $make_term->term_id,
+            'hide_empty' => false,
+        ));
+
+        // Filter models to active post type
+        if (!is_wp_error($active_make_models) && !empty($active_make_models) && !empty($type_post_ids)) {
+            $assigned_model_ids = array();
+            $assigned_all = wp_get_object_terms($type_post_ids, 'listing-make-model', array('fields' => 'ids'));
+            if (!is_wp_error($assigned_all)) {
+                $assigned_model_ids = array_map('intval', $assigned_all);
+            }
+
+            $active_make_models = array_filter($active_make_models, function ($model) use ($assigned_model_ids) {
+                return in_array((int) $model->term_id, $assigned_model_ids, true);
+            });
+        }
+    }
 }
 ?>
 
@@ -193,13 +209,11 @@ if ($active_make) {
                 <!-- Make -->
                 <div class="lgl-filter-group">
                     <label for="lgl_make">Make</label>
-                    <select name="listing_make" id="lgl_make" class="lgl-select2" data-placeholder="Select Make"
-                        <?php echo ($post_type == false) ? 'disabled' : ''; ?>>
+                    <select name="listing_make" id="lgl_make" class="lgl-select2" data-placeholder="Select Make" <?php echo ($post_type == false) ? 'disabled' : ''; ?>>
                         <option value=""><?php echo ($post_type == false) ? 'Select Vehicle Type First' : 'All Makes'; ?></option>
                         <?php if ($post_type != false) : ?>
                             <?php foreach ($makes as $make) : ?>
-                                <option value="<?php echo esc_attr($make->term_id); ?>"
-                                    <?php selected($active_make, $make->term_id); ?>>
+                                <option value="<?php echo esc_attr($make->slug); ?>" <?php selected($active_make, $make->slug); ?>>
                                     <?php echo esc_html($make->name); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -210,15 +224,13 @@ if ($active_make) {
                 <!-- Model -->
                 <div class="lgl-filter-group">
                     <label for="lgl_model">Model</label>
-                    <select name="listing_model" id="lgl_model" class="lgl-select2" data-placeholder="Select Model"
-                        <?php echo empty($active_make_models) ? 'disabled' : ''; ?>>
+                    <select name="listing_model" id="lgl_model" class="lgl-select2" data-placeholder="Select Model" <?php echo empty($active_make_models) ? 'disabled' : ''; ?>>
                         <?php if (empty($active_make_models)) : ?>
                             <option value="">Select Make First</option>
                         <?php else : ?>
                             <option value="">All Models</option>
                             <?php foreach ($active_make_models as $model) : ?>
-                                <option value="<?php echo esc_attr($model->term_id); ?>"
-                                    <?php selected($active_model, $model->term_id); ?>>
+                                <option value="<?php echo esc_attr($model->slug); ?>" <?php selected($active_model, $model->slug); ?>>
                                     <?php echo esc_html($model->name); ?>
                                 </option>
                             <?php endforeach; ?>
