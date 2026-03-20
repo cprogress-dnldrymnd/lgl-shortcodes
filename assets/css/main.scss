@@ -854,14 +854,16 @@
     }
     .lgl-slider-nav {
         --spacing: 10px;
-        margin-left: calc(var(--spacing) - var(--spacing) - var(--spacing));
-        margin-right: calc(var(--spacing) - var(--spacing) - var(--spacing));
+        --spacing-offset: 10px;
+        margin-left: var(--spacing-offset);
+        margin-right: var(--spacing-offset);
         .lgl-slider-item {
             padding-left: var(--spacing);
             padding-right: var(--spacing);
             display: block;
             @media (max-width: 767px) {
                 --spacing: 5px;
+                --spacing-offset: -5px;
             }
         }
     }
