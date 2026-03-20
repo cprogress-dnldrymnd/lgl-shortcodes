@@ -2640,7 +2640,6 @@ $wt-cols: 110px 1fr 120px 110px 80px 80px 50px;
     }
 }
 .lgl-breadcrumbs-wrapper {
-    font-size: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2651,8 +2650,18 @@ $wt-cols: 110px 1fr 120px 110px 80px 80px 50px;
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        font-size: 16px;
+        line-height: 1.2;
         a {
             text-decoration: none;
+        }
+        @media (max-width: 767px) {
+            font-size: 14px;
+            gap: 10px;
+        }
+        @media (max-width: 575px) {
+            font-size: 12px;
+            gap: 5px;
         }
     }
 }
@@ -2660,4 +2669,12 @@ $wt-cols: 110px 1fr 120px 110px 80px 80px 50px;
 /* Maintain button styling overrides */
 .lgl-breadcrumbs-wrapper .lgl-back-to-results {
     color: inherit; /* Or force a specific button color here if needed */
+}
+
+.single {
+    .lgl-current-page {
+        @media(max-width: 575px) {
+            display: none;
+        }
+    }
 }

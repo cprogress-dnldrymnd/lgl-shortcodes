@@ -2051,7 +2051,6 @@
   color: var(--lgl-color-accent); }
 
 .lgl-breadcrumbs-wrapper {
-  font-size: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2061,13 +2060,27 @@
   .lgl-breadcrumbs-wrapper .lgl-breadcrumbs {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; }
+    gap: 10px;
+    font-size: 16px;
+    line-height: 1.2; }
     .lgl-breadcrumbs-wrapper .lgl-breadcrumbs a {
       text-decoration: none; }
+    @media (max-width: 767px) {
+      .lgl-breadcrumbs-wrapper .lgl-breadcrumbs {
+        font-size: 14px;
+        gap: 10px; } }
+    @media (max-width: 575px) {
+      .lgl-breadcrumbs-wrapper .lgl-breadcrumbs {
+        font-size: 12px;
+        gap: 5px; } }
 
 /* Maintain button styling overrides */
 .lgl-breadcrumbs-wrapper .lgl-back-to-results {
   color: inherit;
   /* Or force a specific button color here if needed */ }
+
+@media (max-width: 575px) {
+  .single .lgl-current-page {
+    display: none; } }
 
 /*# sourceMappingURL=main.css.map */
