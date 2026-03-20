@@ -72,9 +72,14 @@ if ($post_type) {
 
 // Filter active make models to only those belonging to the current post_type as well
 if ($post_type && $active_make) {
+
+    // Convert the slug string into the term object to retrieve the integer ID
+    $active_make_term = get_term_by('slug', $active_make, 'listing-make-model');
+    $active_make_id   = $active_make_term ? $active_make_term->term_id : 0;
+
     $active_make_models = get_terms(array(
         'taxonomy'   => 'listing-make-model',
-        'parent'     => $active_make,
+        'parent'     => $active_make_id, // Pass the strict integer ID here
         'hide_empty' => false,
     ));
 
