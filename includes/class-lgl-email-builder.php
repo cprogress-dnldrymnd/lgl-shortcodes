@@ -59,12 +59,12 @@ class LGL_Email_Builder
      * @param array $args  wp_mail argument array: to, subject, message, headers, attachments.
      * @return array       Potentially modified argument array.
      */
-    public function maybe_apply_global_template(array $args): array
+    public function maybe_apply_global_template( array $args ): array
     {
         $global = self::get_global_email_settings();
 
         // Feature disabled — pass through untouched
-        if (empty($global['apply_to_all_emails'])) {
+        if ( empty( $global['apply_to_all_emails'] ) ) {
             return $args;
         }
 
@@ -73,28 +73,28 @@ class LGL_Email_Builder
 
         // Skip emails that are already a complete HTML document (LGL's own emails,
         // WooCommerce, etc. that wrap themselves).
-        if (stripos($body, '<!DOCTYPE') !== false || stripos($body, '<html') !== false) {
+        if ( stripos( $body, '<!DOCTYPE' ) !== false || stripos( $body, '<html' ) !== false ) {
             return $args;
         }
 
         // Wrap the body in the global template
-        $args['message'] = self::wrap_html($subject, $body);
+        $args['message'] = self::wrap_html( $subject, $body );
 
         // Ensure the email is sent as HTML
         $headers = $args['headers'] ?? [];
-        if (is_string($headers)) {
-            $headers = array_filter(array_map('trim', explode("\n", $headers)));
+        if ( is_string( $headers ) ) {
+            $headers = array_filter( array_map( 'trim', explode( "\n", $headers ) ) );
         }
 
         $has_content_type = false;
-        foreach ((array) $headers as $header) {
-            if (stripos($header, 'content-type') !== false) {
+        foreach ( (array) $headers as $header ) {
+            if ( stripos( $header, 'content-type' ) !== false ) {
                 $has_content_type = true;
                 break;
             }
         }
 
-        if (! $has_content_type) {
+        if ( ! $has_content_type ) {
             $headers[] = 'Content-Type: text/html; charset=UTF-8';
         }
 
@@ -129,17 +129,17 @@ class LGL_Email_Builder
      * @param  array  $entry           The submitted form entry.
      * @return array                   Modified email args with wrapped message.
      */
-    public function apply_template_to_gf_email(array $email, string $message_format, array $notification, array $entry): array
+    public function apply_template_to_gf_email( array $email, string $message_format, array $notification, array $entry ): array
     {
         $global = self::get_global_email_settings();
 
         // Feature disabled — pass through untouched
-        if (empty($global['apply_to_all_emails'])) {
+        if ( empty( $global['apply_to_all_emails'] ) ) {
             return $email;
         }
 
         // Only wrap HTML-format notifications — leave plain text as-is
-        if ($message_format !== 'html') {
+        if ( $message_format !== 'html' ) {
             return $email;
         }
 
@@ -147,11 +147,11 @@ class LGL_Email_Builder
         $body    = $email['message'] ?? '';
 
         // Guard: skip if already a full HTML document
-        if (stripos($body, '<!DOCTYPE') !== false || stripos($body, '<html') !== false) {
+        if ( stripos( $body, '<!DOCTYPE' ) !== false || stripos( $body, '<html' ) !== false ) {
             return $email;
         }
 
-        $email['message'] = self::wrap_html($subject, $body);
+        $email['message'] = self::wrap_html( $subject, $body );
 
         return $email;
     }
@@ -167,11 +167,10 @@ class LGL_Email_Builder
      * @param  string $from  Default from address supplied by WordPress.
      * @return string        LGL from address, or the original if not configured.
      */
-    public function filter_mail_from(string $from): string
-    {
+    public function filter_mail_from( string $from ): string {
         $settings   = self::get_global_email_settings();
-        $custom     = sanitize_email($settings['from_email'] ?? '');
-        return ($custom && is_email($custom)) ? $custom : $from;
+        $custom     = sanitize_email( $settings['from_email'] ?? '' );
+        return ( $custom && is_email( $custom ) ) ? $custom : $from;
     }
 
     /**
@@ -181,11 +180,10 @@ class LGL_Email_Builder
      * @param  string $name  Default from name supplied by WordPress.
      * @return string        LGL from name, or the original if not configured.
      */
-    public function filter_mail_from_name(string $name): string
-    {
+    public function filter_mail_from_name( string $name ): string {
         $settings   = self::get_global_email_settings();
-        $custom     = sanitize_text_field($settings['from_name'] ?? '');
-        return ($custom !== '') ? $custom : $name;
+        $custom     = sanitize_text_field( $settings['from_name'] ?? '' );
+        return ( $custom !== '' ) ? $custom : $name;
     }
 
 
@@ -945,10 +943,10 @@ $(document).ready(function() {
                                     id="lgl_apply_to_all_emails"
                                     name="apply_to_all_emails"
                                     value="1"
-                                    <?php checked(! empty($global_settings['apply_to_all_emails'])); ?>>
+                                    <?php checked( ! empty( $global_settings['apply_to_all_emails'] ) ); ?>>
                                 <div>
                                     <label for="lgl_apply_to_all_emails">
-                                        <?php _e('Wrap all outgoing WordPress emails in this global template', 'lgl-shortcodes'); ?>
+                                        <?php _e( 'Wrap all outgoing WordPress emails in this global template', 'lgl-shortcodes' ); ?>
                                     </label>
                                     <p>
                                         <?php _e(
@@ -975,7 +973,7 @@ $(document).ready(function() {
                         <!-- Sender Identity -->
                         <div class="lgl-eb-section">
                             <h3>✉️ <?php _e('Sender Identity', 'lgl-shortcodes'); ?></h3>
-                            <p class="description" style="margin-bottom:14px;"><?php _e('Overrides the <strong>From Name</strong> and <strong>From Email</strong> on every email sent by WordPress. Leave blank to keep the WordPress default.', 'lgl-shortcodes'); ?></p>
+                            <p class="description" style="margin-bottom:14px;"><?php _e( 'Overrides the <strong>From Name</strong> and <strong>From Email</strong> on every email sent by WordPress. Leave blank to keep the WordPress default.', 'lgl-shortcodes' ); ?></p>
 
                             <div class="lgl-eb-row">
                                 <label for="lgl_from_name"><?php _e('From Name', 'lgl-shortcodes'); ?></label>
@@ -1108,6 +1106,8 @@ $(document).ready(function() {
         $auto_reply      = ! empty($email_settings['auto_reply_enabled']);
         $ar_subject      = $email_settings['auto_reply_subject'] ?? '';
         $ar_body         = $email_settings['auto_reply_body']    ?? '';
+        $form_from_name  = $email_settings['from_name']  ?? '';
+        $form_from_email = $email_settings['from_email'] ?? '';
         $global_settings = self::get_global_email_settings();
         $test_nonce      = wp_create_nonce('lgl_email_builder');
     ?>
@@ -1166,6 +1166,38 @@ $(document).ready(function() {
                                                     <input type="email" name="custom_email" value="<?php echo esc_attr($custom_email); ?>" placeholder="sales@example.com">
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div class="lgl-eb-section">
+                                            <h3>✉️ <?php _e('Sender Identity', 'lgl-shortcodes'); ?></h3>
+                                            <p class="description" style="margin-bottom:14px;">
+                                                <?php _e('Override the global <strong>From Name</strong> and <strong>From Email</strong> for this form only. Leave blank to use the global setting (or the WordPress default if that is also blank).', 'lgl-shortcodes'); ?>
+                                            </p>
+                                            <?php
+                                            $global_from_name  = $global_settings['from_name']  ?? '';
+                                            $global_from_email = $global_settings['from_email'] ?? '';
+                                            $ph_name  = $global_from_name  ?: get_option('blogname');
+                                            $ph_email = $global_from_email ?: get_option('admin_email');
+                                            ?>
+                                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                                                <div class="lgl-eb-row">
+                                                    <label><?php _e('From Name', 'lgl-shortcodes'); ?></label>
+                                                    <input type="text" name="from_name" value="<?php echo esc_attr($form_from_name); ?>" placeholder="<?php echo esc_attr($ph_name); ?>" class="widefat">
+                                                </div>
+                                                <div class="lgl-eb-row">
+                                                    <label><?php _e('From Email', 'lgl-shortcodes'); ?></label>
+                                                    <input type="email" name="from_email" value="<?php echo esc_attr($form_from_email); ?>" placeholder="<?php echo esc_attr($ph_email); ?>" class="widefat">
+                                                </div>
+                                            </div>
+                                            <?php if ( $global_from_name || $global_from_email ) : ?>
+                                                <p class="description" style="margin-top:8px;">
+                                                    <?php printf(
+                                                        esc_html__( 'Global defaults: %s / %s', 'lgl-shortcodes' ),
+                                                        '<strong>' . esc_html( $global_from_name  ?: '—' ) . '</strong>',
+                                                        '<strong>' . esc_html( $global_from_email ?: '—' ) . '</strong>'
+                                                    ); ?>
+                                                </p>
+                                            <?php endif; ?>
                                         </div>
 
                                         <div class="lgl-eb-section">
@@ -1329,6 +1361,8 @@ $(document).ready(function() {
             'body'               => wp_kses_post($_POST['body']                      ?? ''),
             'recipient_type'     => in_array($rec_type, $allowed_recipients, true) ? $rec_type : 'admin',
             'custom_email'       => sanitize_email($_POST['custom_email']            ?? ''),
+            'from_name'          => sanitize_text_field($_POST['from_name']          ?? ''),
+            'from_email'         => sanitize_email($_POST['from_email']              ?? ''),
             'auto_reply_enabled' => ! empty($_POST['auto_reply_enabled']),
             'auto_reply_subject' => sanitize_text_field($_POST['auto_reply_subject'] ?? ''),
             'auto_reply_body'    => wp_kses_post($_POST['auto_reply_body']           ?? ''),
@@ -1430,7 +1464,24 @@ $(document).ready(function() {
         }
 
         $recipients = self::resolve_recipients($email_cfg);
-        $headers    = ['Content-Type: text/html; charset=UTF-8'];
+
+        // ── Resolve sender: per-form override → global setting → WP default ──
+        $global          = self::get_global_email_settings();
+        $resolved_name   = trim( $email_cfg['from_name']  ?? '' )
+                        ?: trim( $global['from_name']      ?? '' )
+                        ?: get_option('blogname');
+        $resolved_email  = sanitize_email( $email_cfg['from_email'] ?? '' );
+        if ( ! $resolved_email || ! is_email( $resolved_email ) ) {
+            $resolved_email = sanitize_email( $global['from_email'] ?? '' );
+        }
+        if ( ! $resolved_email || ! is_email( $resolved_email ) ) {
+            $resolved_email = get_option('admin_email');
+        }
+
+        $headers = [
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . $resolved_name . ' <' . $resolved_email . '>',
+        ];
 
         if (! empty($recipients)) {
             wp_mail($recipients, $subject, self::wrap_html($subject, $body), $headers);
