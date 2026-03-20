@@ -311,8 +311,8 @@ if (!current_user_can('manage_options')) {
             'fields'      => array(
                 array('name' => 'Phone Number',    'type' => 'Text', 'default' => '01978 810091', 'description' => 'Displayed as a clickable <code>tel:</code> link. Non-numeric characters are automatically stripped when building the href.'),
                 array('name' => 'WhatsApp Number', 'type' => 'Text', 'default' => '01978 810091', 'description' => 'Used to build a <code>https://wa.me/</code> link. Non-numeric characters are automatically stripped.'),
-                array('name' => 'Email Address',   'type' => 'Text', 'default' => 'sales@clwydcaravans.com', 'description' => 'Displayed as a clickable <code>mailto:</code> link on the single vehicle page.'),
-                array('name' => 'Address',         'type' => 'Textarea', 'default' => 'Clwyd Caravans', 'description' => 'Displayed in the contact sidebar. Also used to generate a Google Maps search link via the Maps API.'),
+                array('name' => 'Email Address',   'type' => 'Text', 'default' => 'sales@website.com', 'description' => 'Displayed as a clickable <code>mailto:</code> link on the single vehicle page.'),
+                array('name' => 'Address',         'type' => 'Textarea', 'default' => 'Website Name', 'description' => 'Displayed in the contact sidebar. Also used to generate a Google Maps search link via the Maps API.'),
             ),
         ),
 

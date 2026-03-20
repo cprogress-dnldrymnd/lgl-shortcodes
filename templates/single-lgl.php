@@ -38,14 +38,14 @@ $reserve_btn_text  = $is_reserved
     : esc_html($reserve_settings['button_text']          ?? __('RESERVE NOW', 'lgl'));
 
 // Contact Payload (With graceful fallbacks to prevent empty UI)
-$contact_phone    = !empty($lgl_options['contact_phone']) ? sanitize_text_field($lgl_options['contact_phone']) : '01978 810091';
+$contact_phone    = !empty($lgl_options['contact_phone']) ? sanitize_text_field($lgl_options['contact_phone']) : false;
 $phone_link       = preg_replace('/\D+/', '', $contact_phone);
 
-$contact_whatsapp = !empty($lgl_options['contact_whatsapp']) ? sanitize_text_field($lgl_options['contact_whatsapp']) : '01978 810091';
+$contact_whatsapp = !empty($lgl_options['contact_whatsapp']) ? sanitize_text_field($lgl_options['contact_whatsapp']) : false;
 $whatsapp_link    = preg_replace('/\D+/', '', $contact_whatsapp);
 
-$contact_email    = !empty($lgl_options['contact_email']) ? sanitize_email($lgl_options['contact_email']) : 'sales@clwydcaravans.com';
-$contact_address  = !empty($lgl_options['contact_address']) ? sanitize_textarea_field($lgl_options['contact_address']) : 'Clwyd Caravans';
+$contact_email    = !empty($lgl_options['contact_email']) ? sanitize_email($lgl_options['contact_email']) : false;
+$contact_address  = !empty($lgl_options['contact_address']) ? sanitize_textarea_field($lgl_options['contact_address']) : false;
 $location_url     = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($contact_address);
 
 // Meta Fields
