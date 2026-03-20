@@ -39,7 +39,7 @@ class LGL_Email_Builder
         add_filter('wp_mail_from_name', [$this, 'filter_mail_from_name'], 10, 1);
     }
 
-    /* ═══════════════════════════════════════════════════════════════
+  /* ═══════════════════════════════════════════════════════════════
        wp_mail FILTER — Apply global template to all site emails
     ═══════════════════════════════════════════════════════════════ */
 
@@ -48,10 +48,10 @@ class LGL_Email_Builder
      * LGL email template (header, footer, colours) when "Apply to all site emails"
      * is enabled in LGL → Email Builder → Global Template.
      *
-     * The filter is deliberately conservative:
-     *  - Skips emails that are already fully-formed HTML documents (<!DOCTYPE / <html).
-     *  - Skips emails sent by LGL itself (they are already wrapped by send()).
-     *  - Always sets Content-Type to text/html so clients render correctly.
+     * The filter uses explicit exclusions to prevent double-wrapping native LGL
+     * emails or breaking complex third-party templates like WooCommerce, while
+     * aggressively stripping outer HTML shells from standard plugins (e.g., Gravity Forms)
+     * to allow clean injection into the LGL DOM structure.
      *
      * @param array $args  wp_mail argument array: to, subject, message, headers, attachments.
      * @return array       Potentially modified argument array.
@@ -68,26 +68,36 @@ class LGL_Email_Builder
         $subject = $args['subject'] ?? '';
         $body    = $args['message'] ?? '';
 
-        // Skip only COMPLETE HTML documents (those with <!DOCTYPE or <head>).
-        // These are already fully wrapped — LGL's own emails, WooCommerce, etc.
-        // Gravity Forms uses a bare <html><body> wrapper (no DOCTYPE, no <head>),
-        // so GF emails intentionally fall through here and get handled below.
-        if ( stripos( $body, '<!DOCTYPE' ) !== false || stripos( $body, '<head' ) !== false ) {
+        // ── Exclusions ──
+        
+        // 1. Skip LGL's own emails (prevents infinite nesting since they are already wrapped).
+        if ( stripos( $body, 'class="eb-wrapper"' ) !== false ) {
             return $args;
         }
 
-        // Strip any bare <html>/<body> wrapper (e.g. Gravity Forms) so we don't
-        // nest html/body elements inside our styled template shell.
+        // 2. Skip WooCommerce emails to preserve their native formatting and styles.
+        if ( stripos( $body, 'id="template_container"' ) !== false || ( stripos( $body, 'id="wrapper"' ) !== false && stripos( $body, 'woocommerce' ) !== false ) ) {
+            return $args;
+        }
+
+        // ── HTML Shell Extraction ──
+        
+        // Modern Gravity Forms generates a full HTML document (with DOCTYPE and <head>).
+        // To prevent generating malformed DOMs (e.g., nested <head> tags inside the LGL body shell),
+        // we strip the outer elements using the 's' modifier to catch multi-line blocks, 
+        // isolating just the inner content for wrapping.
+        $body = preg_replace( '/<!DOCTYPE[^>]*>/i', '', $body );
+        $body = preg_replace( '/<head\b[^>]*>(.*?)<\/head>/is', '', $body );
         $body = preg_replace( '/<html[^>]*>/i',  '', $body );
         $body = preg_replace( '/<\/html>/i',      '', $body );
         $body = preg_replace( '/<body[^>]*>/i',  '', $body );
         $body = preg_replace( '/<\/body>/i',      '', $body );
         $body = trim( $body );
 
-        // Wrap the cleaned body in the global LGL template
+        // Wrap the isolated core body in the global LGL template
         $args['message'] = self::wrap_html( $subject, $body );
 
-        // Ensure the email is sent as HTML
+        // Ensure the email is explicitly sent as HTML
         $headers = $args['headers'] ?? [];
         if ( is_string( $headers ) ) {
             $headers = array_filter( array_map( 'trim', explode( "\n", $headers ) ) );
