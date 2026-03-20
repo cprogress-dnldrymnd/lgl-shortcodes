@@ -74,6 +74,19 @@
     .lgl-filter-form {
         position: relative;
     }
+    .lgl-reset-filters-btn.lgl-reset-filters-btn.lgl-reset-filters-btn.lgl-reset-filters-btn {
+        padding: 0;
+        font-size: 12px;
+        font-family: var(--lgl-font-secondary);
+        background-color: transparent;
+        border-radius: 0;
+        font-weight: 500;
+        letter-spacing: 0;
+        position: absolute;
+        right: 0;
+        bottom: -21px;
+        line-height: 1.2;
+    }
     .lgl-filter-form .lgl-search-form-inner {
         display: flex;
         gap: 0;
@@ -82,19 +95,7 @@
         border-radius: 10px;
         overflow: hidden;
         flex-wrap: wrap;
-        .lgl-reset-filters-btn.lgl-reset-filters-btn {
-            padding: 0;
-            font-size: 12px;
-            font-family: var(--lgl-font-secondary);
-            background-color: transparent;
-            border-radius: 0;
-            font-weight: 500;
-            letter-spacing: 0;
-            position: absolute;
-            right: 0;
-            bottom: -21px;
-            line-height: 1.2;
-        }
+
         &.lgl-filter-form-no-ajax {
             @media (min-width: 1200px) {
                 .lgl-filter-group {

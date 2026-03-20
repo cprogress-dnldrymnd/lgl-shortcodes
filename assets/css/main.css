@@ -54,6 +54,18 @@
     background-position: calc(100% - 25px) center; }
   .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form {
     position: relative; }
+  .lgl-search-container.lgl-search-container.lgl-search-container .lgl-reset-filters-btn.lgl-reset-filters-btn.lgl-reset-filters-btn.lgl-reset-filters-btn {
+    padding: 0;
+    font-size: 12px;
+    font-family: var(--lgl-font-secondary);
+    background-color: transparent;
+    border-radius: 0;
+    font-weight: 500;
+    letter-spacing: 0;
+    position: absolute;
+    right: 0;
+    bottom: -21px;
+    line-height: 1.2; }
   .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-search-form-inner {
     display: flex;
     gap: 0;
@@ -62,18 +74,6 @@
     border-radius: 10px;
     overflow: hidden;
     flex-wrap: wrap; }
-    .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-search-form-inner .lgl-reset-filters-btn.lgl-reset-filters-btn {
-      padding: 0;
-      font-size: 12px;
-      font-family: var(--lgl-font-secondary);
-      background-color: transparent;
-      border-radius: 0;
-      font-weight: 500;
-      letter-spacing: 0;
-      position: absolute;
-      right: 0;
-      bottom: -21px;
-      line-height: 1.2; }
     @media (min-width: 1200px) {
       .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form .lgl-search-form-inner.lgl-filter-form-no-ajax .lgl-filter-group {
         --width: calc(calc(100% / 3) - 50px); }
