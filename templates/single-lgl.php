@@ -62,6 +62,7 @@ $sub_title = get_post_meta($post_id, 'sub_title', true);
 ?>
 <main id="lgl-primary" class="lgl-site-main single-lgl">
     <div class="lgl-holder">
+        <?= do_shortcode('[lgl_breadcrumbs]') ?>
         <article <?php post_class('lgl-post'); ?>>
             <div class="lgl-post--wrap">
                 <div class="lgl-post--main">
