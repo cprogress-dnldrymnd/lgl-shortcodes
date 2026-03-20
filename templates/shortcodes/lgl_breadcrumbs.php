@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Breadcrumbs and Back to Results Template
  * Shortcode: [lgl_breadcrumbs]
@@ -36,23 +37,23 @@ $style_class = (isset($style) && $style === 'light') ? 'lgl-breadcrumbs-light' :
 
 echo '<div class="lgl-breadcrumbs-wrapper ' . esc_attr($style_class) . '">';
 
-    echo '<div class="lgl-breadcrumbs">';
-        echo '<a href="' . esc_url($home_url) . '">Home</a> <span class="lgl-separator">|</span> ';
+echo '<div class="lgl-breadcrumbs">';
+echo '<a href="' . esc_url($home_url) . '">Home</a> <span class="lgl-separator">|</span> ';
 
-        if (is_singular() && in_array($post_type, array('caravan', 'motorhome', 'campervan'))) {
-            // Single Vehicle Page
-            echo '<a href="' . esc_url($archive_url) . '" class="lgl-br-archive">' . esc_html($post_type_label) . '</a> <span class="lgl-separator">&raquo;</span> ';
-            echo '<span class="lgl-current-page">' . esc_html(get_the_title()) . '</span>';
-            echo '</div>'; // End breadcrumbs left side
-            
-            // Back to Results Button (Right side)
-            echo '<div class="lgl-br-back">';
-            echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results lgl-btn lgl-btn-secondary">&laquo; Back to Results</a>';
-            echo '</div>';
-        } else {
-            // General Archive Page
-            echo '<span class="lgl-current-page">' . esc_html($post_type_label) . '</span>';
-            echo '</div>'; // End breadcrumbs left side
-        }
+if (is_singular() && in_array($post_type, array('caravan', 'motorhome', 'campervan'))) {
+    // Single Vehicle Page
+    echo '<a href="' . esc_url($archive_url) . '" class="lgl-br-archive">' . esc_html($post_type_label) . '</a> <span class="lgl-separator">|</span> ';
+    echo '<span class="lgl-current-page">' . esc_html(get_the_title()) . '</span>';
+    echo '</div>'; // End breadcrumbs left side
+
+    // Back to Results Button (Right side)
+    echo '<div class="lgl-br-back">';
+    echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results lgl-btn lgl-btn-secondary">&laquo; Back to Results</a>';
+    echo '</div>';
+} else {
+    // General Archive Page
+    echo '<span class="lgl-current-page">' . esc_html($post_type_label) . '</span>';
+    echo '</div>'; // End breadcrumbs left side
+}
 
 echo '</div>';
