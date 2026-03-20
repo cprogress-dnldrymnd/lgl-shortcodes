@@ -33,6 +33,10 @@ class LGL_Email_Builder
         // ── Global template: apply to ALL outgoing wp_mail calls when enabled ──
         add_filter('wp_mail',           [$this, 'maybe_apply_global_template'], 10, 1);
 
+        // ── Gravity Forms: hook in before GF adds its own HTML wrapper ──
+        // Priority 9 so we run before GF's own processing at priority 10.
+        add_filter('gform_pre_send_email', [$this, 'apply_template_to_gf_email'], 9, 4);
+
         // ── From Name / From Email — applied globally whenever a value is saved ──
         add_filter('wp_mail_from',      [$this, 'filter_mail_from'],      10, 1);
         add_filter('wp_mail_from_name', [$this, 'filter_mail_from_name'], 10, 1);
@@ -55,12 +59,12 @@ class LGL_Email_Builder
      * @param array $args  wp_mail argument array: to, subject, message, headers, attachments.
      * @return array       Potentially modified argument array.
      */
-    public function maybe_apply_global_template( array $args ): array
+    public function maybe_apply_global_template(array $args): array
     {
         $global = self::get_global_email_settings();
 
         // Feature disabled — pass through untouched
-        if ( empty( $global['apply_to_all_emails'] ) ) {
+        if (empty($global['apply_to_all_emails'])) {
             return $args;
         }
 
@@ -69,34 +73,87 @@ class LGL_Email_Builder
 
         // Skip emails that are already a complete HTML document (LGL's own emails,
         // WooCommerce, etc. that wrap themselves).
-        if ( stripos( $body, '<!DOCTYPE' ) !== false || stripos( $body, '<html' ) !== false ) {
+        if (stripos($body, '<!DOCTYPE') !== false || stripos($body, '<html') !== false) {
             return $args;
         }
 
         // Wrap the body in the global template
-        $args['message'] = self::wrap_html( $subject, $body );
+        $args['message'] = self::wrap_html($subject, $body);
 
         // Ensure the email is sent as HTML
         $headers = $args['headers'] ?? [];
-        if ( is_string( $headers ) ) {
-            $headers = array_filter( array_map( 'trim', explode( "\n", $headers ) ) );
+        if (is_string($headers)) {
+            $headers = array_filter(array_map('trim', explode("\n", $headers)));
         }
 
         $has_content_type = false;
-        foreach ( (array) $headers as $header ) {
-            if ( stripos( $header, 'content-type' ) !== false ) {
+        foreach ((array) $headers as $header) {
+            if (stripos($header, 'content-type') !== false) {
                 $has_content_type = true;
                 break;
             }
         }
 
-        if ( ! $has_content_type ) {
+        if (! $has_content_type) {
             $headers[] = 'Content-Type: text/html; charset=UTF-8';
         }
 
         $args['headers'] = $headers;
 
         return $args;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       GRAVITY FORMS FILTER — Apply global template to GF notifications
+    ═══════════════════════════════════════════════════════════════ */
+
+    /**
+     * Applies the LGL global email template to Gravity Forms notifications.
+     *
+     * Why a separate hook?
+     * GF calls wp_mail() with a body that already contains <html> tags (it builds
+     * its own basic HTML wrapper internally). Our wp_mail filter sees <html> and
+     * deliberately skips those emails to avoid double-wrapping. This hook fires on
+     * gform_pre_send_email BEFORE GF adds its own wrapper, so we get the raw
+     * notification body and can wrap it cleanly ourselves. The wp_mail filter then
+     * sees <!DOCTYPE in the resulting message and skips it — no double wrapping.
+     *
+     * Only fires when:
+     *  - "Apply to All Site Emails" is enabled in LGL → Email Builder → Global Template.
+     *  - The notification message format is 'html' (plain text notifications are skipped).
+     *  - The body is not already a full HTML document.
+     *
+     * @param  array  $email           GF email args: to, from, reply_to, subject, message, headers, attachments.
+     * @param  string $message_format  'html' or 'text'.
+     * @param  array  $notification    The GF notification configuration array.
+     * @param  array  $entry           The submitted form entry.
+     * @return array                   Modified email args with wrapped message.
+     */
+    public function apply_template_to_gf_email(array $email, string $message_format, array $notification, array $entry): array
+    {
+        $global = self::get_global_email_settings();
+
+        // Feature disabled — pass through untouched
+        if (empty($global['apply_to_all_emails'])) {
+            return $email;
+        }
+
+        // Only wrap HTML-format notifications — leave plain text as-is
+        if ($message_format !== 'html') {
+            return $email;
+        }
+
+        $subject = $email['subject'] ?? '';
+        $body    = $email['message'] ?? '';
+
+        // Guard: skip if already a full HTML document
+        if (stripos($body, '<!DOCTYPE') !== false || stripos($body, '<html') !== false) {
+            return $email;
+        }
+
+        $email['message'] = self::wrap_html($subject, $body);
+
+        return $email;
     }
 
     /* ═══════════════════════════════════════════════════════════════
@@ -110,10 +167,11 @@ class LGL_Email_Builder
      * @param  string $from  Default from address supplied by WordPress.
      * @return string        LGL from address, or the original if not configured.
      */
-    public function filter_mail_from( string $from ): string {
+    public function filter_mail_from(string $from): string
+    {
         $settings   = self::get_global_email_settings();
-        $custom     = sanitize_email( $settings['from_email'] ?? '' );
-        return ( $custom && is_email( $custom ) ) ? $custom : $from;
+        $custom     = sanitize_email($settings['from_email'] ?? '');
+        return ($custom && is_email($custom)) ? $custom : $from;
     }
 
     /**
@@ -123,10 +181,11 @@ class LGL_Email_Builder
      * @param  string $name  Default from name supplied by WordPress.
      * @return string        LGL from name, or the original if not configured.
      */
-    public function filter_mail_from_name( string $name ): string {
+    public function filter_mail_from_name(string $name): string
+    {
         $settings   = self::get_global_email_settings();
-        $custom     = sanitize_text_field( $settings['from_name'] ?? '' );
-        return ( $custom !== '' ) ? $custom : $name;
+        $custom     = sanitize_text_field($settings['from_name'] ?? '');
+        return ($custom !== '') ? $custom : $name;
     }
 
 
@@ -886,14 +945,20 @@ $(document).ready(function() {
                                     id="lgl_apply_to_all_emails"
                                     name="apply_to_all_emails"
                                     value="1"
-                                    <?php checked( ! empty( $global_settings['apply_to_all_emails'] ) ); ?>>
+                                    <?php checked(! empty($global_settings['apply_to_all_emails'])); ?>>
                                 <div>
                                     <label for="lgl_apply_to_all_emails">
-                                        <?php _e( 'Wrap all outgoing WordPress emails in this global template', 'lgl-shortcodes' ); ?>
+                                        <?php _e('Wrap all outgoing WordPress emails in this global template', 'lgl-shortcodes'); ?>
                                     </label>
                                     <p>
                                         <?php _e(
                                             'When enabled, every email sent via <code>wp_mail()</code> — including WordPress core, WooCommerce, contact forms, and any other plugin — will be wrapped in the header, footer, and colour settings defined below. Emails that are already full HTML documents are skipped automatically.',
+                                            'lgl-shortcodes'
+                                        ); ?>
+                                    </p>
+                                    <p>
+                                        <?php _e(
+                                            '<strong>Gravity Forms</strong> notifications are handled via a dedicated hook that intercepts the message before GF adds its own HTML wrapper. HTML-format notifications are wrapped; plain text notifications are left as-is.',
                                             'lgl-shortcodes'
                                         ); ?>
                                     </p>
@@ -910,7 +975,7 @@ $(document).ready(function() {
                         <!-- Sender Identity -->
                         <div class="lgl-eb-section">
                             <h3>✉️ <?php _e('Sender Identity', 'lgl-shortcodes'); ?></h3>
-                            <p class="description" style="margin-bottom:14px;"><?php _e( 'Overrides the <strong>From Name</strong> and <strong>From Email</strong> on every email sent by WordPress. Leave blank to keep the WordPress default.', 'lgl-shortcodes' ); ?></p>
+                            <p class="description" style="margin-bottom:14px;"><?php _e('Overrides the <strong>From Name</strong> and <strong>From Email</strong> on every email sent by WordPress. Leave blank to keep the WordPress default.', 'lgl-shortcodes'); ?></p>
 
                             <div class="lgl-eb-row">
                                 <label for="lgl_from_name"><?php _e('From Name', 'lgl-shortcodes'); ?></label>
@@ -918,7 +983,7 @@ $(document).ready(function() {
                                     value="<?php echo esc_attr($global_settings['from_name'] ?? ''); ?>"
                                     placeholder="<?php echo esc_attr(get_option('blogname')); ?>"
                                     style="width:100%;max-width:420px;">
-                                <span class="description"><?php _e('e.g. Website Name Ltd', 'lgl-shortcodes'); ?></span>
+                                <span class="description"><?php _e('e.g. Clwyd Caravans &amp; Leisure Ltd', 'lgl-shortcodes'); ?></span>
                             </div>
 
                             <div class="lgl-eb-row">
@@ -927,7 +992,7 @@ $(document).ready(function() {
                                     value="<?php echo esc_attr($global_settings['from_email'] ?? ''); ?>"
                                     placeholder="<?php echo esc_attr(get_option('admin_email')); ?>"
                                     style="width:100%;max-width:420px;">
-                                <span class="description"><?php _e('Use an address at your own domain — e.g. <code>noreply@website.com</code>.', 'lgl-shortcodes'); ?></span>
+                                <span class="description"><?php _e('Use an address at your own domain — e.g. <code>noreply@clwydcaravans.com</code>.', 'lgl-shortcodes'); ?></span>
                             </div><!-- /.lgl-eb-row from_email -->
                         </div><!-- /.lgl-eb-section sender identity -->
 
