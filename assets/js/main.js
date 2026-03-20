@@ -246,6 +246,25 @@
         });
 
         /**
+         * Intercepts the Reset Filters button click.
+         * Forcibly nullifies all Select2 instances within the target form to clear the UI,
+         * then delegates the actual reset operation to the primary AJAX submission pipeline.
+         */
+        $(document).on('click', '.lgl-reset-filters-btn', function (e) {
+            e.preventDefault();
+
+            const $form = $(this).closest('form');
+
+            // 1. Flush the visual and internal state of all Select2 nodes
+            $form.find('select.lgl-select2').val('').trigger('change.select2');
+
+            // 2. Dispatch the submit event to trigger grid refresh and URL cleanup
+            if ($form.hasClass('lgl-filter-form-ajax')) {
+                $form.trigger('submit');
+            }
+        });
+
+        /**
          * Fetches valid filter options for the current filter state and repopulates
          * the dropdowns so impossible combinations are completely hidden.
          * * @param {string} providedFormData Pre-captured string to bypass disabled state limits
