@@ -2664,16 +2664,33 @@ $wt-cols: 110px 1fr 120px 110px 80px 80px 50px;
             gap: 5px;
         }
     }
+    .lgl-br-back {
+        @media (max-width: 575px) {
+            width: 100%;
+            text-align: right;
+            line-height: 1;
+        }
+    }
+    @media (max-width: 575px) {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+    }
 }
 
 /* Maintain button styling overrides */
 .lgl-breadcrumbs-wrapper .lgl-back-to-results {
-    color: inherit; /* Or force a specific button color here if needed */
+    font-family: var(--lgl-font-secondary);
+    text-decoration: underline;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .single {
+    .lgl-breadcrumbs-wrapper {
+        margin-bottom: 40px;
+    }
     .lgl-current-page {
-        @media(max-width: 575px) {
+        @media (max-width: 575px) {
             display: none;
         }
     }

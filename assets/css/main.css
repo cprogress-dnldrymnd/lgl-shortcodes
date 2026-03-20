@@ -2073,12 +2073,25 @@
       .lgl-breadcrumbs-wrapper .lgl-breadcrumbs {
         font-size: 12px;
         gap: 5px; } }
+  @media (max-width: 575px) {
+    .lgl-breadcrumbs-wrapper .lgl-br-back {
+      width: 100%;
+      text-align: right;
+      line-height: 1; } }
+  @media (max-width: 575px) {
+    .lgl-breadcrumbs-wrapper {
+      flex-direction: column-reverse;
+      align-items: flex-start; } }
 
 /* Maintain button styling overrides */
 .lgl-breadcrumbs-wrapper .lgl-back-to-results {
-  color: inherit;
-  /* Or force a specific button color here if needed */ }
+  font-family: var(--lgl-font-secondary);
+  text-decoration: underline;
+  font-size: 16px;
+  font-weight: bold; }
 
+.single .lgl-breadcrumbs-wrapper {
+  margin-bottom: 40px; }
 @media (max-width: 575px) {
   .single .lgl-current-page {
     display: none; } }

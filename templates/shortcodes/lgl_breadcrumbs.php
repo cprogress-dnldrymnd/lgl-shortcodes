@@ -47,7 +47,7 @@ echo '<div class="lgl-breadcrumbs-wrapper ' . esc_attr($style_class) . '">';
         // Output Back to Results Button (Right side)
         // The href here will be dynamically overwritten by our JS to include previous filter parameters
         echo '<div class="lgl-br-back">';
-        echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results lgl-btn lgl-btn-secondary">&laquo; Back to Results</a>';
+        echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results">&laquo; Back to Results</a>';
         echo '</div>';
     } 
     // 2. Custom Archive Pages or Standard Pages View
