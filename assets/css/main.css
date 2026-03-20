@@ -2047,6 +2047,17 @@
 .lgl-breadcrumbs-light .lgl-current-page {
   color: #ffffff; }
 
+.lgl-breadcrumbs-wrapper {
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px; }
+  .lgl-breadcrumbs-wrapper a {
+    text-decoration: none; }
+
 /* Maintain button styling overrides */
 .lgl-breadcrumbs-wrapper .lgl-back-to-results {
   color: inherit;

@@ -34,7 +34,7 @@ $post_type_label = $post_type_obj ? $post_type_obj->labels->name : 'Vehicles';
 // Determine the CSS class based on the shortcode attribute
 $style_class = (isset($style) && $style === 'light') ? 'lgl-breadcrumbs-light' : 'lgl-breadcrumbs-dark';
 
-echo '<div class="lgl-breadcrumbs-wrapper ' . esc_attr($style_class) . '" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">';
+echo '<div class="lgl-breadcrumbs-wrapper ' . esc_attr($style_class) . '">';
 
     echo '<div class="lgl-breadcrumbs">';
         echo '<a href="' . esc_url($home_url) . '">Home</a> <span class="lgl-separator">|</span> ';
@@ -47,7 +47,7 @@ echo '<div class="lgl-breadcrumbs-wrapper ' . esc_attr($style_class) . '" style=
             
             // Back to Results Button (Right side)
             echo '<div class="lgl-br-back">';
-            echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results lgl-btn lgl-btn-secondary" style="text-decoration: none;">&laquo; Back to Results</a>';
+            echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results lgl-btn lgl-btn-secondary">&laquo; Back to Results</a>';
             echo '</div>';
         } else {
             // General Archive Page
