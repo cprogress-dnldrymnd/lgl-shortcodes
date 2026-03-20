@@ -56,8 +56,8 @@ if (is_singular(array('caravan', 'motorhome', 'campervan'))) {
     echo '</div>'; // End breadcrumbs left side
 
     // Output Back to Results Button (Right side)
-    echo '<div class="lgl-br-back">';
-    echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results lgl-btn lgl-btn-secondary" >&laquo; Back to Results</a>';
+    echo '<div class="lgl-br-back lgl-back-to-results-wrapper" style="display: none;">';
+    echo '<a href="' . esc_url($archive_url) . '" class="lgl-back-to-results lgl-btn lgl-btn-secondary" style="text-decoration: none;">&laquo; Back to Results</a>';
     echo '</div>';
 }
 // 2. Custom Archive Pages or Standard Pages View

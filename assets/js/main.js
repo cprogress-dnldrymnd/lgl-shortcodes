@@ -16,17 +16,39 @@
     });
 
     /**
-     * Retrieves the last search URL from session storage and updates 
-     * the "Back to Results" and Breadcrumb archive links.
-     */
+      * Retrieves the last search URL from session storage and updates 
+      * the "Back to Results" and Breadcrumb archive links.
+      * Strictly verifies the user's origin path to prevent stale session injection.
+      * Reveals the Back button ONLY if the origin matches the archive page.
+      */
     function initBreadcrumbs() {
         const lastUrl = sessionStorage.getItem('lgl_last_search_url');
-        if (lastUrl && $('.lgl-back-to-results').length) {
-            // Ensure the referrer is from the same domain to prevent injection issues
-            if (lastUrl.indexOf(window.location.host) !== -1) {
-                $('.lgl-back-to-results').attr('href', lastUrl);
-                $('.lgl-br-archive').attr('href', lastUrl);
+        const $backWrapper = $('.lgl-back-to-results-wrapper');
+        const $backBtn = $('.lgl-back-to-results');
+
+        if (lastUrl && $backBtn.length) {
+            if (document.referrer) {
+                try {
+                    const refObj = new URL(document.referrer);
+                    const lastObj = new URL(lastUrl);
+
+                    // Check if the page the user just came from matches the path of the saved search URL.
+                    if (refObj.pathname === lastObj.pathname) {
+                        $backBtn.attr('href', lastUrl);
+                        $('.lgl-br-archive').attr('href', lastUrl);
+
+                        // Origin validated: Reveal the Back to Results button
+                        $backWrapper.show();
+                        return; // Stop here, successful execution
+                    }
+                } catch (e) {
+                    // Fail silently on invalid URLs
+                }
             }
+
+            // If the script reaches here, the user came from the Homepage, an email, or direct link.
+            // The wrapper remains hidden (display: none), and we purge the stale memory.
+            sessionStorage.removeItem('lgl_last_search_url');
         }
     }
 
