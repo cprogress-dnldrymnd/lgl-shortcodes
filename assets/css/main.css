@@ -42,6 +42,14 @@
         width: 100%; } }
   .lgl-search-container.lgl-search-container.lgl-search-container.lgl-search-container-bg-secondary {
     background-color: var(--lgl-color-secondary); }
+  .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-group select {
+    border: none;
+    height: 64px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--lgl-color-secondary);
+    font-family: var(--lgl-font-primary);
+    background-image: none; }
   .lgl-search-container.lgl-search-container.lgl-search-container .lgl-filter-form {
     display: flex;
     gap: 0;

@@ -58,6 +58,17 @@
     &.lgl-search-container-bg-secondary {
         background-color: var(--lgl-color-secondary);
     }
+    .lgl-filter-group {
+        select {
+            border: none;
+            height: 64px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--lgl-color-secondary);
+            font-family: var(--lgl-font-primary);
+            background-image: none;
+        }
+    }
     .lgl-filter-form {
         display: flex;
         gap: 0;
