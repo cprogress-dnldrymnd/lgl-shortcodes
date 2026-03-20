@@ -82,10 +82,11 @@
             e.preventDefault();
 
             // The option VALUE is the full archive page URL set in LGL Settings → LGL Pages
-            const destUrl = $('#lgl_post_type').val();
+            // ... inside the global search submit handler ...
+            const destUrl = $('#lgl_post_type').val(); // This is the base URL
 
             if (!destUrl) {
-                // No vehicle type chosen — shake the dropdown gently as a hint
+                // No vehicle type chosen — shake the dropdown
                 $('#lgl_post_type').closest('.lgl-filter-group').addClass('lgl-field-error');
                 setTimeout(function () {
                     $('#lgl_post_type').closest('.lgl-filter-group').removeClass('lgl-field-error');
@@ -93,19 +94,20 @@
                 return;
             }
 
-            // Build optional make / model query params
             const makeVal = $('#lgl_make').val() || '';
             const modelVal = $('#lgl_model').val() || '';
 
             let redirectUrl = destUrl;
-            const params = [];
 
-            if (makeVal) params.push('listing_make=' + encodeURIComponent(makeVal));
-            if (modelVal) params.push('listing_model=' + encodeURIComponent(modelVal));
+            // Ensure trailing slash on base URL
+            if (!redirectUrl.endsWith('/')) redirectUrl += '/';
 
-            if (params.length) {
-                // Append to any existing query string already on the URL
-                redirectUrl += (destUrl.indexOf('?') !== -1 ? '&' : '?') + params.join('&');
+            // Append Make and Model as path segments
+            if (makeVal) {
+                redirectUrl += encodeURIComponent(makeVal) + '/';
+                if (modelVal) {
+                    redirectUrl += encodeURIComponent(modelVal) + '/';
+                }
             }
 
             window.location.href = redirectUrl;
@@ -375,27 +377,46 @@
             if (window.history.replaceState) {
                 const urlParams = new URLSearchParams(formDataStr);
 
-                // Clean empty or internal parameters
+                // 1. Extract make and model for the path
+                const makeSlug = urlParams.get('listing_make');
+                const modelSlug = urlParams.get('listing_model');
+
+                // 2. Clean up query parameters (remove make/model as they are now in the path)
                 const keysForDel = [];
                 urlParams.forEach((value, key) => {
-                    if (!value || key === 'post_type' || key === 'action' || key === 'nonce') {
+                    if (!value || key === 'post_type' || key === 'action' || key === 'nonce' || key === 'listing_make' || key === 'listing_model') {
                         keysForDel.push(key);
                     }
                 });
                 keysForDel.forEach(key => urlParams.delete(key));
 
-                // Add pagination and sorting
+                // 3. Add pagination and sorting
                 const sortVal = $('#lgl-sort-order').val();
                 if (sortVal) urlParams.set('sort_order', sortVal);
                 if (currentPage > 1) urlParams.set('paged', currentPage);
 
-                const newQueryString = urlParams.toString();
-                const newUrl = window.location.pathname + (newQueryString ? '?' + newQueryString : '');
+                // 4. Construct the new path
+                let baseUrl = $('#lgl_base_archive_url').val();
 
-                window.history.replaceState(null, '', newUrl);
+                if (baseUrl) {
+                    if (!baseUrl.endsWith('/')) baseUrl += '/';
 
-                // Persist the exact filtered URL for the single page "Back" button
-                sessionStorage.setItem('lgl_last_search_url', window.location.href);
+                    let newPath = baseUrl;
+                    if (makeSlug) {
+                        newPath += encodeURIComponent(makeSlug) + '/';
+                        if (modelSlug) {
+                            newPath += encodeURIComponent(modelSlug) + '/';
+                        }
+                    }
+
+                    const newQueryString = urlParams.toString();
+                    const newUrl = newPath + (newQueryString ? '?' + newQueryString : '');
+
+                    window.history.replaceState(null, '', newUrl);
+
+                    // Persist the exact filtered URL for the single page "Back" button
+                    sessionStorage.setItem('lgl_last_search_url', window.location.href);
+                }
             }
 
             activeSearchXhr = $.ajax({

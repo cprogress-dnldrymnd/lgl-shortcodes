@@ -94,36 +94,23 @@ if ($post_type && $active_make) {
 // -------------------------------------------------------------------
 // Read active URL parameters to pre-populate the filter fields
 // -------------------------------------------------------------------
-$active_make      = isset($_GET['listing_make'])  ? sanitize_text_field($_GET['listing_make'])  : '';
-$active_model     = isset($_GET['listing_model']) ? sanitize_text_field($_GET['listing_model']) : '';
+// Prioritize native query vars from our rewrite rules, fallback to standard $_GET
+$active_make      = get_query_var('listing_make') ? sanitize_text_field(get_query_var('listing_make')) : (isset($_GET['listing_make']) ? sanitize_text_field($_GET['listing_make']) : '');
+$active_model     = get_query_var('listing_model') ? sanitize_text_field(get_query_var('listing_model')) : (isset($_GET['listing_model']) ? sanitize_text_field($_GET['listing_model']) : '');
 $active_condition = isset($_GET['condition'])     ? sanitize_text_field($_GET['condition'])     : '';
 $active_berth     = isset($_GET['berth'])         ? sanitize_text_field($_GET['berth'])         : '';
 $active_price_min = isset($_GET['price_min'])     ? sanitize_text_field($_GET['price_min'])     : '';
 $active_price_max = isset($_GET['price_max'])     ? sanitize_text_field($_GET['price_max'])     : '';
 
-// If a make is active, fetch its child models so the Model dropdown can be pre-populated
-$active_make_models = array();
-if ($active_make) {
-    $make_term = get_term_by('slug', $active_make, 'listing-make-model');
-    if ($make_term) {
-        $active_make_models = get_terms(array(
-            'taxonomy'   => 'listing-make-model',
-            'parent'     => $make_term->term_id,
-            'hide_empty' => false,
-        ));
-
-        // Filter models to active post type
-        if (!is_wp_error($active_make_models) && !empty($active_make_models) && !empty($type_post_ids)) {
-            $assigned_model_ids = array();
-            $assigned_all = wp_get_object_terms($type_post_ids, 'listing-make-model', array('fields' => 'ids'));
-            if (!is_wp_error($assigned_all)) {
-                $assigned_model_ids = array_map('intval', $assigned_all);
-            }
-
-            $active_make_models = array_filter($active_make_models, function ($model) use ($assigned_model_ids) {
-                return in_array((int) $model->term_id, $assigned_model_ids, true);
-            });
-        }
+// Calculate the clean Base URL for JavaScript path construction
+$base_archive_url = '';
+if ($post_type) {
+    $options = get_option('lgl_settings', array());
+    $page_key = $post_type . '_page';
+    if (!empty($options[$page_key])) {
+        $base_archive_url = get_permalink($options[$page_key]);
+    } else {
+        $base_archive_url = get_post_type_archive_link($post_type);
     }
 }
 ?>
@@ -174,6 +161,7 @@ if ($active_make) {
         <div class="lgl-search-container lgl-holder <?= $post_type == false ? 'lgl-search-container-bg-secondary' : '' ?>">
             <form id="lgl-search-form" class="lgl-filter-form <?= $post_type == false ? 'lgl-filter-form-no-ajax' : 'lgl-filter-form-ajax' ?>">
                 <input type="hidden" name="post_type" id="lgl_target_post_type" value="<?php echo esc_attr($post_type); ?>">
+                <input type="hidden" id="lgl_base_archive_url" value="<?php echo esc_url($base_archive_url); ?>">
 
                 <?php if ($post_type == false) { ?>
                     <?php

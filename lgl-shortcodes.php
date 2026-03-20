@@ -17,7 +17,7 @@ if (! defined('ABSPATH')) {
 // Define a constant for the plugin directory path to ensure reliable file inclusion.
 define('LGL_SHORTCODES_PATH', plugin_dir_path(__FILE__));
 define('LGL_SHORTCODES_URL', plugin_dir_url(__FILE__));
-define('LGL_SHORTCODES_VERSION', '4.0.3');
+define('LGL_SHORTCODES_VERSION', '4.0.4');
 // ── Load the Forms integration ──
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-forms.php';
 require_once LGL_SHORTCODES_PATH . 'includes/class-lgl-email-builder.php';
@@ -117,8 +117,59 @@ if (! class_exists('LGL_Shortcodes')) {
             add_action('add_meta_boxes', array($this, 'add_featured_meta_box'));
             add_action('save_post', array($this, 'save_featured_meta_box'));
 
+            add_filter('query_vars', array($this, 'register_query_vars'));
+            add_action('init', array($this, 'register_rewrite_rules'));
+
             new LGL_Forms();
             new LGL_Email_Builder();
+        }
+
+        /**
+         * Registers custom query variables so WordPress can parse them from the rewritten URL path.
+         */
+        public function register_query_vars($vars)
+        {
+            $vars[] = 'listing_make';
+            $vars[] = 'listing_model';
+            return $vars;
+        }
+
+        /**
+         * Dynamically generates URL rewrite rules based on the pages defined in LGL Settings.
+         * Maps /archive-page/make/model/ to index.php?pagename=archive-page&listing_make=make&listing_model=model
+         */
+        public function register_rewrite_rules()
+        {
+            $options = get_option('lgl_settings', array());
+
+            $pages = array(
+                'caravan_page'   => isset($options['caravan_page']) ? intval($options['caravan_page']) : 0,
+                'motorhome_page' => isset($options['motorhome_page']) ? intval($options['motorhome_page']) : 0,
+                'campervan_page' => isset($options['campervan_page']) ? intval($options['campervan_page']) : 0,
+            );
+
+            foreach ($pages as $page_id) {
+                if ($page_id > 0) {
+                    $page = get_post($page_id);
+                    if ($page) {
+                        $slug = $page->post_name; // E.g., 'caravans'
+
+                        // Rule 1: Make AND Model (/caravans/coachman/laser-xtra/)
+                        add_rewrite_rule(
+                            '^' . $slug . '/([^/]+)/([^/]+)/?$',
+                            'index.php?pagename=' . $slug . '&listing_make=$matches[1]&listing_model=$matches[2]',
+                            'top'
+                        );
+
+                        // Rule 2: Make ONLY (/caravans/coachman/)
+                        add_rewrite_rule(
+                            '^' . $slug . '/([^/]+)/?$',
+                            'index.php?pagename=' . $slug . '&listing_make=$matches[1]',
+                            'top'
+                        );
+                    }
+                }
+            }
         }
 
         /**
