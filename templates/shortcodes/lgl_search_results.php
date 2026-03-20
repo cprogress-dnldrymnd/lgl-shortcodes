@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
                         <div class="lgl-sort-field">
                             <select name="sort_order" id="lgl-sort-order" class="lgl-select2" style="width: 220px;">
                                 <option value="" selected="selected">Default</option>
-                                <option value="date_high" selected="selected">Date: newest first</option>
+                                <option value="date_high">Date: newest first</option>
                                 <option value="date_low">Date: oldest first</option>
                                 <option value="mileage_high">Mileage: highest first</option>
                                 <option value="mileage_low">Mileage: lowest first</option>
